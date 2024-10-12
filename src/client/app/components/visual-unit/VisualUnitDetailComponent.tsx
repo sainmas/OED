@@ -6,6 +6,7 @@ import { FormattedMessage } from 'react-intl';
 import TooltipHelpComponent from '../TooltipHelpComponent';
 import * as React from 'react';
 import CreateVisualUnitMapModalComponent from './CreateVisualUnitModalMapComponent';
+import CreateCikVisualMapComponent from './CreateCikVisualModalMapComponent';
 
 /**
  * Defines the units page card view
@@ -39,6 +40,19 @@ export default function VisualUnitDetailComponent() {
 
 			<div style={titleStyle}>
 				<CreateVisualUnitMapModalComponent/>
+			</div>
+
+			<div className='container-fluid'>
+				<h2 style={titleStyle}>
+					<FormattedMessage id='cik-visual-unit-temp' />
+					{/* <div style={tooltipStyle}>
+							<TooltipMarkerComponent page='visual-unit' helpTextId={tooltipStyle.tooltipVisualUnitView} />
+						</div> */}
+				</h2>
+			</div>
+
+			<div style={titleStyle}>
+				<CreateCikVisualMapComponent />
 			</div>
 		</div>
 	);

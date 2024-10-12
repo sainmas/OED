@@ -509,6 +509,7 @@ const LocaleTranslationData = {
 		"view.groups": "View Groups",
 		"visit": " or visit our ",
 		"visual-unit": "Visual Units Graph",
+		"cik-visual-unit-temp": "Cik Visual Units Graph(TEMP)",
 		"website": "website",
 		"week": "Week",
 		"yes": "yes",
