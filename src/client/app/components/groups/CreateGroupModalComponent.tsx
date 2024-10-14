@@ -3,6 +3,7 @@
 * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 // import { sortBy } from 'lodash';
 import * as React from 'react';
+import { selectSelectedLanguage } from '../../redux/slices/appStateSlice';
 import { useEffect, useState } from 'react';
 import { FormattedMessage } from 'react-intl';
 import {
@@ -50,7 +51,8 @@ export default function CreateGroupModalComponent() {
 	const unitsDataById = useAppSelector(selectUnitDataById);
 	// Which units are possible for graphing state
 	const possibleGraphicUnits = useAppSelector(selectPossibleGraphicUnits);
-
+	// Obtaining language
+	const selectedLanguage = useAppSelector(selectSelectedLanguage);
 	// Since creating group the initial values are effectively nothing or the desired defaults.
 	const defaultValues: GroupData = {
 		// ID not needed, assigned by DB, add here for TS
@@ -523,7 +525,7 @@ export default function CreateGroupModalComponent() {
 		});
 		// Want chosen in sorted order.
 		return selectedMetersUnsorted.sort((meterA, meterB) => meterA.label.toLowerCase()?.
-			localeCompare(meterB.label.toLowerCase(), undefined, { sensitivity: 'accent'}));
+			localeCompare(meterB.label.toLowerCase(), String(selectedLanguage), { sensitivity: 'accent'}));
 	}
 
 	/**
@@ -543,7 +545,7 @@ export default function CreateGroupModalComponent() {
 		});
 		// Want chosen in sorted order.
 		return selectedGroupsUnsorted.sort((groupA, groupB) => groupA.label.toLowerCase()?.
-			localeCompare(groupB.label.toLowerCase(), undefined, { sensitivity: 'accent'}));
+			localeCompare(groupB.label.toLowerCase(), String(selectedLanguage), { sensitivity: 'accent'}));
 	}
 
 	/**
