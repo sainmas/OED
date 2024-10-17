@@ -44,7 +44,7 @@ export default function CreateCikVisualMapComponent() {
 	useEffect(() => {
 		/* View-box dimensions */
 		const width = window.innerWidth;
-		const height = 750;
+		const height = 1000;
 
 		/* Grab data */
 		const nodes = data.nodes.map(d => ({...d}));
@@ -55,12 +55,12 @@ export default function CreateCikVisualMapComponent() {
 				/* Set all link ids (from data.links) */
 				.id((d: any) => d.id)
 				/* This controls how long each link is */
-				.distance(90)
+				.distance(120)
 			)
 			/* Create new many-body force */
 			.force('charge', d3.forceManyBody()
 				/* This controls the 'repelling' force on each node */
-				.strength(-500)
+				.strength(-800)
 			)
 			.force('x', d3.forceX())
 			.force('y', d3.forceY());
@@ -83,19 +83,6 @@ export default function CreateCikVisualMapComponent() {
 			.attr('markerHeight', 4)
 			/* auto: point towards dest. node */
 			.attr('orient', 'auto')
-			.append('svg:path')
-			.attr('d', 'M0,-5L10,0L0,5');
-
-		/* Start arrow head (for bidirectional edges) */
-		svg.append('defs').append('marker')
-			.attr('id', 'arrow-start')
-			.attr('viewBox', '0 -5 10 10')
-			.attr('refX', 25)
-			.attr('refY', 0)
-			.attr('markerWidth', 4)
-			.attr('markerHeight', 4)
-			/* auto-start-reverse: point towards src. node */
-			.attr('orient', 'auto-start-reverse')
 			.append('svg:path')
 			.attr('d', 'M0,-5L10,0L0,5');
 
