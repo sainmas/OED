@@ -151,20 +151,6 @@ mocha.describe('readings API', () => {
                             note: "Thing_36 → thing unit"
                          }
                     ];
-                    const meterData = [
-                        {
-                            name: 'Thing_36 thing unit',
-                            unit: 'Thing_36',
-                            defaultGraphicUnit: 'thing unit',
-                            displayable: true,
-                            gps: undefined,
-                            note: 'special meter',
-                            file: 'test/web/readingsData/readings_ri_15_days_75.csv',
-                            deleteFile: false,
-                            readingFrequency: '15 minutes',
-                            id: METER_ID
-                        }
-                    ];
                 });
                 
 
