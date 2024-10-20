@@ -188,10 +188,21 @@ mocha.describe('readings API', () => {
                             childGroups: [], 
                         }
                     ]
-                    
+                    //load data into database
+                    await prepareTest(unitDataThing, conversionDataThing, meterDataThingGroups, groupThing);
+                    //get unit ID since the DB could use any value.
+                    const unitId = await getUnitId('thing unit');
+                    // Load the expected response data from the corresponding csv file
+                    const expected = await parseExpectedCsv('src/server/test/web/readingsData/expected_bar_group_ri_15-20_mu_Thing36_gu_thing_st_-inf_et_inf_bd_13.csv');
+                    // Create a request to the API for unbounded reading times and save the response
+                    const res = await chai.request(app).get(`/api/unitReadings/bar/groups/${GROUP_ID}`)
+                        .query({ 
+                            timeInterval: ETERNITY.toString(), 
+                            barWidthDays: '13',
+                            graphicUnitId: unitId });
+                    // Check that the API reading is equal to what it is expected to equal
+                    expectReadingToEqualExpected(res, expected, GROUP_ID);
                 });
-                
-
             });
         });
     });
