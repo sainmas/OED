@@ -114,7 +114,7 @@ mocha.describe('readings API', () => {
 
                 // Add BG16 here
                 mocha.it('BG16: should have daily points for 15 + 20 minute reading intervals and flow units with +-inf start/end time & thing as thing where rate is 36', async () => {
-                    const unitData = [
+                    const unitDataThing = [
                         {
                             // u14
                             name: "Thing_36",
@@ -140,7 +140,7 @@ mocha.describe('readings API', () => {
                             note: "special unit"
                          }
                     ];
-                    const conversionData = [
+                    const conversionDataThing = [
                         {
                             // c15
                             sourceName: "Thing_36",
@@ -151,6 +151,44 @@ mocha.describe('readings API', () => {
                             note: "Thing_36 → thing unit"
                          }
                     ];
+                    const meterDataThingGroups = [
+                        {
+                            name: 'Thing_36 thing unit',
+                            unit: 'Thing_36',
+                            defaultGraphicUnit: 'thing unit',
+                            displayable: true,
+                            gps: undefined,
+                            note: 'special meter',
+                            file: 'test/web/readingsData/readings_ri_15_days_75.csv',
+                            deleteFile: false,
+                            readingFrequency: '15 minutes',
+                            id: METER_ID
+                        },
+                        {
+                            name: 'Thing_36 Other',
+                            unit: 'Thing_36',
+                            defaultGraphicUnit: 'thing unit',
+                            displayable: true, 
+                            gps: undefined,
+                            note: 'special meter',
+                            file: 'test/web/readingsData/readings_ri_20_days_75.csv',
+                            deleteFile: false,
+                            readingFrequency: '20 minutes',
+                            id: (METER_ID + 1)
+                        }
+                    ];
+                    const groupThing = [
+                        {
+                            id: GROUP_ID,
+                            name: 'Thing_36 thing unit + Thing_36 Other',
+                            displayable: true,
+                            note: 'special group',
+                            defaultGraphicUnit: 'thing unit',
+                            childMeters: ['Thing_36 thing unit', 'Thing_36 Other'],
+                            childGroups: [], 
+                        }
+                    ]
+                    
                 });
                 
 
