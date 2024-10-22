@@ -19,6 +19,9 @@ export default function CreateVisualUnitMapModalComponent() {
 	const unitData = useAppSelector(selectAllUnits);
 	const conversionData = useAppSelector(selectConversionsDetails);
 
+	/* color for nodes (Up to 10 different colors) */
+	const color = d3.scaleOrdinal(d3.schemeCategory10);
+
 	/* Create data container to pass to D3 force graph */
 	const data: { nodes: any[], links: any[] } = {
 		nodes: [],
@@ -26,7 +29,8 @@ export default function CreateVisualUnitMapModalComponent() {
 	};
 	unitData.map(function (value) {
 		data.nodes.push({'name': value.name,
-			'id': value.id
+			'id': value.id,
+			'typeOfUnit': value.typeOfUnit
 		});
 	});
 	conversionData.map(function (value) {
@@ -104,7 +108,7 @@ export default function CreateVisualUnitMapModalComponent() {
 			.data(nodes)
 			.enter().append('circle')
 			.attr('r', 20)					/* Node radius */
-			.style('fill', '#69b3a2');
+			.style('fill', d => color(d.typeOfUnit));
 
 		/* Drag behavior */
 		node.call(d3.drag()

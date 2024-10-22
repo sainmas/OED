@@ -29,7 +29,8 @@ export default function CreateCikVisualMapComponent() {
 	units.forEach(function (value) {
 		const unit = unitDataById[value];
 		data.nodes.push({'name': unit.name,
-			'id': unit.id
+			'id': unit.id,
+			'typeOfUnit': unit.typeOfUnit
 		});
 	});
 	cikData.map(function (value) {
@@ -50,18 +51,25 @@ export default function CreateCikVisualMapComponent() {
 		const nodes = data.nodes.map(d => ({...d}));
 		const links = data.links.map(d => ({...d}));
 
+		/* color for nodes (Up to 10 different colors) */
+		const color = d3.scaleOrdinal(d3.schemeCategory10);
+
 		const simulation = d3.forceSimulation(nodes)
 			.force('link', d3.forceLink(links)
 				/* Set all link ids (from data.links) */
 				.id((d: any) => d.id)
 				/* This controls how long each link is */
 				.distance(120)
+				/* This controls the link strength between nodes */
+				// .strength(0.2)
 			)
 			/* Create new many-body force */
 			.force('charge', d3.forceManyBody()
 				/* This controls the 'repelling' force on each node */
 				.strength(-800)
 			)
+			/* Create colliding force for nodes */
+			// .force('collide', d3.forceCollide().radius(70))
 			.force('x', d3.forceX())
 			.force('y', d3.forceY());
 
@@ -92,9 +100,7 @@ export default function CreateCikVisualMapComponent() {
 			.enter().append('line')
 			.style('stroke', '#aaa')
 			.attr('stroke-width', 3)
-			.attr('marker-end', 'url(#arrow-end)')
-			/* Only draw start arrow head if bidirectional */
-			.attr('marker-start', d => d.bidirectional === true ? 'url(#arrow-start)' : '');
+			.attr('marker-end', 'url(#arrow-end)');
 
 		/* Node style */
 		const node = svg.selectAll('.node')
@@ -102,7 +108,7 @@ export default function CreateCikVisualMapComponent() {
 			.enter().append('circle')
 			/* Node radius */
 			.attr('r', 20)
-			.style('fill', '#69b3a2');
+			.style('fill', d => color(d.typeOfUnit));
 
 		/* Drag behavior */
 		node.call(d3.drag()
