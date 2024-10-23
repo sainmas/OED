@@ -51,8 +51,11 @@ export default function CreateCikVisualMapComponent() {
 		const nodes = data.nodes.map(d => ({...d}));
 		const links = data.links.map(d => ({...d}));
 
-		/* color for nodes (Up to 10 different colors) */
-		const color = d3.scaleOrdinal(d3.schemeCategory10);
+		/* creating color schema for nodes based on their unit type */
+		const colors = ['#1F77B4', '#2CA02C', '#fd7e14'];
+		const colorSchema = d3.scaleOrdinal<string, string>()
+			.domain(['meter', 'unit', 'suffix'])
+			.range(colors);
 
 		const simulation = d3.forceSimulation(nodes)
 			.force('link', d3.forceLink(links)
@@ -108,7 +111,7 @@ export default function CreateCikVisualMapComponent() {
 			.enter().append('circle')
 			/* Node radius */
 			.attr('r', 20)
-			.style('fill', d => color(d.typeOfUnit));
+			.attr('fill', d => colorSchema(d.typeOfUnit));
 
 		/* Drag behavior */
 		node.call(d3.drag()

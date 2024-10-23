@@ -19,8 +19,11 @@ export default function CreateVisualUnitMapModalComponent() {
 	const unitData = useAppSelector(selectAllUnits);
 	const conversionData = useAppSelector(selectConversionsDetails);
 
-	/* color for nodes (Up to 10 different colors) */
-	const color = d3.scaleOrdinal(d3.schemeCategory10);
+	/* creating color schema for nodes based on their unit type */
+	const colors = ['#1F77B4', '#2CA02C', '#fd7e14'];
+	const colorSchema = d3.scaleOrdinal<string, string>()
+		.domain(['meter', 'unit', 'suffix'])
+		.range(colors);
 
 	/* Create data container to pass to D3 force graph */
 	const data: { nodes: any[], links: any[] } = {
@@ -108,7 +111,7 @@ export default function CreateVisualUnitMapModalComponent() {
 			.data(nodes)
 			.enter().append('circle')
 			.attr('r', 20)					/* Node radius */
-			.style('fill', d => color(d.typeOfUnit));
+			.attr('fill', d => colorSchema(d.typeOfUnit));
 
 		/* Drag behavior */
 		node.call(d3.drag()
