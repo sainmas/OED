@@ -7,8 +7,14 @@ import { RootState } from 'store';
 import { UnitData, UnitDataById } from '../../types/redux/units';
 import { baseApi } from './baseApi';
 import { conversionsApi } from './conversionsApi';
+import { useAppSelector } from '../../redux/reduxHooks';
+import { selectSelectedLanguage } from '../../redux/slices/appStateSlice';
+
+// Obtaining language functionality
+const selectedLanguage = useAppSelector(selectSelectedLanguage);
+
 export const unitsAdapter = createEntityAdapter<UnitData>({
-	sortComparer: (unitA, unitB) => unitA.identifier?.localeCompare(unitB.identifier, undefined, { sensitivity: 'accent' })
+	sortComparer: (unitA, unitB) => unitA.identifier.toLowerCase()?.localeCompare(unitB.identifier.toLowerCase(), String(selectedLanguage), { sensitivity: 'accent' })
 });
 export const unitsInitialState = unitsAdapter.getInitialState();
 export type UnitDataState = EntityState<UnitData, number>;

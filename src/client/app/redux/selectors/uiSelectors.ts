@@ -3,6 +3,7 @@
 * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 
 import { sortBy } from 'lodash';
+import { selectSelectedLanguage } from '../../redux/slices/appStateSlice';
 import { selectGroupDataById } from '../../redux/api/groupsApi';
 import { selectMeterDataById } from '../../redux/api/metersApi';
 import { selectUnitDataById } from '../../redux/api/unitsApi';
@@ -27,6 +28,7 @@ import {
 import { selectVisibleMetersAndGroups, selectVisibleUnitOrSuffixState } from './authVisibilitySelectors';
 import { selectDefaultGraphicUnitFromEntity, selectMeterOrGroupFromEntity, selectNameFromEntity } from './entitySelectors';
 import { createAppSelector } from './selectors';
+import { useAppSelector } from '../../redux/reduxHooks';
 
 export const selectCurrentUnitCompatibility = createAppSelector(
 	[
@@ -373,6 +375,9 @@ export function getSelectOptionsByEntity(
 	incompatibleItems: Set<number>,
 	entityDataById: MeterDataByID | GroupDataByID | UnitDataById
 ) {
+	// Obtaining language functionality
+	const selectedLanguage = useAppSelector(selectSelectedLanguage);
+
 	//The final list of select options to be displayed
 	const compatibleItemOptions = Object.entries(entityDataById)
 		.filter(([id]) => compatibleItems.has(Number(id)))
@@ -410,8 +415,12 @@ export function getSelectOptionsByEntity(
 			} as SelectOption;
 		});
 
-	const compatible = sortBy(compatibleItemOptions, item => item.label.toLowerCase(), 'asc');
-	const incompatible = sortBy(incompatibleItemOptions, item => item.label.toLowerCase(), 'asc');
+	//const compatible = sortBy(compatibleItemOptions, item => item.label.toLowerCase(), 'asc');
+	const compatible = compatibleItemOptions.sort((itemA, itemB) => itemA.label.toLowerCase()?.
+		localeCompare(itemB.label.toLowerCase(), String(selectedLanguage), { sensitivity: 'accent' }));
+	//const incompatible = sortBy(incompatibleItemOptions, item => item.label.toLowerCase(), 'asc');
+	const incompatible = incompatibleItemOptions.sort((itemA, itemB) => itemA.label.toLowerCase()?.
+		localeCompare(itemB.label.toLowerCase(), String(selectedLanguage), { sensitivity: 'accent' }));
 	return { compatible, incompatible };
 }
 

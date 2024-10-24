@@ -4,6 +4,7 @@
 
 import { sortBy } from 'lodash';
 import * as moment from 'moment';
+import { selectSelectedLanguage } from '../../redux/slices/appStateSlice';
 import { selectConversionsDetails } from '../../redux/api/conversionsApi';
 import { selectAllGroups } from '../../redux/api/groupsApi';
 import { selectAllMeters, selectMeterById } from '../../redux/api/metersApi';
@@ -18,6 +19,7 @@ import translate from '../../utils/translate';
 import { selectAllUnits, selectUnitDataById } from '../api/unitsApi';
 import { selectVisibleMetersAndGroups } from './authVisibilitySelectors';
 import { createAppSelector } from './selectors';
+import { useAppSelector } from '../../redux/reduxHooks';
 
 export const MIN_VAL = Number.MIN_SAFE_INTEGER;
 export const MAX_VAL = Number.MAX_SAFE_INTEGER;
@@ -26,6 +28,9 @@ export const MAX_DATE_MOMENT = moment(0).utc().add(5000, 'years');
 export const MIN_DATE = MIN_DATE_MOMENT.format('YYYY-MM-DD HH:mm:ssZ');
 export const MAX_DATE = MAX_DATE_MOMENT.format('YYYY-MM-DD HH:mm:ssZ');
 export const MAX_ERRORS = 75;
+
+// Obtaining language functionality
+const selectedLanguage = useAppSelector(selectSelectedLanguage);
 
 export const selectPossibleGraphicUnits = createAppSelector(
 	selectUnitDataById,
@@ -48,10 +53,18 @@ export const selectPossibleMeterUnits = createAppSelector(
 			}
 		});
 		// Put in alphabetical order.
-		possibleMeterUnits = new Set(sortBy(Array.from(possibleMeterUnits), unit => unit.identifier.toLowerCase(), 'asc'));
+		//possibleMeterUnits = new Set(sortBy(Array.from(possibleMeterUnits), unit => unit.identifier.toLowerCase(), 'asc'));
+		// convert the set into an array because sets cannot use sort() and localeCompare() directly
+		let possibleMeterUnitsArray = Array.from(possibleMeterUnits);
+		// sort the array using localeCompare()
+		possibleMeterUnitsArray = possibleMeterUnitsArray.sort((unitA, unitB) => unitA.identifier.toLowerCase()?.
+		localeCompare(unitB.identifier.toLowerCase(), String(selectedLanguage), { sensitivity: 'accent' }));
+		// create a new set from the sorted array
+		let sortedPossibleMeterUnits = new Set<UnitData>(possibleMeterUnitsArray);
 		// The default graphic unit can also be no unit/-99 but that is not desired so put last in list.
-		return possibleMeterUnits.add(noUnitTranslated());
+		return sortedPossibleMeterUnits.add(noUnitTranslated());
 	}
+
 );
 
 export const selectUnitName = createAppSelector(

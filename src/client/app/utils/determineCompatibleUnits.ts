@@ -9,10 +9,12 @@ import React from 'react';
 import { selectCik } from '../redux/api/conversionsApi';
 import { selectAllGroups, selectGroupDataById } from '../redux/api/groupsApi';
 import { selectAllMeters, selectMeterDataById } from '../redux/api/metersApi';
+import { selectSelectedLanguage } from '../../redux/slices/appStateSlice';
 import { store } from '../store';
 import { DataType } from '../types/Datasources';
 import { SelectOption } from '../types/items';
 import { GroupData } from '../types/redux/groups';
+import { useAppSelector } from '../../redux/reduxHooks';
 
 /**
  * The intersect operation of two sets.
@@ -152,6 +154,9 @@ export function getMeterMenuOptionsForGroup(defaultGraphicUnit: number, deepMete
 	// Get all meters' state.
 	const meterData = selectAllMeters(state);
 
+	// Obtaining language
+	const selectedLanguage = useAppSelector(selectSelectedLanguage);
+
 	// Options for the meter menu.
 	const options: SelectOption[] = [];
 	// For each meter, decide its compatibility for the menu
@@ -176,7 +181,9 @@ export function getMeterMenuOptionsForGroup(defaultGraphicUnit: number, deepMete
 
 	// We want the options sorted by meter identifier.
 	// Had to make item.label? potentially undefined due to start up race conditions
-	return sortBy(options, item => item.label?.toLowerCase(), 'asc');
+	//return sortBy(options, item => item.label?.toLowerCase(), 'asc');
+	return options.sort((itemA, itemB) => itemA.label.toLowerCase()?.
+		localeCompare(itemB.label.toLowerCase(), String(selectedLanguage), { sensitivity: 'accent' }));
 }
 
 /**
@@ -194,6 +201,9 @@ export function getGroupMenuOptionsForGroup(groupId: number, defaultGraphicUnit:
 	const currentUnits = unitsCompatibleWithMeters(deepMetersSet);
 	// Get all groups' state.
 	const groupData = selectAllGroups(store.getState());
+
+	// Obtaining language
+	const selectedLanguage = useAppSelector(selectSelectedLanguage);
 
 	// Options for the group menu.
 	const options: SelectOption[] = [];
@@ -221,7 +231,10 @@ export function getGroupMenuOptionsForGroup(groupId: number, defaultGraphicUnit:
 
 	// We want the options sorted by group name.
 	// Had to make item.label? potentially undefined due to start up race conditions
-	return sortBy(options, item => item.label?.toLowerCase(), 'asc');
+	//return sortBy(options, item => item.label?.toLowerCase(), 'asc');
+	return options.sort((itemA, itemB) => itemA.label.toLowerCase()?.
+		localeCompare(itemB.label.toLowerCase(), String(selectedLanguage), { sensitivity: 'accent' }));
+
 }
 
 /**
