@@ -62,6 +62,7 @@ export default function EditGroupModalComponent(props: EditGroupModalComponentPr
 	const [deleteGroup] = groupsApi.useDeleteGroupMutation();
 	// Meter state
 	const meterDataById = useAppSelector(selectMeterDataById);
+	const groupDataById = useAppSelector(selectGroupDataById);
 	// Group state used on other pages
 	// Make a local copy of the group data so we can update during the edit process.
 	// When the group is saved the values will be synced again with the global state.
@@ -917,6 +918,7 @@ export default function EditGroupModalComponent(props: EditGroupModalComponentPr
 	 */
 	function metersToSelectOptions(): SelectOption[] {
 		// In format for the display component for menu.
+		const locale = useAppSelector(selectSelectedLanguage);
 		const selectedMetersUnsorted: SelectOption[] = [];
 		groupState.childMeters.forEach(groupId => {
 			selectedMetersUnsorted.push({
@@ -937,6 +939,7 @@ export default function EditGroupModalComponent(props: EditGroupModalComponentPr
 	 */
 	function groupsToSelectOptions(): SelectOption[] {
 		// In format for the display component for menu.
+		const locale = useAppSelector(selectSelectedLanguage);
 		const selectedGroupsUnsorted: SelectOption[] = [];
 		groupState.childGroups.forEach(groupId => {
 			selectedGroupsUnsorted.push({
