@@ -2,7 +2,6 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 
-import { sortBy } from 'lodash';
 import * as moment from 'moment';
 import { selectConversionsDetails } from '../../redux/api/conversionsApi';
 import { selectAllGroups } from '../../redux/api/groupsApi';
@@ -26,7 +25,6 @@ export const MAX_DATE_MOMENT = moment(0).utc().add(5000, 'years');
 export const MIN_DATE = MIN_DATE_MOMENT.format('YYYY-MM-DD HH:mm:ssZ');
 export const MAX_DATE = MAX_DATE_MOMENT.format('YYYY-MM-DD HH:mm:ssZ');
 export const MAX_ERRORS = 75;
-
 export const selectPossibleGraphicUnits = createAppSelector(
 	selectUnitDataById,
 	unitDataById => potentialGraphicUnits(unitDataById)
@@ -35,11 +33,13 @@ export const selectPossibleGraphicUnits = createAppSelector(
 /**
  * Calculates the set of all possible meter units for a meter.
  * This is any unit that is of type meter.
+ * @param state # TODO
+ * @param locale # TODO
  * @returns The set of all possible graphic units for a meter
  */
 export const selectPossibleMeterUnits = createAppSelector(
-	selectAllUnits,
-	unitData => {
+	[selectAllUnits, (state, locale) => locale],
+	(unitData, locale) => {
 		let possibleMeterUnits = new Set<UnitData>();
 		// The meter unit can be any unit of type meter.
 		unitData.forEach(unit => {
@@ -48,7 +48,8 @@ export const selectPossibleMeterUnits = createAppSelector(
 			}
 		});
 		// Put in alphabetical order.
-		possibleMeterUnits = new Set(sortBy(Array.from(possibleMeterUnits), unit => unit.identifier.toLowerCase(), 'asc'));
+		possibleMeterUnits = new Set(Array.from(possibleMeterUnits).sort((unitA, unitB) => unitA.identifier.toLowerCase().
+			localeCompare(unitB.identifier.toLowerCase(), locale, { sensitivity: 'accent'})));
 		// The default graphic unit can also be no unit/-99 but that is not desired so put last in list.
 		return possibleMeterUnits.add(noUnitTranslated());
 	}

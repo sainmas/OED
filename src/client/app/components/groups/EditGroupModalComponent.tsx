@@ -2,8 +2,9 @@
 * License, v. 2.0. If a copy of the MPL was not distributed with this
 * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 
-import { cloneDeep, isEqual, difference, sortBy, filter } from 'lodash';
+import { cloneDeep, isEqual, difference, filter } from 'lodash';
 import * as React from 'react';
+import { selectSelectedLanguage } from '../../redux/slices/appStateSlice';
 // Realize that * is already imported from react
 import { useEffect, useState } from 'react';
 import { FormattedMessage } from 'react-intl';
@@ -62,7 +63,6 @@ export default function EditGroupModalComponent(props: EditGroupModalComponentPr
 	// Meter state
 	const meterDataById = useAppSelector(selectMeterDataById);
 	// Group state used on other pages
-	const groupDataById = useAppSelector(selectGroupDataById);
 	// Make a local copy of the group data so we can update during the edit process.
 	// When the group is saved the values will be synced again with the global state.
 	// This needs to be a deep clone so the changes are only local.
@@ -927,7 +927,8 @@ export default function EditGroupModalComponent(props: EditGroupModalComponentPr
 			);
 		});
 		// Want chosen in sorted order.
-		return sortBy(selectedMetersUnsorted, item => item.label.toLowerCase(), 'asc');
+		return selectedMetersUnsorted.sort((meterA, meterB) => meterA.label.toLowerCase()?.
+			localeCompare(meterB.label.toLowerCase(), String(locale), { sensitivity: 'accent'}));
 	}
 
 	/**
@@ -948,7 +949,8 @@ export default function EditGroupModalComponent(props: EditGroupModalComponentPr
 			);
 		});
 		// Want chosen in sorted order.
-		return sortBy(selectedGroupsUnsorted, item => item.label.toLowerCase(), 'asc');
+		return selectedGroupsUnsorted.sort((groupA, groupB) => groupA.label.toLowerCase()?.
+			localeCompare(groupB.label.toLowerCase(), String(locale), { sensitivity: 'accent'}));
 	}
 
 	/**
