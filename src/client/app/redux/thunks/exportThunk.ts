@@ -2,7 +2,6 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 
- import { selectSelectedLanguage } from '../../redux/slices/appStateSlice';
 import { selectConversionsDetails } from '../../redux/api/conversionsApi';
 import { selectGroupById } from '../../redux/api/groupsApi';
 import { metersApi, selectMeterById } from '../../redux/api/metersApi';
@@ -26,7 +25,6 @@ import { createAppThunk } from './appThunk';
 import { selectAnythingFetching } from '../../redux/selectors/apiSelectors';
 import { RootState } from '../../store';
 import { find, sortBy } from 'lodash';
-import { useAppSelector } from '../../redux/reduxHooks';
 
 const selectCanExport = (state: RootState) => {
 	const fetchInProgress = selectAnythingFetching(state);

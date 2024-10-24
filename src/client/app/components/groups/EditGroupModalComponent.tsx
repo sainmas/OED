@@ -12,7 +12,6 @@ import {
 	Label, Modal, ModalBody, ModalFooter, ModalHeader, Row
 } from 'reactstrap';
 import { groupsApi, selectGroupDataById } from '../../redux/api/groupsApi';
-import { selectSelectedLanguage } from '../../redux/slices/appStateSlice';
 import { selectMeterDataById } from '../../redux/api/metersApi';
 import { useAppSelector } from '../../redux/reduxHooks';
 import { selectPossibleGraphicUnits } from '../../redux/selectors/adminSelectors';
@@ -64,8 +63,6 @@ export default function EditGroupModalComponent(props: EditGroupModalComponentPr
 	const meterDataById = useAppSelector(selectMeterDataById);
 	// Group state used on other pages
 	const groupDataById = useAppSelector(selectGroupDataById);
-	// Obtaining language
-	const selectedLanguage = useAppSelector(selectSelectedLanguage);
 	// Make a local copy of the group data so we can update during the edit process.
 	// When the group is saved the values will be synced again with the global state.
 	// This needs to be a deep clone so the changes are only local.
@@ -930,9 +927,7 @@ export default function EditGroupModalComponent(props: EditGroupModalComponentPr
 			);
 		});
 		// Want chosen in sorted order.
-		//return sortBy(selectedMetersUnsorted, item => item.label.toLowerCase(), 'asc');
-		return selectedMetersUnsorted.sort((itemA, itemB) => itemA.label.toLowerCase()?.
-		localeCompare(itemB.label.toLowerCase(), String(selectedLanguage), { sensitivity: 'accent'}));
+		return sortBy(selectedMetersUnsorted, item => item.label.toLowerCase(), 'asc');
 	}
 
 	/**
@@ -953,9 +948,7 @@ export default function EditGroupModalComponent(props: EditGroupModalComponentPr
 			);
 		});
 		// Want chosen in sorted order.
-		//return sortBy(selectedGroupsUnsorted, item => item.label.toLowerCase(), 'asc');
-		return selectedGroupsUnsorted.sort((itemA, itemB) => itemA.label.toLowerCase()?.
-		localeCompare(itemB.label.toLowerCase(), undefined, { sensitivity: 'accent'}));
+		return sortBy(selectedGroupsUnsorted, item => item.label.toLowerCase(), 'asc');
 	}
 
 	/**
