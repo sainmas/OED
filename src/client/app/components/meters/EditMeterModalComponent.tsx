@@ -192,7 +192,7 @@ export default function EditMeterModalComponent(props: EditMeterModalComponentPr
 			// Tells if the change should be cancelled.
 			// Checks for groups that include the meter being edited.
 			for (const groupId of Object.values(groupDataByID)) {
-				if (groupId.deepMeters.includes(meterState.id)) {
+				if (groupId.displayable && groupId.deepMeters.includes(meterState.id)) {
 					groups += `${groupId.name}\n`;
 				}
 			}
