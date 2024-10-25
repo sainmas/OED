@@ -21,6 +21,7 @@ import TooltipMarkerComponent from './TooltipMarkerComponent';
  * @returns Chart select element
  */
 export default function ChartSelectComponent() {
+	const translate = useTranslate();
 	const currentChartToRender = useAppSelector(selectChartToRender);
 	const dispatch = useAppDispatch();
 	const [expand, setExpand] = useState(false);
@@ -28,7 +29,6 @@ export default function ChartSelectComponent() {
 	const sortedMaps = sortBy(values(mapsById).map(map => (
 		{ value: map.id, label: map.name, isDisabled: !(map.origin && map.opposite) } as SelectOption
 	)), 'label');
-	const translate = useTranslate();
 
 	return (
 		<>

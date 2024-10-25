@@ -39,6 +39,7 @@ import SpinnerComponent from './SpinnerComponent';
  * @returns map component
  */
 export default function MapChartComponent() {
+	const translate = useTranslate();
 	const { meterArgs, groupArgs, meterShouldSkip, groupShouldSkip } = useAppSelector(selectMapChartQueryArgs);
 	const { data: meterReadings, isLoading: meterIsFetching } = readingsApi.useBarQuery(meterArgs, { skip: meterShouldSkip });
 	const { data: groupData, isLoading: groupIsFetching } = readingsApi.useBarQuery(groupArgs, { skip: groupShouldSkip });
@@ -70,7 +71,6 @@ export default function MapChartComponent() {
 	const data = [];
 	// Holds the image to use.
 	let image;
-	const translate = useTranslate();
 	if (selectedMap !== 0) {
 		const mapID = selectedMap;
 		if (byMapID[mapID]) {

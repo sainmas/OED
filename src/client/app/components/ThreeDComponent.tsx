@@ -32,6 +32,7 @@ import Locales from '../types/locales';
  * @returns 3D Plotly 3D Surface Graph
  */
 export default function ThreeDComponent() {
+	const translate = useTranslate();
 	const { args, shouldSkipQuery } = useAppSelector(selectThreeDQueryArgs);
 	const { data, isFetching } = readingsApi.endpoints.threeD.useQuery(args, { skip: shouldSkipQuery });
 	const meterDataById = useAppSelector(selectMeterDataById);
@@ -46,7 +47,6 @@ export default function ThreeDComponent() {
 	const threeDData = data;
 	let layout = {};
 	let dataToRender = null;
-	const translate = useTranslate();
 
 
 	if (!meterOrGroupID) {
@@ -111,6 +111,7 @@ function formatThreeDData(
 	graphState: GraphState,
 	unitDataById: UnitDataById
 ) {
+	const translate = useTranslate();
 	// Initialize Plotly Data
 	const xDataToRender: string[] = [];
 	const yDataToRender: string[] = [];
@@ -125,7 +126,6 @@ function formatThreeDData(
 	const currentSelectedRate = graphState.lineGraphRate;
 	let unitLabel = '';
 	let needsRateScaling = false;
-	const translate = useTranslate();
 	if (graphingUnit !== -99) {
 		const selectUnitState = unitDataById[graphState.selectedUnit];
 		if (selectUnitState !== undefined) {
@@ -229,12 +229,12 @@ function setHelpLayout(helpText: string = 'Help Text Goes Here', fontSize: numbe
  * @returns plotly layout object.
  */
 function setThreeDLayout(zLabelText: string = 'Resource Usage', yDataToRender: string[]) {
+	const translate = useTranslate();
 	// Convert date strings to JavaScript Date objects and then get dataRange
 	const dateObjects = yDataToRender.map(dateStr => new Date(dateStr));
 	const dataMin = Math.min(...dateObjects.map(date => date.getTime()));
 	const dataMax = Math.max(...dateObjects.map(date => date.getTime()));
 	const dataRange = dataMax - dataMin;
-	const translate = useTranslate();
 
 	//Calculate nTicks for small num of days on y-axis; possibly a better way
 	let nTicks, dTick = 'd1';

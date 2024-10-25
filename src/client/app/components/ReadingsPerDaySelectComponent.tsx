@@ -18,6 +18,7 @@ import TooltipMarkerComponent from './TooltipMarkerComponent';
  * @returns A Select menu with Readings per day options.
  */
 export default function ReadingsPerDaySelect() {
+	const translate = useTranslate();
 	const dispatch = useAppDispatch();
 	const readingInterval = useAppSelector(selectThreeDReadingInterval);
 	const { args, shouldSkipQuery } = useAppSelector(selectThreeDQueryArgs);
@@ -29,7 +30,6 @@ export default function ReadingsPerDaySelect() {
 			...selectReadingsPerDaySelectData(currentData ?? stableEmptyThreeDReadings, readingInterval)
 		})
 	});
-	const translate = useTranslate();
 
 	return (
 		<div>

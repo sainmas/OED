@@ -40,6 +40,7 @@ interface CreateMeterModalProps {
  * @returns Meter create element
  */
 export default function CreateMeterModalComponent(props: CreateMeterModalProps): React.JSX.Element {
+	const translate = useTranslate();
 	// Tracks whether a unit/ default unit has been selected.
 	// RTKQ Mutation to submit add meter
 	const [submitAddMeter] = metersApi.endpoints.addMeter.useMutation();
@@ -100,7 +101,6 @@ export default function CreateMeterModalComponent(props: CreateMeterModalProps):
 		setShowModal(false);
 		resetState();
 	};
-	const translate = useTranslate();
 
 	// Unlike edit, we decided to discard and inputs when you choose to leave the page. The reasoning is
 	// that create starts from an empty template.

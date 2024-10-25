@@ -6,7 +6,7 @@ import { showErrorNotification } from './notifications';
 import { logToServer } from '../redux/actions/logs';
 import { DataType } from '../types/Datasources';
 import { MapMetadata } from '../types/redux/map';
-import { useTranslate } from '../redux/componentHooks';
+import translate from './translate';
 
 /**
  * Defines a Cartesian Point with x & y
@@ -120,7 +120,6 @@ export function isValidGPSInput(input: string): boolean {
 	const latitudeConstraint = array[latitudeIndex] >= -90 && array[latitudeIndex] <= 90;
 	const longitudeConstraint = array[longitudeIndex] >= -180 && array[longitudeIndex] <= 180;
 	const result = latitudeConstraint && longitudeConstraint;
-	const translate = useTranslate();
 	if (!result) {
 		// TODO It would be nice to return the error and then notify as desired.
 		showErrorNotification(translate('input.gps.range') + input);

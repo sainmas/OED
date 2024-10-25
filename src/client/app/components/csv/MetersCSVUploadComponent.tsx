@@ -22,6 +22,7 @@ import { selectVisibleMeterAndGroupData } from '../../redux/selectors/adminSelec
  * @returns CSV Meters page element
  */
 export default function MetersCSVUploadComponent() {
+	const translate = useTranslate();
 	const [meterData, setMeterData] = React.useState<MetersCSVUploadPreferences>(MetersCSVUploadDefaults);
 	const [selectedFile, setSelectedFile] = React.useState<File | null>(null);
 	const [isValidFileType, setIsValidFileType] = React.useState<boolean>(false);
@@ -51,7 +52,6 @@ export default function MetersCSVUploadComponent() {
 			[name]: checked
 		}));
 	};
-	const translate = useTranslate();
 
 	const handleFileChange = (file: File) => {
 		setSelectedFile(file);

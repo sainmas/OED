@@ -21,6 +21,7 @@ import { tooltipBaseStyle } from '../../../styles/modalStyle';
  * @returns CreateUserModal component
  */
 export default function CreateUserModal() {
+	const translate = useTranslate();
 	// create user form state and use the defaults
 	const [userDetails, setUserDetails] = useState(userDefaults);
 
@@ -85,7 +86,6 @@ export default function CreateUserModal() {
 		setShowModal(false);
 	};
 	// End Modal show/close
-	const translate = useTranslate();
 
 	const handleSubmit = async () => {
 		const newUser: User = { username: userDetails.username, role: userDetails.role, password: userDetails.password, note: userDetails.note };

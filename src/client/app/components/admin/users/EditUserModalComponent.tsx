@@ -29,6 +29,7 @@ interface EditUserModalComponentProps {
  * @returns User edit element
  */
 export default function EditUserModalComponent(props: EditUserModalComponentProps) {
+	const translate = useTranslate();
 	// get current logged in user
 	const currentLoggedInUser = useAppSelector(selectCurrentUserProfile) as User;
 
@@ -85,7 +86,6 @@ export default function EditUserModalComponent(props: EditUserModalComponentProp
 			confirmPassword: ''
 		}));
 	};
-	const translate = useTranslate();
 
 	/* Confirm Delete Modal */
 	// Separate from state comment to keep everything related to the warning confirmation modal together

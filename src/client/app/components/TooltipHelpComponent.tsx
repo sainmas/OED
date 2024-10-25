@@ -23,7 +23,7 @@ export default function TooltipHelpComponent(props: TooltipHelpProps) {
 	/**
 	 * @returns JSX to create the help icons with links
 	 */
-
+	const translate = useTranslate();
 
 	const version = useAppSelector(selectOEDVersion);
 	const helpUrl = useAppSelector(selectHelpUrl);
@@ -72,7 +72,6 @@ export default function TooltipHelpComponent(props: TooltipHelpProps) {
 		'help.groups.groupview': { link: `${helpUrl}/groupViewing/` },
 		'help.meters.meterview': { link: `${helpUrl}/meterViewing/` }
 	};
-	const translate = useTranslate();
 
 	return (
 		<div style={divStyle}>

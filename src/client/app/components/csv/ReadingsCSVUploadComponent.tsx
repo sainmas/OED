@@ -27,6 +27,7 @@ import CreateMeterModalComponent from '../meters/CreateMeterModalComponent';
  * @returns CSV Readings page element
  */
 export default function ReadingsCSVUploadComponent() {
+	const translate = useTranslate();
 	const dispatch = useAppDispatch();
 	// Check for admin status
 	const isAdmin = useAppSelector(selectIsAdmin);
@@ -87,7 +88,6 @@ export default function ReadingsCSVUploadComponent() {
 			[name]: value === 'true'
 		}));
 	};
-	const translate = useTranslate();
 
 	const handleFileChange = (file: File) => {
 		if (file) {

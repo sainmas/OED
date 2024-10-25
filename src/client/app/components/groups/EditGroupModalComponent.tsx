@@ -57,6 +57,7 @@ interface EditGroupModalComponentProps {
  * @returns Group edit element
  */
 export default function EditGroupModalComponent(props: EditGroupModalComponentProps) {
+	const translate = useTranslate();
 	const [submitGroupEdits] = groupsApi.useEditGroupMutation();
 	const [deleteGroup] = groupsApi.useDeleteGroupMutation();
 	// Meter state
@@ -147,7 +148,6 @@ export default function EditGroupModalComponent(props: EditGroupModalComponentPr
 		);
 	}, [groupState.area, groupState.areaUnit, groupState.name, groupState.deepMeters]);
 	/* End State */
-	const translate = useTranslate();
 
 	/* Confirm Delete Modal */
 	// Separate from state comment to keep everything related to the warning confirmation modal together

@@ -15,6 +15,7 @@ import TooltipMarkerComponent from './TooltipMarkerComponent';
  * @returns Map page controls
  */
 export default function MapControlsComponent() {
+	const translate = useTranslate();
 	const dispatch = useAppDispatch();
 	const barDuration = useAppSelector(selectMapBarWidthDays);
 
@@ -23,7 +24,6 @@ export default function MapControlsComponent() {
 	};
 
 	const barDurationDays = barDuration.asDays();
-	const translate = useTranslate();
 
 	return (
 		<div>

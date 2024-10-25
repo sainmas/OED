@@ -19,6 +19,7 @@ import { selectUnitDataById, unitsApi } from '../redux/api/unitsApi';
  * @returns A React-Select component for UI Options Panel
  */
 export default function UnitSelectComponent() {
+	const translate = useTranslate();
 	const dispatch = useAppDispatch();
 	const unitSelectOptions = useAppSelector(selectUnitSelectData);
 	const selectedUnitID = useAppSelector(selectSelectedUnit);
@@ -38,7 +39,6 @@ export default function UnitSelectComponent() {
 	}
 
 	const onChange = (newValue: SelectOption) => dispatch(graphSlice.actions.updateSelectedUnit(newValue?.value));
-	const translate = useTranslate();
 
 	return (
 		<div style={divBottomPadding}>
