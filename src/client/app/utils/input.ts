@@ -6,7 +6,6 @@ import { GPSPoint } from './calibration';
 import { UnitData, DisplayableType, UnitRepresentType, UnitType, UnitDataById } from '../types/redux/units';
 import translate from './translate';
 
-
 /**
  * get string value from GPSPoint or null.
  * @param gps GPS point to get value from and can be null
@@ -61,8 +60,8 @@ export function potentialGraphicUnits(units: UnitDataById) {
 		}
 	});
 	// Put in alphabetical order.
-	possibleGraphicUnits = new Set(Array.from(possibleGraphicUnits).sort((unitA, unitB) => unitA.identifier.toLowerCase().
-		localeCompare(unitB.identifier.toLowerCase(), undefined, { sensitivity: 'accent'})));
+	possibleGraphicUnits = new Set(Array.from(possibleGraphicUnits).sort((unitA,unitB) => unitA.identifier.toLowerCase().
+		localeCompare(unitB.identifier.toLowerCase(), undefined, { sensitivity: 'accent' })));
 	// The default graphic unit can also be no unit/-99 but that is not desired so put last in list.
 	possibleGraphicUnits.add(noUnitTranslated());
 	return possibleGraphicUnits;

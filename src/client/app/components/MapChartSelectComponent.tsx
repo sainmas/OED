@@ -3,7 +3,7 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 
 import * as React from 'react';
-import { sortBy, values } from 'lodash';
+import { values } from 'lodash';
 import { useDispatch, useSelector } from 'react-redux';
 import { State } from '../types/redux/state';
 import { SelectOption } from '../types/items';
@@ -30,9 +30,12 @@ export default function MapChartSelectComponent() {
 	// TODO When this is converted to RTK then should use useAppDispatch().
 	//Utilizes useDispatch and useSelector hooks
 	const dispatch = useDispatch();
-	const sortedMaps = sortBy(values(useSelector((state: State) => state.maps.byMapID)).map(map => (
+
+	const maps = values(useSelector((state: State) => state.maps.byMapID)).map(map => (
 		{ value: map.id, label: map.name, isDisabled: !(map.origin && map.opposite) } as SelectOption
-	)), 'label');
+	));
+	const sortedMaps = maps.sort((mapA, mapB) => mapA.label.toLowerCase().
+		localeCompare(mapB.label.toLowerCase(), undefined, { sensitivity: 'accent' }));
 
 	const selectedMap = {
 		label: useSelector((state: State) => state.maps.byMapID[state.maps.selectedMap] ? state.maps.byMapID[state.maps.selectedMap].name : ''),
