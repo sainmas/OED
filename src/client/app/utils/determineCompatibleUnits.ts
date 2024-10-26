@@ -4,7 +4,7 @@
 
 // TODO it is a bad practice to import store anywhere other than index.tsx These utils need to be converted into selectors.
 
-import { get, sortBy } from 'lodash';
+import { get } from 'lodash';
 import React from 'react';
 import { selectCik } from '../redux/api/conversionsApi';
 import { selectAllGroups, selectGroupDataById } from '../redux/api/groupsApi';
@@ -176,7 +176,6 @@ export function getMeterMenuOptionsForGroup(defaultGraphicUnit: number, deepMete
 
 	// We want the options sorted by meter identifier.
 	// Had to make item.label? potentially undefined due to start up race conditions
-	//return sortBy(options, item => item.label?.toLowerCase(), 'asc');
 	return options.sort((itemA, itemB) => itemA.label.toLowerCase()?.
 		localeCompare(itemB.label.toLowerCase(), undefined, { sensitivity: 'accent' }));
 }
@@ -223,7 +222,6 @@ export function getGroupMenuOptionsForGroup(groupId: number, defaultGraphicUnit:
 
 	// We want the options sorted by group name.
 	// Had to make item.label? potentially undefined due to start up race conditions
-	//return sortBy(options, item => item.label?.toLowerCase(), 'asc');
 	return options.sort((itemA, itemB) => itemA.label.toLowerCase()?.
 		localeCompare(itemB.label.toLowerCase(), undefined, { sensitivity: 'accent' }));
 

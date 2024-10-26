@@ -24,7 +24,7 @@ import translate from '../../utils/translate';
 import { createAppThunk } from './appThunk';
 import { selectAnythingFetching } from '../../redux/selectors/apiSelectors';
 import { RootState } from '../../store';
-import { find, sortBy } from 'lodash';
+import { find } from 'lodash';
 
 const selectCanExport = (state: RootState) => {
 	const fetchInProgress = selectAnythingFetching(state);
@@ -56,7 +56,8 @@ export const exportGraphReadingsThunk = createAppThunk(
 					const scaling = selectScalingFromEntity(entity, areaUnit, areaNormalization, lineGraphRate.rate);
 					// Get the readings from the state.
 					// Sort by start timestamp.
-					const sortedReadings = sortBy(Object.values(readings), item => item.startTimestamp, 'asc');
+					const sortedReadings = Object.values(readings).sort((itemA, itemB) => itemA.startTimestamp.toString().
+						localeCompare(itemB.startTimestamp.toString(), undefined, { sensitivity: 'accent' }));
 					// Identifier for current meter.
 					const entityName = selectNameFromEntity(entity);
 					// const unitLabel = selectUnitById(state, selectSelectedUnit(state))
@@ -69,7 +70,8 @@ export const exportGraphReadingsThunk = createAppThunk(
 				.forEach(([id, readings]) => {
 					const entity = selectGroupById(state, Number(id));
 					const scaling = selectScalingFromEntity(entity, areaUnit, areaNormalization, lineGraphRate.rate);
-					const sortedReadings = sortBy(Object.values(readings), item => item.startTimestamp, 'asc');
+					const sortedReadings = Object.values(readings).sort((itemA, itemB) => itemA.startTimestamp.toString().
+						localeCompare(itemB.startTimestamp.toString(), undefined, { sensitivity: 'accent' }));
 					const entityName = selectNameFromEntity(entity);
 					const unitIdentifier = selectNameFromEntity(selectUnitById(state, selectSelectedUnit(state)));
 					graphExport(sortedReadings, entityName, lineUnitLabel, unitIdentifier, chartToRender, scaling, MeterOrGroup.groups, showMinMax);
@@ -89,7 +91,8 @@ export const exportGraphReadingsThunk = createAppThunk(
 				.forEach(([id, readings]) => {
 					const entity = selectMeterById(state, Number(id));
 					const scaling = selectScalingFromEntity(entity, areaUnit, areaNormalization, lineGraphRate.rate);
-					const sortedReadings = sortBy(Object.values(readings), item => item.startTimestamp, 'asc');
+					const sortedReadings = Object.values(readings).sort((itemA, itemB) => itemA.startTimestamp.toString().
+						localeCompare(itemB.startTimestamp.toString(), undefined, { sensitivity: 'accent' }));
 					const entityName = selectNameFromEntity(entity);
 					const unitIdentifier = selectNameFromEntity(selectUnitById(state, selectSelectedUnit(state)));
 					graphExport(sortedReadings, entityName, barUnitLabel, unitIdentifier, chartToRender, scaling, MeterOrGroup.meters);
@@ -101,7 +104,8 @@ export const exportGraphReadingsThunk = createAppThunk(
 				.forEach(([id, readings]) => {
 					const entity = selectGroupById(state, Number(id));
 					const scaling = selectScalingFromEntity(entity, areaUnit, areaNormalization, lineGraphRate.rate);
-					const sortedReadings = sortBy(Object.values(readings), item => item.startTimestamp, 'asc');
+					const sortedReadings = Object.values(readings).sort((itemA, itemB) => itemA.startTimestamp.toString().
+						localeCompare(itemB.startTimestamp.toString(), undefined, { sensitivity: 'accent' }));
 					const entityName = selectNameFromEntity(entity);
 					const unitIdentifier = selectNameFromEntity(selectUnitById(state, selectSelectedUnit(state)));
 					graphExport(sortedReadings, entityName, barUnitLabel, unitIdentifier, chartToRender, scaling, MeterOrGroup.groups);
