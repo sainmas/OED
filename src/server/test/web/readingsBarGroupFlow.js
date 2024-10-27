@@ -112,7 +112,6 @@ mocha.describe('readings API', () => {
                     expectReadingToEqualExpected(res, expected, GROUP_ID);
                 });
 
-                // Add BG16 here
                 mocha.it('BG16: should have daily points for 15 + 20 minute reading intervals and flow units with +-inf start/end time & thing as thing where rate is 36', async () => {
                     const unitDataThing = [
                         {
