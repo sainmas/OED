@@ -92,7 +92,7 @@ export default function ThreeDComponent() {
 						modeBarButtonsToRemove: listOfButtons,
 						modeBarButtonsToAdd: [{
 							name: 'more-options',
-							title: 'More Options',
+							title: 'Toggle Options',
 							icon: Icons.pencil,
 							click: function () {
 								// # of items must differ so the length can tell which list of buttons is being set
