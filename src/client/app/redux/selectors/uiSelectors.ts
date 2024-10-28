@@ -409,7 +409,8 @@ export function getSelectOptionsByEntity(
 				defaultGraphicUnit: defaultGraphicUnit
 			} as SelectOption;
 		});
-
+	// TODO: change second argument of locale from undefined to current language if needed, but alphabetical ordering works 
+	// with accents using undefined locale arg
 	const compatible = compatibleItemOptions.sort((itemA, itemB) => itemA.label.toLowerCase().
 		localeCompare(itemB.label.toLowerCase(), undefined, { sensitivity: 'accent' }));
 	const incompatible = incompatibleItemOptions.sort((itemA, itemB) => itemA.label.toLowerCase()?.

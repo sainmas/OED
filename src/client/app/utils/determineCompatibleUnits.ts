@@ -177,6 +177,8 @@ export function getMeterMenuOptionsForGroup(defaultGraphicUnit: number, deepMete
 
 	// We want the options sorted by meter identifier.
 	// Had to make item.label? potentially undefined due to start up race conditions
+	// TODO: change second argument of locale from undefined to current language if needed, but alphabetical ordering works 
+	// with accents using undefined locale arg
 	return options.sort((itemA, itemB) => itemA.label.toLowerCase()?.
 		localeCompare(itemB.label.toLowerCase(), undefined, { sensitivity: 'accent' }));
 }
@@ -223,6 +225,8 @@ export function getGroupMenuOptionsForGroup(groupId: number, defaultGraphicUnit:
 
 	// We want the options sorted by group name.
 	// Had to make item.label? potentially undefined due to start up race conditions
+	// TODO: change second argument of locale from undefined to current language if needed, but alphabetical ordering works 
+	// with accents using undefined locale arg
 	return options.sort((itemA, itemB) => itemA.label.toLowerCase()?.
 		localeCompare(itemB.label.toLowerCase(), undefined, { sensitivity: 'accent' }));
 
