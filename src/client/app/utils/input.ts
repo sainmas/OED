@@ -61,7 +61,7 @@ export function potentialGraphicUnits(units: UnitDataById) {
 		}
 	});
 	// Put in alphabetical order.
-	// TODO: change second argument of locale from undefined to current language if needed, but alphabetical ordering works 
+	// TODO: change second argument of locale from undefined to current language if needed, but alphabetical ordering works
 	// with accents using undefined locale arg
 	possibleGraphicUnits = new Set(Array.from(possibleGraphicUnits).sort((unitA, unitB) => unitA.identifier.toLowerCase().
 		localeCompare(unitB.identifier.toLowerCase(), undefined, { sensitivity: 'accent' })));
