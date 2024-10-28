@@ -15,6 +15,7 @@ import { ChartTypes } from '../types/redux/graph';
 import { State } from '../types/redux/state';
 import translate from '../utils/translate';
 import TooltipMarkerComponent from './TooltipMarkerComponent';
+import { selectSelectedLanguage } from '../redux/slices/appStateSlice';
 
 /**
  *  A component that allows users to select which chart should be displayed.
@@ -22,6 +23,7 @@ import TooltipMarkerComponent from './TooltipMarkerComponent';
  */
 export default function ChartSelectComponent() {
 	const currentChartToRender = useAppSelector(selectChartToRender);
+	const locale = useAppSelector(selectSelectedLanguage);
 	const dispatch = useAppDispatch();
 	const [expand, setExpand] = useState(false);
 	const mapsById = useSelector((state: State) => state.maps.byMapID);
@@ -30,7 +32,7 @@ export default function ChartSelectComponent() {
 		{ value: map.id, label: map.name, isDisabled: !(map.origin && map.opposite) } as SelectOption
 	));
 	const sortedMaps = maps.sort((mapA, mapB) => mapA.label.toLowerCase().
-		localeCompare(mapB.label.toLowerCase(), undefined, { sensitivity: 'accent' }));
+		localeCompare(mapB.label.toLowerCase(), String(locale), { sensitivity: 'accent' }));
 
 	return (
 		<>

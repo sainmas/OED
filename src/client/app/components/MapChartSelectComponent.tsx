@@ -10,6 +10,8 @@ import { SelectOption } from '../types/items';
 import { defineMessages, FormattedMessage, useIntl } from 'react-intl';
 import SingleSelectComponent from './SingleSelectComponent';
 import TooltipMarkerComponent from './TooltipMarkerComponent';
+import { selectSelectedLanguage } from '../redux/slices/appStateSlice';
+import { useAppSelector } from '../redux/reduxHooks';
 
 /**
  * Component used to select the desired map
@@ -30,12 +32,12 @@ export default function MapChartSelectComponent() {
 	// TODO When this is converted to RTK then should use useAppDispatch().
 	//Utilizes useDispatch and useSelector hooks
 	const dispatch = useDispatch();
-
+	const locale = useAppSelector(selectSelectedLanguage);
 	const maps = values(useSelector((state: State) => state.maps.byMapID)).map(map => (
 		{ value: map.id, label: map.name, isDisabled: !(map.origin && map.opposite) } as SelectOption
 	));
 	const sortedMaps = maps.sort((mapA, mapB) => mapA.label.toLowerCase().
-		localeCompare(mapB.label.toLowerCase(), undefined, { sensitivity: 'accent' }));
+		localeCompare(mapB.label.toLowerCase(), String(locale), { sensitivity: 'accent' }));
 
 	const selectedMap = {
 		label: useSelector((state: State) => state.maps.byMapID[state.maps.selectedMap] ? state.maps.byMapID[state.maps.selectedMap].name : ''),
