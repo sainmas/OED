@@ -22,7 +22,7 @@ mocha.describe('readings API', () => {
 		mocha.describe('for compare charts', () => {
 			mocha.describe('for groups', () => {
 				// Test CG15					
-				mocha.it(' 7 day shift end 2022-10-31 17:00:00 for 15 minute reading intervals and flow units & kW as kW ', async () => {
+				mocha.it('CG15: 7 day shift end 2022-10-31 17:00:00 for 15 minute reading intervals and flow units & kW as kW ', async () => {
 					
                     // unit data
 					const unitDatakW = [
