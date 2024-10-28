@@ -20,7 +20,10 @@ import { UnitDataById } from '../types/redux/units';
 import { isValidThreeDInterval, roundTimeIntervalForFetch } from '../utils/dateRangeCompatibility';
 import { AreaUnitType, getAreaUnitConversion } from '../utils/getAreaUnitConversion';
 import { lineUnitLabel } from '../utils/graphics';
+// Both translates are used since some are in the function component where the React Hook is okay
+// and some are in other functions where the older method is needed.
 import { useTranslate } from '../redux/componentHooks';
+import translate from '../utils/translate';
 import SpinnerComponent from './SpinnerComponent';
 import ThreeDPillComponent from './ThreeDPillComponent';
 import Plot from 'react-plotly.js';
@@ -111,7 +114,6 @@ function formatThreeDData(
 	graphState: GraphState,
 	unitDataById: UnitDataById
 ) {
-	const translate = useTranslate();
 	// Initialize Plotly Data
 	const xDataToRender: string[] = [];
 	const yDataToRender: string[] = [];
@@ -229,7 +231,6 @@ function setHelpLayout(helpText: string = 'Help Text Goes Here', fontSize: numbe
  * @returns plotly layout object.
  */
 function setThreeDLayout(zLabelText: string = 'Resource Usage', yDataToRender: string[]) {
-	const translate = useTranslate();
 	// Convert date strings to JavaScript Date objects and then get dataRange
 	const dateObjects = yDataToRender.map(dateStr => new Date(dateStr));
 	const dataMin = Math.min(...dateObjects.map(date => date.getTime()));
