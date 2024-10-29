@@ -10,10 +10,7 @@ const { chai, mocha, app } = require('../common');
 const { prepareTest,
 	expectCompareToEqualExpected,
 	getUnitId,
-	METER_ID,
-	unitDataThing,
-	conversionDataThing_36,
-	meterDataThing_36} = require('../../util/readingsUtils');
+	METER_ID} = require('../../util/readingsUtils');
 
 mocha.describe('readings API', () => {
 	mocha.describe('readings test, test if data returned by API is as expected', () => {
@@ -22,6 +19,62 @@ mocha.describe('readings API', () => {
 				// Add C15 here
 
 				mocha.it('C16: 7 day shift end 2022-10-31 17:00:00 for 15 minute reading intervals and flow units & thing as thing where rate is 36', async () => {
+					// These are the 2D arrays for units and conversions to feed into the database
+					// For Thing units.
+					const unitDataThing = [
+						{
+							// u14
+							name: 'Thing_36',
+							identifier: '',
+							unitRepresent: Unit.unitRepresentType.FLOW,
+							secInRate: 36,
+							typeOfUnit: Unit.unitType.METER,
+							suffix: '',
+							displayable: Unit.displayableType.NONE,
+							preferredDisplay: false,
+							note: 'special unit'
+						},
+						{
+							// u15
+							name: 'thing unit',
+							identifier: '',
+							unitRepresent: Unit.unitRepresentType.FLOW,
+							secInRate: 3600,
+							typeOfUnit: Unit.unitType.UNIT,
+							suffix: '',
+							displayable: Unit.displayableType.ALL,
+							preferredDisplay: false,
+							note: 'special unit'
+						}
+					];
+
+					const conversionDataThing_36 = [
+						{
+							// c15
+							sourceName: 'Thing_36',
+							destinationName: 'thing unit',
+							bidirectional: false,
+							slope: 1,
+							intercept: 0,
+							note: 'Thing_36 → thing unit'
+						}
+					];
+
+					const meterDataThing_36 = [
+						{
+							name: 'Thing_36 thing unit',
+							unit: 'Thing_36',
+							defaultGraphicUnit: 'thing unit',
+							displayable: true,
+							gps: undefined,
+							note: 'special meter',
+							file: 'test/web/readingsData/readings_ri_15_days_75.csv',
+							deleteFile: false,
+							readingFrequency: '15 minutes',
+							id: METER_ID
+						}
+					]
+
 					// Initialize test database with "thing" data
 					await prepareTest(unitDataThing, conversionDataThing_36, meterDataThing_36);
 
