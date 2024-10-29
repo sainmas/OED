@@ -14,14 +14,14 @@ const { prepareTest,
 	unitDatakWh,
 	conversionDatakWh,
 	meterDatakWhGroups,
-    groupDatakWh } = require('../../util/readingsUtils');
+	groupDatakWh } = require('../../util/readingsUtils');
 
 mocha.describe('readings API', () => {
 	mocha.describe('readings test, test if data returned by API is as expected', () => {
 		mocha.describe('for compare charts', () => {
 			mocha.describe('for groups', () => {
 				// Test 15 minutes over all time for flow unit.
-				mocha.it(' 1 day shift end 2022-10-31 17:00:00 for 15 minute reading intervals and quantity units & kWh as kWh ', async () => {
+				mocha.it('CG1: 1 day shift end 2022-10-31 17:00:00 for 15 minute reading intervals and quantity units & kWh as kWh ', async () => {
 					await prepareTest(unitDatakWh, conversionDatakWh, meterDatakWhGroups, groupDatakWh);
 					// Get the unit ID since the DB could use any value.
 					const unitId = await getUnitId('kWh');
@@ -36,9 +36,7 @@ mocha.describe('readings API', () => {
 						});
 					expectCompareToEqualExpected(res, expected, GROUP_ID);
 				});
-
-				// Case CG2
-				mocha.it(' 7 day shift end 2022-10-31 17:00:00 for 15 minute reading intervals and quantity units & kWh as kWh ', async () => {
+				mocha.it('CG2: 7 day shift end 2022-10-31 17:00:00 for 15 minute reading intervals and quantity units & kWh as kWh ', async () => {
 					await prepareTest(unitDatakWh, conversionDatakWh, meterDatakWhGroups, groupDatakWh);
 					// Get the unit ID since the DB could use any value.
 					const unitId = await getUnitId('kWh');
@@ -53,6 +51,7 @@ mocha.describe('readings API', () => {
 						});
 					expectCompareToEqualExpected(res, expected, GROUP_ID);
 				});
+
 				// Add CG3 here
 
 				// Add CG4 here
