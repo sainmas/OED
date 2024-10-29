@@ -18,6 +18,7 @@ import { readingsApi } from '../redux/api/readingsApi';
 import { selectUnitDataById } from '../redux/api/unitsApi';
 import { useAppSelector } from '../redux/reduxHooks';
 import { selectMapChartQueryArgs } from '../redux/selectors/chartQuerySelectors';
+import { selectAreaScalingFromEntity } from '../redux/selectors/entitySelectors';
 import { DataType } from '../types/Datasources';
 import { State } from '../types/redux/state';
 import { UnitRepresentType } from '../types/redux/units';
@@ -30,7 +31,7 @@ import {
 	itemMapInfoOk,
 	normalizeImageDimensions
 } from '../utils/calibration';
-import { AreaUnitType, getAreaUnitConversion } from '../utils/getAreaUnitConversion';
+import { AreaUnitType } from '../utils/getAreaUnitConversion';
 import getGraphColor from '../utils/getGraphColor';
 import { useTranslate } from '../redux/componentHooks';
 import SpinnerComponent from './SpinnerComponent';
@@ -151,10 +152,7 @@ export default function MapChartComponent() {
 					let meterArea = meterDataById[meterID].area;
 					// we either don't care about area, or we do in which case there needs to be a nonzero area
 					if (!areaNormalization || (meterArea > 0 && meterDataById[meterID].areaUnit != AreaUnitType.none)) {
-						if (areaNormalization) {
-							// convert the meter area into the proper unit, if needed
-							meterArea *= getAreaUnitConversion(meterDataById[meterID].areaUnit, selectedAreaUnit);
-						}
+						meterArea = selectAreaScalingFromEntity(meterDataById[meterID], selectedAreaUnit, areaNormalization);
 						// Convert the gps value to the equivalent Plotly grid coordinates on user map.
 						// First, convert from GPS to grid units. Since we are doing a GPS calculation, this happens on the true north map.
 						// It must be on true north map since only there are the GPS axis parallel to the map axis.
@@ -226,10 +224,7 @@ export default function MapChartComponent() {
 				if (gps !== undefined && gps !== null && groupData !== undefined) {
 					let groupArea = groupDataById[groupID].area;
 					if (!areaNormalization || (groupArea > 0 && groupDataById[groupID].areaUnit != AreaUnitType.none)) {
-						if (areaNormalization) {
-							// convert the meter area into the proper unit, if needed
-							groupArea *= getAreaUnitConversion(groupDataById[groupID].areaUnit, selectedAreaUnit);
-						}
+						groupArea = selectAreaScalingFromEntity(groupDataById[groupID], selectedAreaUnit, areaNormalization);
 						// Convert the gps value to the equivalent Plotly grid coordinates on user map.
 						// First, convert from GPS to grid units. Since we are doing a GPS calculation, this happens on the true north map.
 						// It must be on true north map since only there are the GPS axis parallel to the map axis.
