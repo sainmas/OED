@@ -297,4 +297,3 @@ module.exports = {
     meterDatakWhGroups,
     groupDatakWh
 };
-// groupDatakWh (meterDatakWhGroups with meterDatakWh, meterDatakWhOther)
