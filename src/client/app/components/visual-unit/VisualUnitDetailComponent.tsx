@@ -44,7 +44,7 @@ export default function VisualUnitDetailComponent() {
 
 			<div className='container-fluid'>
 				<h2 style={titleStyle}>
-					<FormattedMessage id='cik-visual-unit-temp' />
+					<FormattedMessage id='visual-unit-cik' />
 					{/* <div style={tooltipStyle}>
 							<TooltipMarkerComponent page='visual-unit' helpTextId={tooltipStyle.tooltipVisualUnitView} />
 						</div> */}
