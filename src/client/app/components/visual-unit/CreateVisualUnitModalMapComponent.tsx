@@ -30,19 +30,20 @@ export default function CreateVisualUnitMapModalComponent() {
 		nodes: [],
 		links: []
 	};
-	unitData.map(function (value) {
+	unitData.map(value =>
 		data.nodes.push({'name': value.name,
 			'id': value.id,
 			'typeOfUnit': value.typeOfUnit
-		});
-	});
-	conversionData.map(function (value) {
+		})
+	);
+	conversionData.map(value =>
 		data.links.push({
 			'source': value.sourceId,
 			'target': value.destinationId,
-			'bidirectional': value.bidirectional		/* boolean value */
-		});
-	});
+			/* boolean value */
+			'bidirectional': value.bidirectional
+		})
+	);
 
 	/* Visuals start here */
 	useEffect(() => {

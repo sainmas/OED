@@ -3,7 +3,7 @@ import * as d3 from 'd3';
 import { useEffect } from 'react';
 import { selectCik } from '../../redux/api/conversionsApi';
 import { useAppSelector } from '../../redux/reduxHooks';
-import { selectUnitDataById } from '../../redux/api/unitsApi';
+import { selectAllUnits } from '../../redux/api/unitsApi';
 
 /**
  * Visual cik graph component
@@ -11,28 +11,39 @@ import { selectUnitDataById } from '../../redux/api/unitsApi';
  */
 export default function CreateCikVisualMapComponent() {
 	/* Get unit and Cik data from redux */
+	const unitData = useAppSelector(selectAllUnits);
 	const cikData = useAppSelector(selectCik);
-	const units = new Set<number>();
-	const unitDataById = useAppSelector(selectUnitDataById);
+	// const units = new Set<number>();
+	// const unitDataById = useAppSelector(selectUnitDataById);
 
 	/* add all units being used in cik */
-	cikData.forEach(unit => (
-		units.add(unit.meterUnitId),
-		units.add(unit.nonMeterUnitId)
-	));
+	// cikData.forEach(unit => (
+	// 	units.add(unit.meterUnitId),
+	// 	units.add(unit.nonMeterUnitId)
+	// ));
 
 	/* Create data container to pass to D3 force graph */
 	const data: { nodes: any[], links: any[] } = {
 		nodes: [],
 		links: []
 	};
-	units.forEach(function (value) {
-		const unit = unitDataById[value];
-		data.nodes.push({'name': unit.name,
-			'id': unit.id,
-			'typeOfUnit': unit.typeOfUnit
-		});
-	});
+
+	// deletes nodes with no connections
+	// units.forEach(value => {
+	// 	const unit = unitDataById[value];
+	// 	data.nodes.push({'name': unit.name,
+	// 		'id': unit.id,
+	// 		'typeOfUnit': unit.typeOfUnit
+	// 	});
+	// });
+
+	unitData.map(value =>
+		data.nodes.push({'name': value.name,
+			'id': value.id,
+			'typeOfUnit': value.typeOfUnit
+		})
+	);
+
 	cikData.map(function (value) {
 		data.links.push({
 			'source': value.meterUnitId,
