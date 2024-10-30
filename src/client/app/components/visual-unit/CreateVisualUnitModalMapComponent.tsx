@@ -20,9 +20,9 @@ export default function CreateVisualUnitMapModalComponent() {
 	const conversionData = useAppSelector(selectConversionsDetails);
 
 	/* creating color schema for nodes based on their unit type */
-	const colors = ['#1F77B4', '#2CA02C', '#fd7e14'];
+	const colors = ['#1F77B4', '#2CA02C', '#fd7e14', '#e377c2'];
 	const colorSchema = d3.scaleOrdinal<string, string>()
-		.domain(['meter', 'unit', 'suffix'])
+		.domain(['meter', 'unit', 'suffix', 'suffix input'])
 		.range(colors);
 
 	/* Create data container to pass to D3 force graph */
@@ -34,7 +34,8 @@ export default function CreateVisualUnitMapModalComponent() {
 		data.nodes.push({
 			'name': value.name,
 			'id': value.id,
-			'typeOfUnit': value.typeOfUnit
+			'typeOfUnit': value.typeOfUnit,
+			'suffix': value.suffix
 		})
 	);
 	conversionData.map(value =>
@@ -121,7 +122,8 @@ export default function CreateVisualUnitMapModalComponent() {
 			.enter().append('circle')
 			/* Node radius */
 			.attr('r', 20)
-			.attr('fill', d => colorSchema(d.typeOfUnit));
+			/* checks if unit has a non empty suffix to color differently */
+			.attr('fill', d => d.suffix && d.typeOfUnit === 'unit' ? colorSchema('suffix input') : colorSchema(d.typeOfUnit));
 
 		/* Drag behavior */
 		node.call(d3.drag()
@@ -198,7 +200,8 @@ export default function CreateVisualUnitMapModalComponent() {
 				.style('fill', '#000')
 				.style('font-size', '14px')
 				.style('alignment-middle', 'middle')
-				.text(item);
+				/* change suffix to suffix analyzed in the legend */
+				.text(item === 'suffix' ? 'suffix analyzed' : item);
 		});
 
 	// Empty dependency array to run the effect only once

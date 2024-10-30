@@ -16,6 +16,12 @@ export default function CreateCikVisualMapComponent() {
 	// const units = new Set<number>();
 	// const unitDataById = useAppSelector(selectUnitDataById);
 
+	/* creating color schema for nodes based on their unit type */
+	const colors = ['#1F77B4', '#2CA02C', '#fd7e14', '#e377c2'];
+	const colorSchema = d3.scaleOrdinal<string, string>()
+		.domain(['meter', 'unit', 'suffix', 'suffix input'])
+		.range(colors);
+
 	/* add all units being used in cik */
 	// cikData.forEach(unit => (
 	// 	units.add(unit.meterUnitId),
@@ -42,7 +48,8 @@ export default function CreateCikVisualMapComponent() {
 		data.nodes.push({
 			'name': value.name,
 			'id': value.id,
-			'typeOfUnit': value.typeOfUnit
+			'typeOfUnit': value.typeOfUnit,
+			'suffix' : value.suffix
 		})
 	);
 
@@ -63,12 +70,6 @@ export default function CreateCikVisualMapComponent() {
 		/* Grab data */
 		const nodes = data.nodes.map(d => ({...d}));
 		const links = data.links.map(d => ({...d}));
-
-		/* creating color schema for nodes based on their unit type */
-		const colors = ['#1F77B4', '#2CA02C', '#fd7e14'];
-		const colorSchema = d3.scaleOrdinal<string, string>()
-			.domain(['meter', 'unit', 'suffix'])
-			.range(colors);
 
 		const simulation = d3.forceSimulation(nodes)
 			.force('link', d3.forceLink(links)
@@ -124,7 +125,8 @@ export default function CreateCikVisualMapComponent() {
 			.enter().append('circle')
 			/* Node radius */
 			.attr('r', 20)
-			.attr('fill', d => colorSchema(d.typeOfUnit));
+			/* checks if unit has a non empty suffix to color differently */
+			.attr('fill', d => d.suffix && d.typeOfUnit === 'unit' ? colorSchema('suffix input') : colorSchema(d.typeOfUnit));
 
 		/* Drag behavior */
 		node.call(d3.drag()
@@ -201,7 +203,8 @@ export default function CreateCikVisualMapComponent() {
 				.style('fill', '#000')
 				.style('font-size', '14px')
 				.style('alignment-middle', 'middle')
-				.text(item);
+				/* change suffix to suffix analyzed in the legend */
+				.text(item === 'suffix' ? 'suffix analyzed' : item);
 		});
 
 	// Empty dependency array to run the effect only once
