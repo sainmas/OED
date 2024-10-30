@@ -977,7 +977,7 @@ export default function EditGroupModalComponent(props: EditGroupModalComponentPr
 			}
 		});
 		// Sort for display. Before were sorted by id so not okay here.
-		listedMeters.sort();
+		listedMeters.sort((meterA, meterB) => meterA.toLowerCase().localeCompare(meterB.toLowerCase(), locale, { sensitivity : 'accent' }));
 		if (hasHidden) {
 			// There are hidden meters so note at bottom of list.
 			listedMeters.push(translate('meter.hidden'));
