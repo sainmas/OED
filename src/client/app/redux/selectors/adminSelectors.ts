@@ -17,6 +17,7 @@ import translate from '../../utils/translate';
 import { selectAllUnits, selectUnitDataById } from '../api/unitsApi';
 import { selectVisibleMetersAndGroups } from './authVisibilitySelectors';
 import { createAppSelector } from './selectors';
+import { selectSelectedLanguage } from '../../redux/slices/appStateSlice';
 
 export const MIN_VAL = Number.MIN_SAFE_INTEGER;
 export const MAX_VAL = Number.MAX_SAFE_INTEGER;
@@ -27,7 +28,8 @@ export const MAX_DATE = MAX_DATE_MOMENT.format('YYYY-MM-DD HH:mm:ssZ');
 export const MAX_ERRORS = 75;
 export const selectPossibleGraphicUnits = createAppSelector(
 	selectUnitDataById,
-	unitDataById => potentialGraphicUnits(unitDataById)
+	selectSelectedLanguage,
+	(unitDataById, selectSelectedLanguage) => potentialGraphicUnits(unitDataById, selectSelectedLanguage)
 );
 
 /**
