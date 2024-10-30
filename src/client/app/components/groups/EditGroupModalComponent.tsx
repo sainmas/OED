@@ -36,7 +36,7 @@ import {
 import { AreaUnitType, getAreaUnitConversion } from '../../utils/getAreaUnitConversion';
 import { getGPSString, nullToEmptyString } from '../../utils/input';
 import { showErrorNotification } from '../../utils/notifications';
-import translate from '../../utils/translate';
+import { useTranslate } from '../../redux/componentHooks';
 import ConfirmActionModalComponent from '../ConfirmActionModalComponent';
 import ListDisplayComponent from '../ListDisplayComponent';
 import MultiSelectComponent from '../MultiSelectComponent';
@@ -59,6 +59,7 @@ interface EditGroupModalComponentProps {
  */
 export default function EditGroupModalComponent(props: EditGroupModalComponentProps) {
 	const locale = useAppSelector(selectSelectedLanguage);
+	const translate = useTranslate();
 	const [submitGroupEdits] = groupsApi.useEditGroupMutation();
 	const [deleteGroup] = groupsApi.useDeleteGroupMutation();
 	// Meter state

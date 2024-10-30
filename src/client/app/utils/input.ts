@@ -59,7 +59,9 @@ export function potentialGraphicUnits(units: UnitDataById) {
 		}
 	});
 	// Put in alphabetical order.
-	possibleGraphicUnits = new Set(Array.from(possibleGraphicUnits).sort((unitA,unitB) => unitA.identifier.toLowerCase().
+	// TODO: change second argument of locale from undefined to current language if needed, but alphabetical ordering works
+	// with accents using undefined locale arg
+	possibleGraphicUnits = new Set(Array.from(possibleGraphicUnits).sort((unitA, unitB) => unitA.identifier.toLowerCase().
 		localeCompare(unitB.identifier.toLowerCase(), undefined, { sensitivity: 'accent' })));
 	// The default graphic unit can also be no unit/-99 but that is not desired so put last in list.
 	possibleGraphicUnits.add(noUnitTranslated());
