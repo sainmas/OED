@@ -5,7 +5,6 @@
 import { GPSPoint } from './calibration';
 import { UnitData, DisplayableType, UnitRepresentType, UnitType, UnitDataById } from '../types/redux/units';
 import translate from './translate';
-
 /**
  * get string value from GPSPoint or null.
  * @param gps GPS point to get value from and can be null

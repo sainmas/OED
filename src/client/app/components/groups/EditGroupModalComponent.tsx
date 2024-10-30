@@ -58,6 +58,7 @@ interface EditGroupModalComponentProps {
  * @returns Group edit element
  */
 export default function EditGroupModalComponent(props: EditGroupModalComponentProps) {
+	const locale = useAppSelector(selectSelectedLanguage);
 	const [submitGroupEdits] = groupsApi.useEditGroupMutation();
 	const [deleteGroup] = groupsApi.useDeleteGroupMutation();
 	// Meter state
@@ -918,7 +919,6 @@ export default function EditGroupModalComponent(props: EditGroupModalComponentPr
 	 */
 	function metersToSelectOptions(): SelectOption[] {
 		// In format for the display component for menu.
-		const locale = useAppSelector(selectSelectedLanguage);
 		const selectedMetersUnsorted: SelectOption[] = [];
 		groupState.childMeters.forEach(groupId => {
 			selectedMetersUnsorted.push({
@@ -939,7 +939,6 @@ export default function EditGroupModalComponent(props: EditGroupModalComponentPr
 	 */
 	function groupsToSelectOptions(): SelectOption[] {
 		// In format for the display component for menu.
-		const locale = useAppSelector(selectSelectedLanguage);
 		const selectedGroupsUnsorted: SelectOption[] = [];
 		groupState.childGroups.forEach(groupId => {
 			selectedGroupsUnsorted.push({

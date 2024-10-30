@@ -33,8 +33,8 @@ export const selectPossibleGraphicUnits = createAppSelector(
 /**
  * Calculates the set of all possible meter units for a meter.
  * This is any unit that is of type meter.
- * @param state # TODO
- * @param locale # TODO
+ * @param state # Redux state passed in as argument
+ * @param locale # Language selected as retrieved from state
  * @returns The set of all possible graphic units for a meter
  */
 export const selectPossibleMeterUnits = createAppSelector(
