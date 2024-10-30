@@ -348,9 +348,9 @@ export default function EditGroupModalComponent(props: EditGroupModalComponentPr
 		// Can only vary if admin and only used then.
 		if (loggedInAsAdmin) {
 			// Get meters that okay for this group in a format the component can display.
-			const possibleMeters = getMeterMenuOptionsForGroup(groupState.defaultGraphicUnit, groupState.deepMeters);
+			const possibleMeters = getMeterMenuOptionsForGroup(groupState.defaultGraphicUnit, groupState.deepMeters, locale);
 			// Get groups okay for this group. Similar to meters.
-			const possibleGroups = getGroupMenuOptionsForGroup(groupState.id, groupState.defaultGraphicUnit, groupState.deepMeters);
+			const possibleGroups = getGroupMenuOptionsForGroup(groupState.id, groupState.defaultGraphicUnit, groupState.deepMeters, locale);
 			// Update the state
 			setGroupChildrenState(groupChildrenState => ({
 				...groupChildrenState,
