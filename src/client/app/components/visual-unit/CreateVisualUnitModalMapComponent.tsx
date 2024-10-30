@@ -31,7 +31,8 @@ export default function CreateVisualUnitMapModalComponent() {
 		links: []
 	};
 	unitData.map(value =>
-		data.nodes.push({'name': value.name,
+		data.nodes.push({
+			'name': value.name,
 			'id': value.id,
 			'typeOfUnit': value.typeOfUnit
 		})
@@ -57,11 +58,15 @@ export default function CreateVisualUnitMapModalComponent() {
 
 		const simulation = d3.forceSimulation(nodes)
 			.force('link', d3.forceLink(links)
-				.id((d: any) => d.id)					/* Set all link ids (from data.links) */
-				.distance(90)							/* This controls how long each link is */
+				/* Set all link ids (from data.links) */
+				.id((d: any) => d.id)
+				/* This controls how long each link is */
+				.distance(90)
 			)
-			.force('charge', d3.forceManyBody()			/* Create new many-body force */
-				.strength(-500)							/* This controls the 'repelling' force on each node */
+			/* Create new many-body force */
+			.force('charge', d3.forceManyBody()
+				/* This controls the 'repelling' force on each node */
+				.strength(-500)
 			)
 			.force('x', d3.forceX())
 			.force('y', d3.forceY());
@@ -82,7 +87,8 @@ export default function CreateVisualUnitMapModalComponent() {
 			.attr('refY', 0)
 			.attr('markerWidth', 4)
 			.attr('markerHeight', 4)
-			.attr('orient', 'auto')			/* auto: point towards dest. node */
+			/* auto: point towards dest. node */
+			.attr('orient', 'auto')
 			.append('svg:path')
 			.attr('d', 'M0,-5L10,0L0,5');
 
@@ -94,7 +100,8 @@ export default function CreateVisualUnitMapModalComponent() {
 			.attr('refY', 0)
 			.attr('markerWidth', 4)
 			.attr('markerHeight', 4)
-			.attr('orient', 'auto-start-reverse')		/* auto-start-reverse: point towards src. node */
+			/* auto-start-reverse: point towards src. node */
+			.attr('orient', 'auto-start-reverse')
 			.append('svg:path')
 			.attr('d', 'M0,-5L10,0L0,5');
 
@@ -105,13 +112,15 @@ export default function CreateVisualUnitMapModalComponent() {
 			.style('stroke', '#aaa')
 			.attr('stroke-width', 3)
 			.attr('marker-end', 'url(#arrow-end)')
-			.attr('marker-start', d => d.bidirectional === true ? 'url(#arrow-start)' : '');	/* Only draw start arrow head if bidirectional */
+			/* Only draw start arrow head if bidirectional */
+			.attr('marker-start', d => d.bidirectional === true ? 'url(#arrow-start)' : '');
 
 		/* Node style */
 		const node = svg.selectAll('.node')
 			.data(nodes)
 			.enter().append('circle')
-			.attr('r', 20)					/* Node radius */
+			/* Node radius */
+			.attr('r', 20)
 			.attr('fill', d => colorSchema(d.typeOfUnit));
 
 		/* Drag behavior */
@@ -192,7 +201,8 @@ export default function CreateVisualUnitMapModalComponent() {
 				.text(item);
 		});
 
-	}, []); // Empty dependency array to run the effect only once
+	// Empty dependency array to run the effect only once
+	}, []);
 
 	return (
 		<div>

@@ -31,14 +31,16 @@ export default function CreateCikVisualMapComponent() {
 	// deletes nodes with no connections
 	// units.forEach(value => {
 	// 	const unit = unitDataById[value];
-	// 	data.nodes.push({'name': unit.name,
+	// 	data.nodes.push({
+	//		'name': unit.name,
 	// 		'id': unit.id,
 	// 		'typeOfUnit': unit.typeOfUnit
 	// 	});
 	// });
 
 	unitData.map(value =>
-		data.nodes.push({'name': value.name,
+		data.nodes.push({
+			'name': value.name,
 			'id': value.id,
 			'typeOfUnit': value.typeOfUnit
 		})
@@ -202,7 +204,8 @@ export default function CreateCikVisualMapComponent() {
 				.text(item);
 		});
 
-	}, []); // Empty dependency array to run the effect only once
+	// Empty dependency array to run the effect only once
+	}, []);
 
 	return (
 		<div>
