@@ -8,6 +8,7 @@ const express = require('express');
 const { log } = require('../log');
 const validate = require('jsonschema').validate;
 const adminAuthenticator = require('./authenticator').adminAuthMiddleware;
+const LogMsg = require('../models/LogMsg');
 
 const router = express.Router();
 router.use(adminAuthenticator('log API'));
@@ -52,6 +53,22 @@ router.post('/error', async (req, res) => {
 	} else {
 		log.error('invalid input from client logger');
 		res.sendStatus(400);
+	}
+});
+
+
+router.get('/logsmsg', async (req, res) => {
+	const conn = getConnection();
+	try {
+		const rows = await LogMsg.getAll(conn);
+		// console.log('can fetch');
+
+		res.json(rows);
+		// console.log(rows);
+
+	} catch (err) {
+		console.error(`Failed to fetch logs: ${err}`);
+		res.status(500).send('Failed to fetch logs');
 	}
 });
 

@@ -5,7 +5,7 @@
  */
 
 import ApiBackend from './ApiBackend';
-import {LogData} from '../../types/redux/logs';
+import { LogData } from '../../types/redux/logs';
 
 export default class LogsApi {
 	private readonly backend: ApiBackend;
@@ -24,5 +24,10 @@ export default class LogsApi {
 
 	public async error(log: LogData): Promise<void> {
 		return await this.backend.doPostRequest('/api/logs/error', log);
+	}
+
+	// fetch all logs
+	public async getAllLogs(): Promise<LogData[]> {
+		return await this.backend.doGetRequest('/api/logs/logsmsg');
 	}
 }

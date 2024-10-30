@@ -61,6 +61,7 @@ export default function HeaderButtonsComponent() {
 		shouldCSVButtonDisabled: true,
 		shouldUnitsButtonDisabled: true,
 		shouldConversionsButtonDisabled: true,
+		shouldLogMsgButtonDisabled: true,
 		// Translated menu title that depend on whether logged in.
 		menuTitle: '',
 		// link to help page for page choices. Should not see default but use general help URL.
@@ -95,7 +96,8 @@ export default function HeaderButtonsComponent() {
 			shouldMapsButtonDisabled: pathname === '/maps',
 			shouldCSVButtonDisabled: pathname === '/csv',
 			shouldUnitsButtonDisabled: pathname === '/units',
-			shouldConversionsButtonDisabled: pathname === '/conversions'
+			shouldConversionsButtonDisabled: pathname === '/conversions',
+			shouldLogMsgButtonDisabled: pathname === '/logmsg'
 		}));
 	}, [pathname]);
 
@@ -212,6 +214,13 @@ export default function HeaderButtonsComponent() {
 								tag={Link}
 								to="/admin">
 								<FormattedMessage id='admin.settings' />
+							</DropdownItem>
+							<DropdownItem
+								style={state.adminViewableLinkStyle}
+								disabled={state.shouldLogMsgButtonDisabled}
+								tag={Link}
+								to="/logmsg">
+								<FormattedMessage id='log.messages' />
 							</DropdownItem>
 							<DropdownItem
 								style={state.adminViewableLinkStyle}

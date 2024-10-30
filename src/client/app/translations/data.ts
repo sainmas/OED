@@ -512,7 +512,8 @@ const LocaleTranslationData = {
 		"week": "Week",
 		"yes": "yes",
 		"yesterday": "Yesterday",
-		"you.cannot.create.a.cyclic.group": "You cannot create a cyclic group"
+		"you.cannot.create.a.cyclic.group": "You cannot create a cyclic group",
+		"log.messages": "Log Messages"
 	},
 	"fr": {
 		"3D": "3D",
@@ -1020,7 +1021,8 @@ const LocaleTranslationData = {
 		"week": "Semaine",
 		"yes": " yes\u{26A1}",
 		"yesterday": "Hier",
-		"you.cannot.create.a.cyclic.group": "Vous ne pouvez pas créer un groupe cyclique"
+		"you.cannot.create.a.cyclic.group": "Vous ne pouvez pas créer un groupe cyclique",
+		"log.messages": "Log Messages\u{26A1}"
 	},
 	"es": {
 		"3D": "3D",
@@ -1529,7 +1531,8 @@ const LocaleTranslationData = {
 		"week": "semana",
 		"yes": "sí",
 		"yesterday": "Ayer",
-		"you.cannot.create.a.cyclic.group": "No se puede crear un grupo cíclico"
+		"you.cannot.create.a.cyclic.group": "No se puede crear un grupo cíclico",
+		"log.messages": "Log Messages\u{26A1}"
 	}
 }
 

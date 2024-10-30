@@ -5,6 +5,7 @@
 const fs = require('fs');
 const logFile = require('./config').logFile;
 const LogEmail = require('./models/LogEmail');
+const LogMsg = require('./models/LogMsg');
 const { getConnection } = require('./db');
 const moment = require('moment');
 
@@ -71,12 +72,34 @@ class Logger {
 
 		// Always log to the logfile.
 		if (this.logToFile) {
-			fs.appendFile(logFile, messageToLog, err => {
+			fs.appendFile(logFile, messageToLog, async err => {
 				if (err) {
 					console.error(`Failed to write to log file: ${err} (${err.stack})`); // tslint:disable-line no-console
 				}
 			});
+
+			fs.readFile(logFile, 'utf8', async (err, data) => {
+				if (err) {
+					console.error(`Failed to read log file: ${err} (${err.stack})`); // tslint:disable-line no-console
+					return;
+				}
+
+				const logEntries = data.split('\n').filter(entry => entry.trim() !== '');
+				for (const entry of logEntries) {
+					const logParts = entry.match(/\[(.*?)@(.*?)\] (.*)/);
+					if (logParts) {
+						const [, logType, logTime, logMessage] = logParts;
+						const logMsg = new LogMsg(logType, logMessage, new Date(logTime));
+						try {
+							await logMsg.insert(conn);
+						} catch (err) {
+							console.error(`Failed to write log to database: ${err} (${err.stack})`); // tslint:disable-line no-console
+						}
+					}
+				}
+			})
 		}
+
 
 		// Only log elsewhere if given a high enough priority level.
 		if (level.priority <= this.level.priority && !skipMail) {
