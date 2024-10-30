@@ -167,6 +167,30 @@ export default function CreateVisualUnitMapModalComponent() {
 			event.subject.fy = null;
 		}
 
+		/* Color Legend */
+		const legend = svg.append('g')
+			.attr('transform', `translate(${-width / 2 + 20}, ${-height / 2 + 20})`);
+
+		colorSchema.domain().forEach((item, i) => {
+			const legendEntry = legend.append('g')
+				.attr('transform', `translate(0, ${i * 25})`);
+
+			// Rectangle color box
+			legendEntry.append('rect')
+				.attr('width', 20)
+				.attr('height', 20)
+				.attr('fill', colorSchema(item));
+
+			// Text label
+			legendEntry.append('text')
+				.attr('x', 30)
+				.attr('y', 15)
+				.style('fill', '#000')
+				.style('font-size', '14px')
+				.style('alignment-middle', 'middle')
+				.text(item);
+		});
+
 	}, []); // Empty dependency array to run the effect only once
 
 	return (
