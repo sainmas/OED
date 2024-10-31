@@ -1008,7 +1008,8 @@ export default function EditGroupModalComponent(props: EditGroupModalComponentPr
 			}
 		});
 		// Sort for display. Before were sorted by id so not okay here.
-		listedGroups.sort();
+		listedGroups.sort((groupA, groupB) => groupA.toLowerCase().localeCompare(
+			groupB.toLowerCase(), locale, { sensitivity : 'accent' }));
 		if (hasHidden) {
 			// There are hidden groups so note at bottom of list.
 			listedGroups.push(translate('group.hidden'));
@@ -1036,7 +1037,8 @@ export default function EditGroupModalComponent(props: EditGroupModalComponentPr
 			}
 		});
 		// Sort for display.
-		listedDeepMeters.sort();
+		listedDeepMeters.sort((deepMeterA, deepMeterB) => deepMeterA.toLowerCase().localeCompare(
+			deepMeterB.toLowerCase(), locale, { sensitivity : 'accent' }));
 		if (hasHidden) {
 			// There are hidden meters so note at bottom of list.
 			// This should never happen to an admin.
