@@ -5,6 +5,7 @@
 import * as React from 'react';
 import * as d3 from 'd3';
 import { useEffect } from 'react';
+import { useIntl } from 'react-intl';
 import { useAppSelector } from '../../redux/reduxHooks';
 import { selectAllUnits } from '../../redux/api/unitsApi';
 import { selectConversionsDetails } from '../../redux/api/conversionsApi';
@@ -14,6 +15,7 @@ import { selectConversionsDetails } from '../../redux/api/conversionsApi';
  * @returns D3 force graph visual
  */
 export default function CreateVisualUnitMapModalComponent() {
+	const intl = useIntl();
 
 	/* Get unit and conversion data from redux */
 	const unitData = useAppSelector(selectAllUnits);
@@ -22,7 +24,7 @@ export default function CreateVisualUnitMapModalComponent() {
 	/* creating color schema for nodes based on their unit type */
 	const colors = ['#1F77B4', '#2CA02C', '#fd7e14', '#e377c2'];
 	const colorSchema = d3.scaleOrdinal<string, string>()
-		.domain(['meter', 'unit', 'suffix', 'suffix input'])
+		.domain(['meter', 'unit', 'suffix', 'suffix-input'])
 		.range(colors);
 
 	/* Create data container to pass to D3 force graph */
@@ -123,7 +125,7 @@ export default function CreateVisualUnitMapModalComponent() {
 			/* Node radius */
 			.attr('r', 20)
 			/* checks if unit has a non empty suffix to color differently */
-			.attr('fill', d => d.suffix && d.typeOfUnit === 'unit' ? colorSchema('suffix input') : colorSchema(d.typeOfUnit));
+			.attr('fill', d => d.suffix && d.typeOfUnit === 'unit' ? colorSchema('suffix-input') : colorSchema(d.typeOfUnit));
 
 		/* Drag behavior */
 		node.call(d3.drag()
@@ -200,8 +202,8 @@ export default function CreateVisualUnitMapModalComponent() {
 				.style('fill', '#000')
 				.style('font-size', '14px')
 				.style('alignment-middle', 'middle')
-				/* change suffix to suffix analyzed in the legend */
-				.text(item === 'suffix' ? 'suffix analyzed' : item);
+				/* internationalizing color legend text */
+				.text(intl.formatMessage({id : `legend-graph-text-${item}`}));
 		});
 
 	// Empty dependency array to run the effect only once

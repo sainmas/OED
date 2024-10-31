@@ -31,7 +31,7 @@ export default function VisualUnitDetailComponent() {
 
 			<div className='container-fluid'>
 				<h2 style={titleStyle}>
-					<FormattedMessage id='visual-unit' />
+					<FormattedMessage id='visual-input-units-graphic' />
 					{/* <div style={tooltipStyle}>
 							<TooltipMarkerComponent page='visual-unit' helpTextId={tooltipStyle.tooltipVisualUnitView} />
 						</div> */}
@@ -44,7 +44,7 @@ export default function VisualUnitDetailComponent() {
 
 			<div className='container-fluid'>
 				<h2 style={titleStyle}>
-					<FormattedMessage id='visual-unit-cik' />
+					<FormattedMessage id='visual-analyzed-units-graphic' />
 					{/* <div style={tooltipStyle}>
 							<TooltipMarkerComponent page='visual-unit' helpTextId={tooltipStyle.tooltipVisualUnitView} />
 						</div> */}
