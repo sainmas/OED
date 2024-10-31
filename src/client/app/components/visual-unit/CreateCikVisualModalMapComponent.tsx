@@ -16,8 +16,6 @@ export default function CreateCikVisualMapComponent() {
 	/* Get unit and Cik data from redux */
 	const unitData = useAppSelector(selectAllUnits);
 	const cikData = useAppSelector(selectCik);
-	// const units = new Set<number>();
-	// const unitDataById = useAppSelector(selectUnitDataById);
 
 	/* creating color schema for nodes based on their unit type */
 	const colors = ['#1F77B4', '#2CA02C', '#fd7e14', '#e377c2'];
@@ -25,27 +23,11 @@ export default function CreateCikVisualMapComponent() {
 		.domain(['meter', 'unit', 'suffix', 'suffix-input'])
 		.range(colors);
 
-	/* add all units being used in cik */
-	// cikData.forEach(unit => (
-	// 	units.add(unit.meterUnitId),
-	// 	units.add(unit.nonMeterUnitId)
-	// ));
-
 	/* Create data container to pass to D3 force graph */
 	const data: { nodes: any[], links: any[] } = {
 		nodes: [],
 		links: []
 	};
-
-	// deletes nodes with no connections
-	// units.forEach(value => {
-	// 	const unit = unitDataById[value];
-	// 	data.nodes.push({
-	//		'name': unit.name,
-	// 		'id': unit.id,
-	// 		'typeOfUnit': unit.typeOfUnit
-	// 	});
-	// });
 
 	unitData.map(value =>
 		data.nodes.push({
@@ -80,16 +62,12 @@ export default function CreateCikVisualMapComponent() {
 				.id((d: any) => d.id)
 				/* This controls how long each link is */
 				.distance(120)
-				/* This controls the link strength between nodes */
-				// .strength(0.2)
 			)
 			/* Create new many-body force */
 			.force('charge', d3.forceManyBody()
 				/* This controls the 'repelling' force on each node */
 				.strength(-800)
 			)
-			/* Create colliding force for nodes */
-			// .force('collide', d3.forceCollide().radius(70))
 			.force('x', d3.forceX())
 			.force('y', d3.forceY());
 

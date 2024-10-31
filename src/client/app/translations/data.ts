@@ -1318,7 +1318,7 @@ const LocaleTranslationData = {
 		"leave": "Salir",
 		"legend-graph-text-meter": "Medidor",
 		"legend-graph-text-suffix": "Sufijo Analizado",
-		"legend-graph-text-suffix-input": "Suffix Entrado",
+		"legend-graph-text-suffix-input": "Sufijo Entrado",
 		"legend-graph-text-unit": "Unidad",
 		"less.energy": "menos energía",
 		"line": "Línea",
