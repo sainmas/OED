@@ -7,6 +7,7 @@
 	See: https://github.com/OpenEnergyDashboard/DesignDocs/blob/main/testing/testing.md for information.
 */
 const { chai, mocha, app } = require("../common");
+const Unit = require('../../models/Unit');
 const {
 	prepareTest,
 	expectCompareToEqualExpected,
@@ -104,7 +105,6 @@ mocha.describe("readings API", () => {
 
 					// Add C13 here
 
-					// Add C14 here
 					mocha.it(
 						"C14: 1 day shift end 2022-10-31 17:00:00 for 15 minute reading intervals and quantity units & kWh as lbs of CO2 & chained & reversed",
 						async () => {
@@ -174,7 +174,6 @@ mocha.describe("readings API", () => {
 									note: "special unit",
 								},
 							];
-
 							const conversionData = [
 								// c11
 								{
@@ -227,10 +226,23 @@ mocha.describe("readings API", () => {
 									id: METER_ID
 								}
 							];
-						}
-					);
-				});
-			});
-		}
-	);
+							// load data into database
+							await prepareTest(unitData, conversionData, meterData);
+							// Get the unit ID since the DB could use any value.
+							const unitId = await getUnitId('pound of CO₂');
+							const expected = [0.00486660462797753, 0.0052526287132491];
+							// for compare, need the unitID, currentStart, currentEnd, shift
+							const res = await chai.request(app).get(`/api/compareReadings/meters/${METER_ID}`)
+								.query({
+									curr_start: '2022-10-31 00:00:00',
+									curr_end: '2022-10-31 17:00:00',
+									shift: 'P1D',
+									graphicUnitId: unitId
+								});
+							expectCompareToEqualExpected(res, expected);
+						});
+					}
+				);		
+		});
+	});
 });
