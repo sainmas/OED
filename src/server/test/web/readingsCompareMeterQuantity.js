@@ -213,6 +213,20 @@ mocha.describe("readings API", () => {
 									note: "lbs → metric tons",
 								},
 							];
+							// redefine the meterData as the unit is different
+							const meterData = [
+								{
+									name: 'Electric Utility pound of CO₂',
+									unit: 'Electric_Utility',
+									displayable: true,
+									gps: undefined,
+									note: 'special meter',
+									file: 'test/web/readingsData/readings_ri_15_days_75.csv',
+									deleteFile: false,
+									readingFrequency: '15 minutes',
+									id: METER_ID
+								}
+							];
 						}
 					);
 				});
