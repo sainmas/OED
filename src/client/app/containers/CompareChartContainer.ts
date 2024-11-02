@@ -87,17 +87,17 @@ function mapStateToProps(state: RootState, ownProps: CompareChartContainerProps)
 		}
 	}
 
-	// To Do: When I click this icon it crashes OED. The error relates to using a Hook (useState, I think) 
-	// outside a component. This does not use a component as the other graphics do as it is 
-	// a container. It either needs a modified solution or the component needs to be converted.
-	// Only after the component has been converted uncomment the code below and in plotly config
+  /* TODO When I click this icon it crashes OED. The error relates to using a Hook (useState, I think) 
+	outside a component. This does not use a component as the other graphics do as it is 
+	a container. It either needs a modified solution or the component needs to be converted.
+	Only after the component has been converted uncomment the code below and in plotly config
 	// Display Plotly Buttons Feature:
-	// The number of items in defaultButtons and advancedButtons must differ as discussed below
+	// The number of items in defaultButtons and advancedButtons must differ as discussed below */
 	const defaultButtons: Plotly.ModeBarDefaultButtons[] = ['zoom2d', 'pan2d', 'select2d', 'lasso2d', 'zoomIn2d', 'zoomOut2d', 'autoScale2d',
 		'resetScale2d'];
-	// const advancedButtons: Plotly.ModeBarDefaultButtons[] = ['select2d', 'lasso2d', 'autoScale2d', 'resetScale2d'];
+	/* const advancedButtons: Plotly.ModeBarDefaultButtons[] = ['select2d', 'lasso2d', 'autoScale2d', 'resetScale2d'];
 	// Manage button states with useState
-	// const	[listOfButtons, setListOfButtons] = useState(defaultButtons);
+	const [listOfButtons, setListOfButtons] = useState(defaultButtons); */
 
 	// Get the time shift for this comparison as a moment duration
 	const compareShift = calculateCompareShift(comparePeriod);
@@ -247,11 +247,11 @@ function mapStateToProps(state: RootState, ownProps: CompareChartContainerProps)
 		config: {
 			displayModeBar: true,
 			modeBarButtonsToRemove: defaultButtons,
-			// TO DO: Removes line above and uncomment betlow. Read above for more info
+			// TO DO: Removes line above and uncomment below. Read above for more info
 			// modeBarButtonsToRemove: listOfButtons,
 			// modeBarButtonsToAdd: [{
 			// 	name: 'toggle-options',
-			// 	title: 'Toggle Options',
+			// 	title: translate('Toggle Option'),
 			// 	icon: Icons.pencil,
 			// 	click: function () {
 			// 		// # of items must differ so the length can tell which list of buttons is being set

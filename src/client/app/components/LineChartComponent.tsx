@@ -99,7 +99,7 @@ export default function LineChartComponent() {
 					modeBarButtonsToRemove: listOfButtons,
 					modeBarButtonsToAdd: [{
 						name: 'toggle-options',
-						title: 'Toggle Options',
+						title: translate('toggle option'),
 						icon: Icons.pencil,
 						click: function () {
 							// # of items must differ so the length can tell which list of buttons is being set
