@@ -87,8 +87,8 @@ function mapStateToProps(state: RootState, ownProps: CompareChartContainerProps)
 		}
 	}
 
-  /* TODO When I click this icon it crashes OED. The error relates to using a Hook (useState, I think) 
-	outside a component. This does not use a component as the other graphics do as it is 
+	/* TODO When I click this icon it crashes OED. The error relates to using a Hook (useState, I think)
+	outside a component. This does not use a component as the other graphics do as it is
 	a container. It either needs a modified solution or the component needs to be converted.
 	Only after the component has been converted uncomment the code below and in plotly config
 	// Display Plotly Buttons Feature:
