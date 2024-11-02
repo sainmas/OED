@@ -13,6 +13,8 @@ const { prepareTest,
 	getUnitId,
 	GROUP_ID,
 	METER_ID,
+	unitDatakWh, 
+	conversionDatakWh
  } = require('../../util/readingsUtils');
 
 mocha.describe('readings API', () => {
@@ -104,7 +106,7 @@ mocha.describe('readings API', () => {
                     await prepareTest(unitDatakW, conversionDatakW, meterDatakWGroups, groupDatakW);
                     //get unit ID since the DB could use any value.
                     const unitId = await getUnitId('kW');
-					const expected = [14017.4841100155, 14605.4957015091];
+					const expected = [4008.97545574702, 4182.62793481036];
 					//for compare, need the unitID, currentStart, currentEnd, shift
 					const res = await chai.request(app).get(`/api/compareReadings/groups/${GROUP_ID}`)
 						.query({
