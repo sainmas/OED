@@ -34,7 +34,7 @@ mocha.describe('readings API', () => {
 							shift: 'P1D',
 							graphicUnitId: unitId
 						});
-					expectCompareToEqualExpected(res, expected, GROUP_ID);
+					expectCompareToEqualExpected(res, expected, x);
 				});
 
 				// Add CG2 here
