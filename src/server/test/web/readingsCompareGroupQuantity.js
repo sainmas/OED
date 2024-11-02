@@ -34,7 +34,7 @@ mocha.describe('readings API', () => {
 							shift: 'P1D',
 							graphicUnitId: unitId
 						});
-					expectCompareToEqualExpected(res, expected, x);
+					expectCompareToEqualExpected(res, expected, GROUP_ID);
 				});
 				mocha.it('CG2: 7 day shift end 2022-10-31 17:00:00 for 15 minute reading intervals and quantity units & kWh as kWh ', async () => {
 					await prepareTest(unitDatakWh, conversionDatakWh, meterDatakWhGroups, groupDatakWh);
