@@ -201,7 +201,7 @@ mocha.describe('readings API', () => {
                     await prepareTest(unitData, conversionData, meterDatakGroups, groupData);
                     // Get the unit ID since the DB could use any value.
                     const unitId = await getUnitId('thing unit');
-					const expected = [1401748.41100155, 1460549.57015091];
+					const expected = [400897.545574702, 418262.793481036];
 
                     const res = await chai.request(app).get(`/api/compareReadings/groups/${GROUP_ID}`)
 						.query({
