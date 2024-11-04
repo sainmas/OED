@@ -21,10 +21,9 @@ export default function VisualUnitDetailComponent() {
 
 	const tooltipStyle = {
 		display: 'inline-block',
-		fontSize: '60%',
-		padding: '0.3rem',
+		fontSize: '50%',
 		// For now, only an admin can see the unit page.
-		tooltipVisualUnitView: 'help.admin.unitview'
+		tooltipVisualUnitView: 'help.admin.unitconversionvisuals'
 	};
 
 	return (
@@ -33,7 +32,7 @@ export default function VisualUnitDetailComponent() {
 
 			<div className='container-fluid'>
 				<h1 style={titleStyle}>
-					<FormattedMessage id='units-conversion-page-title' />
+					<FormattedMessage id='units.conversion.page.title' />
 					<div style={tooltipStyle}>
 						<TooltipMarkerComponent page='visual-unit' helpTextId={tooltipStyle.tooltipVisualUnitView} />
 					</div>
@@ -42,9 +41,6 @@ export default function VisualUnitDetailComponent() {
 
 				<h2 style={titleStyle}>
 					<FormattedMessage id='visual-input-units-graphic' />
-					<div style={tooltipStyle}>
-						<TooltipMarkerComponent page='visual-unit' helpTextId={tooltipStyle.tooltipVisualUnitView} />
-					</div>
 				</h2>
 			</div>
 
@@ -55,9 +51,6 @@ export default function VisualUnitDetailComponent() {
 			<div className='container-fluid'>
 				<h2 style={titleStyle}>
 					<FormattedMessage id='visual-analyzed-units-graphic' />
-					{/* <div style={tooltipStyle}>
-						<TooltipMarkerComponent page='visual-unit' helpTextId={tooltipStyle.tooltipVisualUnitView} />
-					</div> */}
 				</h2>
 			</div>
 
