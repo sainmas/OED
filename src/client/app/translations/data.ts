@@ -481,6 +481,7 @@ const LocaleTranslationData = {
 		"unit.type.of.unit": "Type of Unit:",
 		"unit.type.of.unit.suffix": "Added suffix will set type of unit to suffix",
 		"units": "Units",
+		"units-conversion-page-title": "Units and Conversions Visual Graphics",
 		"unsaved.failure": "Changes failed to save",
 		"unsaved.success": "Changes saved",
 		"unsaved.warning": "You have unsaved change(s). Are you sure you want to leave?",

@@ -7,6 +7,7 @@ import TooltipHelpComponent from '../TooltipHelpComponent';
 import * as React from 'react';
 import CreateVisualUnitMapModalComponent from './CreateVisualUnitModalMapComponent';
 import CreateCikVisualMapComponent from './CreateCikVisualModalMapComponent';
+import TooltipMarkerComponent from '../TooltipMarkerComponent';
 
 /**
  * Defines the units page card view
@@ -18,23 +19,32 @@ export default function VisualUnitDetailComponent() {
 		textAlign: 'center'
 	};
 
-	// const tooltipStyle = {
-	// 	display: 'inline-block',
-	// 	fontSize: '50%',
-	// 	// For now, only an admin can see the unit page.
-	// 	tooltipVisualUnitView: 'help.admin.unitview'
-	// };
+	const tooltipStyle = {
+		display: 'inline-block',
+		fontSize: '60%',
+		padding: '0.3rem',
+		// For now, only an admin can see the unit page.
+		tooltipVisualUnitView: 'help.admin.unitview'
+	};
 
 	return (
 		<div>
 			<TooltipHelpComponent page='visual-unit' />
 
 			<div className='container-fluid'>
+				<h1 style={titleStyle}>
+					<FormattedMessage id='units-conversion-page-title' />
+					<div style={tooltipStyle}>
+						<TooltipMarkerComponent page='visual-unit' helpTextId={tooltipStyle.tooltipVisualUnitView} />
+					</div>
+				</h1>
+				<br/>
+
 				<h2 style={titleStyle}>
 					<FormattedMessage id='visual-input-units-graphic' />
-					{/* <div style={tooltipStyle}>
-							<TooltipMarkerComponent page='visual-unit' helpTextId={tooltipStyle.tooltipVisualUnitView} />
-						</div> */}
+					<div style={tooltipStyle}>
+						<TooltipMarkerComponent page='visual-unit' helpTextId={tooltipStyle.tooltipVisualUnitView} />
+					</div>
 				</h2>
 			</div>
 
@@ -46,8 +56,8 @@ export default function VisualUnitDetailComponent() {
 				<h2 style={titleStyle}>
 					<FormattedMessage id='visual-analyzed-units-graphic' />
 					{/* <div style={tooltipStyle}>
-							<TooltipMarkerComponent page='visual-unit' helpTextId={tooltipStyle.tooltipVisualUnitView} />
-						</div> */}
+						<TooltipMarkerComponent page='visual-unit' helpTextId={tooltipStyle.tooltipVisualUnitView} />
+					</div> */}
 				</h2>
 			</div>
 
