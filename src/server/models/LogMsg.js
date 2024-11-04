@@ -30,7 +30,7 @@ class LogMsg {
 	 * @returns The new log object.
 	 */
 	static mapRow(row) {
-		return new LogMsg(row.logType, row.logMessage, row.logTime);
+		return new LogMsg(row.log_type, row.log_message, row.log_time);
 	}
 
 	/**
@@ -47,9 +47,9 @@ class LogMsg {
 	 * @param {*} conn The connection to use.
 	 * @returns {Promise.<>}
 	 */
-		static createLogMsgTypeEnum(conn) {
-			return conn.none(sqlFile('logmsg/create_log_types_enum.sql'));
-		}
+	static createLogMsgTypeEnum(conn) {
+		return conn.none(sqlFile('logmsg/create_log_types_enum.sql'));
+	}
 
 	/**
 	 * Returns a promise to insert this log into the database
@@ -97,8 +97,8 @@ class LogMsg {
 	 * @param conn is the connection to use.
 	 * @returns {Promise.<array.<LogMsg>>}
 	 */
-	static async getLogsByType(logType, conn){
-		const rows = await conn.any(sqlFile('logmsg/get_logs_from_type.sql'), {logType: logType});
+	static async getLogsByType(logType, conn) {
+		const rows = await conn.any(sqlFile('logmsg/get_logs_from_type.sql'), { logType: logType });
 
 		return rows.map(LogMsg.mapRow);
 	}
@@ -119,8 +119,8 @@ class LogMsg {
 			endDate: endDate,
 			logType: logType
 		});
-
 		return rows.map(LogMsg.mapRow);
+
 	}
 }
 module.exports = LogMsg;

@@ -7,114 +7,22 @@ import { showWarnNotification } from '../../utils/notifications';
 import { logsApi } from '../../utils/api';
 // import translate from '../../utils/translate';
 
-const initialLogs = [
-	{
-		id: 1,
-		log_type: 'ERROR',
-		// eslint-disable-next-line max-len
-		log_message: 'Unhandled Promise Rejection: AggregateError Stacktrace: AggregateError [ECONNREFUSED]: at internalConnectMultiple (node:net:1118:18) at afterConnectMultiple (node:net:1685:7)',
-		log_time: '2024-09-11 16:58:51.303'
-	},
-	{
-		id: 2,
-		log_type: 'ERROR',
-		// eslint-disable-next-line max-len
-		log_message: 'Unhandled Promise Rejection: AggregateError Stacktrace: AggregateError [ECONNREFUSED]: at internalConnectMultiple(node:net:1118:18) at afterConnectMultiple (node:net:1685:7)',
-		log_time: '2024-09-11 16:59:12.524'
-	},
-	{
-		id: 3,
-		log_type: 'WARN',
-		log_message: 'Automatically set identifier of the unit "kg" to "kg"',
-		log_time: '2024-09-12 17:35:29.953'
-	},
-	{
-		id: 4,
-		log_type: 'WARN',
-		log_message: 'Automatically set identifier of the unit "liter" to "liter"',
-		log_time: '2024-09-12 17:35:29.954'
-	},
-	{
-		id: 5,
-		log_type: 'WARN',
-		log_message: 'Automatically set identifier of the unit "Fahrenheit" to "Fahrenheit"',
-		log_time: '2024-09-12 17:35:29.954'
-	},
-	{
-		id: 6,
-		log_type: 'INFO',
-		log_message: 'Schema created',
-		log_time: '2024-10-01 21:53:13.505'
-	},
-	{
-		id: 7,
-		log_type: 'INFO',
-		log_message: 'Listening on port 3000',
-		log_time: '2024-10-01 21:53:35.09'
-	},
-	{
-		id: 8,
-		log_type: 'INFO',
-		// eslint-disable-next-line max-len
-		log_message: 'The uploaded file /usr/src/app/src/server/tmp/uploads/csvPipeline/2024-10-01_22:49:55.358-29ac-3yrLeap.csv was created to upload readings csv data',
-		log_time: '2024-10-01 22:49:55.374'
-	},
-	{
-		id: 9,
-		log_type: 'ERROR',
-		// eslint-disable-next-line max-len
-		log_message: 'Unhandled Promise Rejection: AggregateError Stacktrace: AggregateError [ECONNREFUSED]: at internalConnectMultiple (node:net:1118:18) at afterConnectMultiple (node:net:1685:7)',
-		log_time: '2024-09-11T16:58:51.303-04:00'
-	},
-	{
-		id: 10,
-		log_type: 'ERROR',
-		// eslint-disable-next-line max-len
-		log_message: 'Unhandled Promise Rejection: AggregateError Stacktrace: AggregateError [ECONNREFUSED]: at internalConnectMultiple(node:net:1118:18) at afterConnectMultiple (node:net:1685:7)',
-		log_time: '2024-09-11T16:59:12.524-04:00'
-	},
-	{
-		id: 11,
-		log_type: 'WARN',
-		log_message: 'Automatically set identifier of the unit "kg" to "kg"',
-		log_time: '2024-09-12T17:35:29.953+00:00'
-	},
-	{
-		id: 12,
-		log_type: 'WARN',
-		log_message: 'Automatically set identifier of the unit "liter" to "liter"',
-		log_time: '2024-09-12T17:35:29.954+00:00'
-	},
-	{
-		id: 13,
-		log_type: 'WARN',
-		log_message: 'Automatically set identifier of the unit "Fahrenheit" to "Fahrenheit"',
-		log_time: '2024-09-12T17:35:29.954+00:00'
-	},
-	{
-		id: 14,
-		log_type: 'INFO',
-		log_message: 'Schema created',
-		log_time: '2024-10-01T21:53:13.505+00:00'
-	},
-	{
-		id: 15,
-		log_type: 'INFO',
-		log_message: 'Listening on port 3000',
-		log_time: '2024-10-01T21:53:35.090+00:00'
-	},
-	{
-		id: 16,
-		log_type: 'INFO',
-		// eslint-disable-next-line max-len
-		log_message: 'The uploaded file /usr/src/app/src/server/tmp/uploads/csvPipeline/2024-10-01_22:49:55.358-29ac-3yrLeap.csv was created to upload readings csv data',
-		log_time: '2024-10-01T22:49:55.374+00:00'
-	}
-];
+// interface LogMsgData {
+// 	logType: string;
+// 	logMessage: string;
+// 	logTime: string;
+// }
+
+const initialLogs: any[] = [];
+
 
 const logTypes = ['ERROR', 'INFO', 'WARN', 'SILENT'];
 
-const LogMsgComponent = () => {
+/**
+ * React component that defines the log message page
+ * @returns LogMsgComponent element
+ */
+export default function LogMsgComponent() {
 	const locale = useAppSelector(selectSelectedLanguage);
 	const [logs, setLogs] = React.useState(initialLogs);
 
@@ -127,20 +35,8 @@ const LogMsgComponent = () => {
 	// Dropdown open state for log type in the header
 	const [dropdownOpen, setDropdownOpen] = React.useState(false);
 
-	// fetching logs data from server
-	React.useEffect(() => {
-		const fetchLogs = async () => {
-			try {
-				const data = await logsApi.getAllLogs();
-				console.log('data: ', data);
+	// const [selectAllOption, setSelectAllOption] = React.useState(true);
 
-			} catch (error) {
-				console.error('Failed to fetch logs:', error);
-			}
-		};
-		fetchLogs();
-		console.log('fetching logs: ', fetchLogs);
-	}, []);
 	// Handle checkbox change
 	const handleCheckboxChange = (logType: string) => {
 		if (selectedLogTypes.includes(logType)) {
@@ -157,6 +53,8 @@ const LogMsgComponent = () => {
 		const sortedLogs = [...logs].sort((a, b) => {
 			const dateA = new Date(a.log_time);
 			const dateB = new Date(b.log_time);
+			// const dateA = new Date(a.logTime);
+			// const dateB = new Date(b.logTime);
 			if (newDateSortOrder === 'asc') {
 				return dateA.getTime() - dateB.getTime();
 			} else {
@@ -178,24 +76,36 @@ const LogMsgComponent = () => {
 
 	// Filter logs based on selected log types and date range
 	const filteredLogs = logs.filter(log => {
-		const logDate = new Date(log.log_time);
+		// const logDate = new Date(log.log_time);
+		const logDate = new Date(log.logTime);
 
 		// Check if log is within the selected date range
 		const isWithinDateRange =
 			(!logDateRange || !logDateRange[0] || logDate >= logDateRange[0]) &&
 			(!logDateRange || !logDateRange[1] || logDate <= logDateRange[1]);
 
-		return selectedLogTypes.includes(log.log_type) && isWithinDateRange;
+		// return selectedLogTypes.includes(log.log_type) && isWithinDateRange;
+		return selectedLogTypes.includes(log.logType) && isWithinDateRange;
 	});
 
-	const handleShowLogTable = () => {
+	/**
+	 * Handle showing the log table
+	 */
+	async function handleShowLogTable() {
 		if (!logDateRange || !logDateRange[0] || !logDateRange[1]) {
-			// showWarnNotification(translate('shifted.data.crosses.leap.year.to.non.leap.year'));
 			showWarnNotification('You must select a date range');
 		} else {
+			try {
+				// get log by date and type
+				const data = await logsApi.getLogsByDateRangeAndType(logDateRange[0].toISOString(), logDateRange[1].toISOString(), selectedLogTypes);
+				setLogs(data);
+
+			} catch (error) {
+				console.error(error);
+			}
 			setShowLogTable(true);
 		}
-	};
+	}
 
 	return (
 		showLogTable ?
@@ -240,11 +150,19 @@ const LogMsgComponent = () => {
 						</tr>
 					</thead>
 					<tbody style={bodyStyle}>
-						{filteredLogs.map(log => (
-							<tr key={log.id}>
-								<td>{log.log_type}</td>
-								<td>{log.log_message}</td>
-								<td>{new Date(log.log_time).toLocaleString()}</td>
+						{filteredLogs.map((log, index) => (
+							<tr key={index + 1}>
+								<td>{log.logType}</td>
+								<td>{log.logMessage}</td>
+								<td>{new Date(log.logTime).toLocaleString('en-US', {
+									year: 'numeric',
+									month: '2-digit',
+									day: '2-digit',
+									hour: '2-digit',
+									minute: '2-digit',
+									second: '2-digit',
+									fractionalSecondDigits: 2
+								})}</td>
 							</tr>
 						))}
 					</tbody>
@@ -298,9 +216,7 @@ const LogMsgComponent = () => {
 				</div>
 			</div >
 	);
-};
-
-export default LogMsgComponent;
+}
 
 const headerStyle: React.CSSProperties = {
 	textAlign: 'center'

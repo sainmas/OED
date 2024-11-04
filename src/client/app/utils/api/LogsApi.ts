@@ -30,4 +30,15 @@ export default class LogsApi {
 	public async getAllLogs(): Promise<LogData[]> {
 		return await this.backend.doGetRequest('/api/logs/logsmsg');
 	}
+
+	public async getLogsByDateRangeAndType(startDate: string, endDate: string, types: string[]): Promise<LogData[]> {
+		const requests = types.map(
+			type => this.backend.doGetRequest('/api/logs/logsmsg/getLogsByDateRangeAndType',
+				{ startDate: startDate, endDate: endDate, logType: type })
+		);
+		const results = await Promise.all(requests);
+
+		return results.flat() as LogData[];
+	}
+
 }
