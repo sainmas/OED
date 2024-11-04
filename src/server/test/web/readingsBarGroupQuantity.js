@@ -136,19 +136,7 @@ mocha.describe('readings API', () => {
                     expectReadingToEqualExpected(res, expected, GROUP_ID);
                 });
                 
-                // BG7 here
-
-                /* u1	{ name: 'kWh', identifier: '', unitRepresent: Unit.unitRepresentType.QUANTITY, secInRate: 3600, typeOfUnit: Unit.unitType.UNIT, suffix: '',
-                 displayable: Unit.displayableType.ALL, preferredDisplay: true, note: 'OED created standard unit' }
-
-                 u2	{ name: 'Electric_Utility', identifier: '', unitRepresent: Unit.unitRepresentType.QUANTITY, secInRate: 3600, typeOfUnit: Unit.unitType.METER, suffix: '',
-                  displayable: Unit.displayableType.NONE, preferredDisplay: false, note: 'special unit' }
-
-                  Conversions
-                    Name	Conversion definition
-                    c1	{ sourceName: 'Electric_Utility', destinationName: 'kWh', bidirectional: false, slope: 1, intercept: 0, note: 'Electric_Utility → kWh' }
-                 */
-                // only will need to be removed before 
+             
                     mocha.it("BG7: 13 day bars for 15 + 20 minute reading intervals and quantity units with reduced, partial days & kWh as kWh", async () => {
                         // Define arrays of data for units, conversions, and test meters/groups
                         const unitData = unitDatakWh;
