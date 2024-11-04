@@ -78,28 +78,20 @@ class Logger {
 				}
 			});
 
-			fs.readFile(logFile, 'utf8', async (err, data) => {
-				if (err) {
-					console.error(`Failed to read log file: ${err} (${err.stack})`); // tslint:disable-line no-console
-					return;
-				}
-
-				const logEntries = data.split('\n').filter(entry => entry.trim() !== '');
-				for (const entry of logEntries) {
-					const logParts = entry.match(/\[(.*?)@(.*?)\] (.*)/);
-					if (logParts) {
-						const [, logType, logTime, logMessage] = logParts;
-						const logMsg = new LogMsg(logType, logMessage, new Date(logTime));
-						try {
-							await logMsg.insert(conn);
-						} catch (err) {
-							console.error(`Failed to write log to database: ${err} (${err.stack})`); // tslint:disable-line no-console
-						}
+			// Write the new log to the database
+			const logMsgPatern = messageToLog.match(/\[(.*?)@(.*?)\] (.*)/);
+			if (logMsgPatern) {
+				const [, logType, logTime, logMessage] = logMsgPatern;
+				const logMsg = new LogMsg(logType, logMessage, new Date(logTime));
+				(async () => {
+					try {
+						await logMsg.insert(conn);
+					} catch (err) {
+						console.error(`Failed to write log to database: ${err} (${err.stack})`);
 					}
-				}
-			})
+				})();
+			}
 		}
-
 
 		// Only log elsewhere if given a high enough priority level.
 		if (level.priority <= this.level.priority && !skipMail) {
