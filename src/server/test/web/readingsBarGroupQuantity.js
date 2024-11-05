@@ -135,15 +135,10 @@ mocha.describe('readings API', () => {
                     // Check that the API reading is equal to what it is expected to equal
                     expectReadingToEqualExpected(res, expected, GROUP_ID);
                 });
-                
-             
+
                     mocha.it("BG7: 13 day bars for 15 + 20 minute reading intervals and quantity units with reduced, partial days & kWh as kWh", async () => {
-                        // Define arrays of data for units, conversions, and test meters/groups
-                        const unitData = unitDatakWh;
-                        const conversionData = conversionDatakWh
-                    
                         // Load data into the database
-                        await prepareTest(unitData, conversionData, meterDatakWhGroups, groupDatakWh);
+                        await prepareTest(unitDatakWh, conversionDatakWh, meterDatakWhGroups, groupDatakWh);
                         // Get unit ID for API call
                         const unitId = await getUnitId('kWh');
                         // Retrieve expected values from CSV file
@@ -158,7 +153,7 @@ mocha.describe('readings API', () => {
                         // Compare API returned data with expected values
                         expectReadingToEqualExpected(res, expected, GROUP_ID);
                     });
-                    
+
 
 
                 mocha.it('BG8: 1 day bars for 15 + 20 minute reading intervals and quantity units with +-inf start/end time & kWh as MJ', async () => {
