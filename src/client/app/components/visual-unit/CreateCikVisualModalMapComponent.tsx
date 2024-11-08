@@ -7,7 +7,9 @@ import { useAppSelector } from '../../redux/reduxHooks';
 import { selectAllUnits } from '../../redux/api/unitsApi';
 
 /**
- * Visual cik graph component
+ * Visual graph component that shows the result of OED's analysis on the
+ * relationship between units and conversions entered by an admin. (Uses
+ * Cik data for the conversion links).
  * @returns D3 force graph visual
  */
 export default function CreateCikVisualMapComponent() {

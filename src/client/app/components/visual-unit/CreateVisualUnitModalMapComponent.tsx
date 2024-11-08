@@ -11,7 +11,8 @@ import { selectAllUnits } from '../../redux/api/unitsApi';
 import { selectConversionsDetails } from '../../redux/api/conversionsApi';
 
 /**
- * Visual unit-conversion graph component
+ * Visual graph component that shows the relationship between units and conversions
+ * entered by an admin. (Uses conversion data for conversion links).
  * @returns D3 force graph visual
  */
 export default function CreateVisualUnitMapModalComponent() {

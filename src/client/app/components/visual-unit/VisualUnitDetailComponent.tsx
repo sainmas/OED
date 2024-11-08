@@ -10,8 +10,8 @@ import CreateCikVisualMapComponent from './CreateCikVisualModalMapComponent';
 import TooltipMarkerComponent from '../TooltipMarkerComponent';
 
 /**
- * Defines the units page card view
- * @returns Units page element
+ * Defines the units and conversion graphics view.
+ * @returns Units visual graphics page element
  */
 export default function VisualUnitDetailComponent() {
 
