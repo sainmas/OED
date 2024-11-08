@@ -212,7 +212,7 @@ export default function HeaderButtonsComponent() {
 								disabled={state.shouldVisualUnitMapButtonDisabled}
 								tag={Link}
 								to="/visual-unit">
-								<FormattedMessage id='visual-unit' />
+								<FormattedMessage id='visual.unit' />
 							</DropdownItem>
 							<DropdownItem divider style={state.adminViewableLinkStyle} />
 							<DropdownItem

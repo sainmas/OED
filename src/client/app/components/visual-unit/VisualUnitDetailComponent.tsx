@@ -40,7 +40,7 @@ export default function VisualUnitDetailComponent() {
 				<br/>
 
 				<h2 style={titleStyle}>
-					<FormattedMessage id='visual-input-units-graphic' />
+					<FormattedMessage id='visual.input.units.graphic' />
 				</h2>
 			</div>
 
@@ -50,7 +50,7 @@ export default function VisualUnitDetailComponent() {
 
 			<div className='container-fluid'>
 				<h2 style={titleStyle}>
-					<FormattedMessage id='visual-analyzed-units-graphic' />
+					<FormattedMessage id='visual.analyzed.units.graphic' />
 				</h2>
 			</div>
 

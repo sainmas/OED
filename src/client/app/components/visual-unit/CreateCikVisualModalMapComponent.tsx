@@ -20,7 +20,7 @@ export default function CreateCikVisualMapComponent() {
 	/* creating color schema for nodes based on their unit type */
 	const colors = ['#1F77B4', '#2CA02C', '#fd7e14', '#e377c2'];
 	const colorSchema = d3.scaleOrdinal<string, string>()
-		.domain(['meter', 'unit', 'suffix', 'suffix-input'])
+		.domain(['meter', 'unit', 'suffix', 'suffix.input'])
 		.range(colors);
 
 	/* Create data container to pass to D3 force graph */
@@ -107,7 +107,7 @@ export default function CreateCikVisualMapComponent() {
 			/* Node radius */
 			.attr('r', 20)
 			/* checks if unit has a non empty suffix to color differently */
-			.attr('fill', d => d.suffix && d.typeOfUnit === 'unit' ? colorSchema('suffix-input') : colorSchema(d.typeOfUnit));
+			.attr('fill', d => d.suffix && d.typeOfUnit === 'unit' ? colorSchema('suffix.input') : colorSchema(d.typeOfUnit));
 
 		/* Drag behavior */
 		node.call(d3.drag()
@@ -185,7 +185,7 @@ export default function CreateCikVisualMapComponent() {
 				.style('font-size', '14px')
 				.style('alignment-middle', 'middle')
 				/* internationalizing color legend text */
-				.text(intl.formatMessage({id : `legend-graph-text-${item}`}));
+				.text(intl.formatMessage({id : `legend.graph.text.${item}`}));
 		});
 
 	// Empty dependency array to run the effect only once
