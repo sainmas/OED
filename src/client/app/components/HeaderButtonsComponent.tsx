@@ -6,7 +6,7 @@ import * as React from 'react';
 import { useEffect, useState } from 'react';
 import { FormattedMessage } from 'react-intl';
 import { Link, useLocation } from 'react-router-dom';
-import { DropdownItem, DropdownMenu, DropdownToggle, Nav, NavLink, Navbar, UncontrolledDropdown } from 'reactstrap';
+import { DropdownItem, DropdownMenu, DropdownToggle, Modal, ModalBody, ModalHeader, Nav, NavLink, Navbar, UncontrolledDropdown } from 'reactstrap';
 import TooltipHelpComponent from '../components/TooltipHelpComponent';
 import { clearGraphHistory } from '../redux/actions/extraActions';
 import { authApi } from '../redux/api/authApi';
@@ -16,15 +16,17 @@ import { selectHelpUrl } from '../redux/slices/adminSlice';
 import { selectOptionsVisibility, toggleOptionsVisibility } from '../redux/slices/appStateSlice';
 import { selectHasRolePermissions, selectIsAdmin, selectIsLoggedIn } from '../redux/slices/currentUserSlice';
 import { UserRole } from '../types/items';
-import translate from '../utils/translate';
+import { useTranslate } from '../redux/componentHooks';
 import LanguageSelectorComponent from './LanguageSelectorComponent';
 import TooltipMarkerComponent from './TooltipMarkerComponent';
+import LoginComponent from './LoginComponent';
 
 /**
  * React Component that defines the header buttons at the top of a page
  * @returns Header buttons element
  */
 export default function HeaderButtonsComponent() {
+	const translate = useTranslate();
 	const [logout] = authApi.useLogoutMutation();
 	const dispatch = useAppDispatch();
 	// Get the current page so know which one should not be shown in menu.
@@ -58,7 +60,8 @@ export default function HeaderButtonsComponent() {
 		shouldGroupsButtonDisabled: true,
 		shouldMetersButtonDisabled: true,
 		shouldMapsButtonDisabled: true,
-		shouldCSVButtonDisabled: true,
+		shouldCSVMetersButtonDisabled: true,
+		shouldCSVReadingsButtonDisabled: true,
 		shouldUnitsButtonDisabled: true,
 		shouldConversionsButtonDisabled: true,
 		shouldVisualUnitMapButtonDisabled: true,
@@ -94,7 +97,8 @@ export default function HeaderButtonsComponent() {
 			shouldGroupsButtonDisabled: pathname === '/groups',
 			shouldMetersButtonDisabled: pathname === '/meters',
 			shouldMapsButtonDisabled: pathname === '/maps',
-			shouldCSVButtonDisabled: pathname === '/csv',
+			shouldCSVMetersButtonDisabled: pathname === '/csvMeters',
+			shouldCSVReadingsButtonDisabled: pathname === '/csvReadings',
 			shouldUnitsButtonDisabled: pathname === '/units',
 			shouldConversionsButtonDisabled: pathname === '/conversions',
 			shouldVisualUnitMapButtonDisabled: pathname === '/visual-unit'
@@ -150,6 +154,17 @@ export default function HeaderButtonsComponent() {
 			logout();
 		}
 	};
+	// Handle modal visibility
+	const [showModal, setShowModal] = useState<boolean>(false);
+
+	const handleClose = () => {
+		setShowModal(false);
+	};
+
+	const handleShow = () => {
+		setShowModal(true);
+	};
+
 	return (
 		<div>
 			<Navbar expand>
@@ -175,11 +190,18 @@ export default function HeaderButtonsComponent() {
 								<FormattedMessage id='conversions' />
 							</DropdownItem>
 							<DropdownItem
-								style={state.csvViewableLinkStyle}
-								disabled={state.shouldCSVButtonDisabled}
+								style={state.adminViewableLinkStyle}
+								disabled={state.shouldCSVMetersButtonDisabled}
 								tag={Link}
-								to="/csv">
-								<FormattedMessage id='csv' />
+								to="/csvMeters">
+								<FormattedMessage id='csvMeters' />
+							</DropdownItem>
+							<DropdownItem
+								style={state.csvViewableLinkStyle}
+								disabled={state.shouldCSVReadingsButtonDisabled}
+								tag={Link}
+								to="/csvReadings">
+								<FormattedMessage id='csvReadings' />
 							</DropdownItem>
 							<DropdownItem
 								disabled={state.shouldGroupsButtonDisabled}
@@ -257,14 +279,11 @@ export default function HeaderButtonsComponent() {
 							<DropdownItem divider />
 							<DropdownItem
 								style={state.loginLinkStyle}
-								tag={Link}
-								to='/login'>
+								onClick={handleShow}>
 								<FormattedMessage id='log.in' />
 							</DropdownItem>
 							<DropdownItem
 								style={state.logoutLinkStyle}
-								tag={Link}
-								to='/'
 								onClick={handleLogOut}>
 								<FormattedMessage id='log.out' />
 							</DropdownItem>
@@ -281,6 +300,17 @@ export default function HeaderButtonsComponent() {
 					</NavLink>
 				</Nav>
 			</Navbar>
+			<>
+				<Modal isOpen={showModal} toggle={handleClose}>
+					<ModalHeader>
+						{translate('log.in')}
+					</ModalHeader>
+					<ModalBody>
+						<LoginComponent handleClose={handleClose}/>
+					</ModalBody>
+				</Modal>
+			</>
+
 		</div>
 	);
 }

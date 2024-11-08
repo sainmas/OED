@@ -2,7 +2,7 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 
-import { cloneDeep, isEqual } from 'lodash';
+import { cloneDeep, isEqual, range } from 'lodash';
 import * as moment from 'moment';
 import * as React from 'react';
 import { useEffect, useState } from 'react';
@@ -26,7 +26,7 @@ import { GPSPoint, isValidGPSInput } from '../../utils/calibration';
 import { AreaUnitType } from '../../utils/getAreaUnitConversion';
 import { getGPSString, nullToEmptyString } from '../../utils/input';
 import { showErrorNotification } from '../../utils/notifications';
-import translate from '../../utils/translate';
+import { useTranslate } from '../../redux/componentHooks';
 import TimeZoneSelect from '../TimeZoneSelect';
 import TooltipHelpComponent from '../TooltipHelpComponent';
 import TooltipMarkerComponent from '../TooltipMarkerComponent';
@@ -43,6 +43,7 @@ interface EditMeterModalComponentProps {
  * @returns Meter edit element
  */
 export default function EditMeterModalComponent(props: EditMeterModalComponentProps) {
+	const translate = useTranslate();
 	const [editMeter] = metersApi.useEditMeterMutation();
 	// since this selector is shared amongst many other modals, we must use a selector factory in order
 	// to have a single selector per modal instance. Memo ensures that this is a stable reference
@@ -180,6 +181,34 @@ export default function EditMeterModalComponent(props: EditMeterModalComponentPr
 		setLocalMeterEdits({ ...localMeterEdits, [e.target.name]: JSON.parse(e.target.value) });
 	};
 
+	// Function handles the selection of a new displayable.
+	const handleDisplayableChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+		// If there is a potential issue then the admin will decide if save happens. Otherwise, the value is put into state.
+		let save = true;
+		if (!JSON.parse(e.target.value)) {
+			// This will hold the overall message for the admin alert.
+			let msg = '';
+			// This will hold the names of groups that are affected.
+			let groups = '';
+			// Tells if the change should be cancelled.
+			// Checks for groups that include the meter being edited.
+			for (const groupId of Object.values(groupDataByID)) {
+				if (groupId.displayable && groupId.deepMeters.includes(meterState.id)) {
+					groups += `${groupId.name}\n`;
+				}
+			}
+			if (groups != '') {
+				// There is a message to display to the user.
+				msg += `${translate('meter')} "${meterState.name}" ${translate('meter.edit.displayable.warning')}\n`;
+				msg += `${groups + '\n' + translate('meter.edit.displayable.verify')}\n`;
+				save = window.confirm(msg);
+			}
+		}
+		if (save) {
+			handleBooleanChange(e);
+		}
+	};
+
 	const handleNumberChange = (e: React.ChangeEvent<HTMLInputElement>) => {
 		setLocalMeterEdits({ ...localMeterEdits, [e.target.name]: Number(e.target.value) });
 	};
@@ -306,7 +335,7 @@ export default function EditMeterModalComponent(props: EditMeterModalComponentPr
 								name='displayable'
 								type='select'
 								value={localMeterEdits.displayable?.toString()}
-								onChange={e => handleBooleanChange(e)}
+								onChange={e => handleDisplayableChange(e)}
 								invalid={localMeterEdits.displayable && localMeterEdits.unitId === -99}>
 								{Object.keys(TrueFalseType).map(key => {
 									return (<option value={key} key={key}>{translate(`TrueFalseType.${key}`)}</option>);
@@ -538,15 +567,9 @@ export default function EditMeterModalComponent(props: EditMeterModalComponentPr
 							<Input id='readingDuplication' name='readingDuplication' type="select"
 								onChange={e => handleNumberChange(e)}
 								defaultValue={localMeterEdits?.readingDuplication} >
-								<option> 1 </option>
-								<option> 2 </option>
-								<option> 3 </option>
-								<option> 4 </option>
-								<option> 5 </option>
-								<option> 6 </option>
-								<option> 7 </option>
-								<option> 8 </option>
-								<option> 9 </option>
+								{range(1, 10).map(i => (
+									<option key={i} value={`${i}`}> {i} </option>
+								))}
 							</Input>
 						</FormGroup></Col>
 					</Row>
