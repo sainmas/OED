@@ -1,5 +1,8 @@
 import * as React from 'react';
-import { Alert, Button, Dropdown, DropdownItem, DropdownMenu, DropdownToggle, FormGroup, Input, Label, Table } from 'reactstrap';
+import {
+	Alert, Button, Dropdown, DropdownItem, DropdownMenu, DropdownToggle,
+	FormGroup, Input, Label, Modal, ModalBody, ModalHeader, Table
+} from 'reactstrap';
 import DateRangePicker from '@wojtekmaj/react-daterange-picker';
 import { useAppSelector } from '../../redux/reduxHooks';
 import { selectSelectedLanguage } from '../../redux/slices/appStateSlice';
@@ -14,10 +17,7 @@ import { logsApi } from '../../utils/api';
 // }
 
 const PER_PAGE = 25;
-
 const initialLogs: any[] = [];
-
-
 const logTypes = ['ERROR', 'INFO', 'WARN', 'SILENT'];
 
 /**
@@ -42,6 +42,15 @@ export default function LogMsgComponent() {
 	// const [selectAllOption, setSelectAllOption] = React.useState(true);
 
 	const [currentPage, setCurrentPage] = React.useState(1);
+
+	const [modalOpen, setModalOpen] = React.useState(false);
+	const [modalLogMessage, setModalLogMessage] = React.useState('');
+
+	// Open modal with the full log message
+	const handleLogMessageClick = (logMessage: string) => {
+		setModalLogMessage(logMessage);
+		setModalOpen(true);
+	};
 
 	// Handle checkbox change
 	const handleCheckboxChange = (logType: string) => {
@@ -121,153 +130,165 @@ export default function LogMsgComponent() {
 	}
 
 	return (
-		showLogTable ?
-			<>
-				<h1 style={titleStyle}>Log Messages</h1>
-				<FormGroup check inline style={logFilterStyle}>
-					<Dropdown isOpen={dropdownOpen} toggle={onToggleDropdown}>
-						<DropdownToggle caret>Log Type</DropdownToggle>
-						<DropdownMenu>
-							{logTypes.map(logType => (
-								<DropdownItem key={logType} toggle={false}>
-									<Label check>
-										<Input
-											type="checkbox"
-											checked={selectedLogTypes.includes(logType)}
-											onChange={() => handleCheckboxChange(logType)}
-										/> {logType}
-									</Label>
-								</DropdownItem>
-							))}
-						</DropdownMenu>
-					</Dropdown>
-					<div style={{ display: 'flex', gap: '2.5%' }}>
-						<p style={labelStyle}>Date Range:</p>
-						<DateRangePicker
-							value={logDateRange}
-							onChange={handleDateRangeChange}
-							minDate={new Date(1970, 0, 1)}
-							maxDate={new Date()}
-							locale={locale} // Formats Dates, and Calendar months base on locale
-							calendarIcon={null}
-							calendarProps={{ defaultView: 'year' }} />
-					</div>
-					<FormGroup check>
-						<Label for="logLimit" style={{ fontWeight: 'bold', margin: '0' }}>
-							Number of logs:
-						</Label>
-						<Input
-							id="logLimit"
-							name="logLimit"
-							placeholder="(from 1 to 1000)"
-							type="number"
-							onChange={e => setLogLimit(e.target.valueAsNumber)}
-							invalid={logLimit < 1 || logLimit > 1000}
-						/>
-					</FormGroup>
-					<Button color='primary' onClick={handleShowLogTable}>Refresh</Button>
-				</FormGroup>
-				<Table style={tableStyle} bordered hover>
-					<thead style={headerStyle}>
-						<tr>
-							<th>Log Type</th>
-							<th>Log Message</th>
-							<th onClick={handleDateSort} style={{ cursor: 'pointer' }}>Log Time {dateSortOrder === 'asc' ? '↑' : '↓'}</th>
-						</tr>
-					</thead>
-					<tbody style={bodyStyle}>
-						{paginatedLogs.map((log, index) => (
-							<tr key={index + 1}>
-								<td>{log.logType}</td>
-								<td>{log.logMessage}</td>
-								<td>
-									{new Date(log.logTime).toLocaleString('en-US', {
-										year: 'numeric',
-										month: '2-digit',
-										day: '2-digit',
-										hour: '2-digit',
-										minute: '2-digit',
-										second: '2-digit',
-										fractionalSecondDigits: 2
-									})}
-								</td>
-							</tr>
-						))}
-					</tbody>
-				</Table>
-				<div style={{ textAlign: 'center', margin: '-1% auto 1% auto' }}>
-					{Array.from({ length: totalPages }, (_, index) => (
-						<Button
-							key={index + 1}
-							color={currentPage === index + 1 ? 'primary' : 'secondary'}
-							onClick={() => handlePageChange(index + 1)}
-							style={{ margin: '0 2px' }}
-						>
-							{index + 1}
-						</Button>
-					))}
-				</div>
-			</>
-			:
-
-			<div className='container-fluid'>
-				<div className='d-inline-flex flex-column align-items-center justify-content-center w-100'>
-					<Alert style={{ textAlign: 'center' }}>Please choose log types and date range for log data</Alert>
-					<div className='col-12 col-lg-6 border border-4 rounded p-4 vw-50'>
-						<div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
-							<Dropdown isOpen={dropdownOpen} toggle={onToggleDropdown}>
-								<DropdownToggle color='primary' caret>
-									Log Type
-								</DropdownToggle>
-								<DropdownMenu>
-									{logTypes.map(logType => (
-										<DropdownItem key={logType} toggle={false}>
-											<Label check>
-												<Input
-													type="checkbox"
-													checked={selectedLogTypes.includes(logType)}
-													onChange={() => handleCheckboxChange(logType)}
-												/> {logType}
-											</Label>
-										</DropdownItem>
-									))}
-								</DropdownMenu>
-							</Dropdown>
-							<FormGroup check>
-								<Label for='logDate' style={{ fontWeight: 'bold', margin: '0' }}>
-									Date Range:
-								</Label>
-								<DateRangePicker
-									id='logDate'
-									value={logDateRange}
-									onChange={handleDateRangeChange}
-									minDate={new Date(1970, 0, 1)}
-									maxDate={new Date()}
-									locale={locale} // Formats Dates, and Calendar months base on locale
-									calendarIcon={null}
-									calendarProps={{ defaultView: 'year' }}
-									required />
-
-							</FormGroup>
-							<FormGroup check>
-								<Label for="logLimit" style={{ fontWeight: 'bold', margin: '0' }}>
-									Number of logs to Display:
-								</Label>
-								<Input
-									id="logLimit"
-									name="logLimit"
-									placeholder="(from 1 to 1000)"
-									type="number"
-									onChange={e => setLogLimit(e.target.valueAsNumber)}
-									required
-									invalid={logLimit < 1 || logLimit > 1000}
-								/>
-							</FormGroup>
+		<>
+			{showLogTable ?
+				(<>
+					<h1 style={titleStyle}>Log Messages</h1>
+					<FormGroup check inline style={logFilterStyle}>
+						<Dropdown isOpen={dropdownOpen} toggle={onToggleDropdown}>
+							<DropdownToggle caret>Log Type</DropdownToggle>
+							<DropdownMenu>
+								{logTypes.map(logType => (
+									<DropdownItem key={logType} toggle={false}>
+										<Label check>
+											<Input
+												type="checkbox"
+												checked={selectedLogTypes.includes(logType)}
+												onChange={() => handleCheckboxChange(logType)}
+											/> {logType}
+										</Label>
+									</DropdownItem>
+								))}
+							</DropdownMenu>
+						</Dropdown>
+						<div style={{ display: 'flex', gap: '2.5%' }}>
+							<p style={labelStyle}>Date Range:</p>
+							<DateRangePicker
+								value={logDateRange}
+								onChange={handleDateRangeChange}
+								minDate={new Date(1970, 0, 1)}
+								maxDate={new Date()}
+								locale={locale} // Formats Dates, and Calendar months base on locale
+								calendarIcon={null}
+								calendarProps={{ defaultView: 'year' }} />
 						</div>
-						<Button block color='primary' onClick={handleShowLogTable}>Show Log Messages</Button>
+						<FormGroup check>
+							<Label for="logLimit" style={{ fontWeight: 'bold', margin: '0' }}>
+								Number of logs:
+							</Label>
+							<Input
+								id="logLimit"
+								name="logLimit"
+								placeholder="(from 1 to 1000)"
+								type="number"
+								onChange={e => setLogLimit(e.target.valueAsNumber)}
+								invalid={logLimit < 1 || logLimit > 1000}
+							/>
+						</FormGroup>
+						<Button color='primary' onClick={handleShowLogTable}>Refresh</Button>
+					</FormGroup>
+					<Table style={tableStyle} bordered hover>
+						<thead style={headerStyle}>
+							<tr>
+								<th>Log Type</th>
+								<th>Log Message</th>
+								<th onClick={handleDateSort} style={{ cursor: 'pointer' }}>Log Time {dateSortOrder === 'asc' ? '↑' : '↓'}</th>
+							</tr>
+						</thead>
+						<tbody style={bodyStyle}>
+							{paginatedLogs.map((log, index) => (
+								<tr key={index + 1}>
+									<td>{log.logType}</td>
+									<td
+										style={{ cursor: 'pointer' }}
+										onClick={() => handleLogMessageClick(log.logMessage)}
+									>{log.logMessage.length > 80 ? `${log.logMessage.slice(0, 80)} ...` : log.logMessage}</td>
+									<td>
+										{new Date(log.logTime).toLocaleString('en-US', {
+											year: 'numeric',
+											month: '2-digit',
+											day: '2-digit',
+											hour: '2-digit',
+											minute: '2-digit',
+											second: '2-digit',
+											fractionalSecondDigits: 2
+										})}
+									</td>
+								</tr>
+							))}
+						</tbody>
+					</Table>
+					<div style={{ textAlign: 'center', margin: '-1% auto 1% auto' }}>
+						{Array.from({ length: totalPages }, (_, index) => (
+							<Button
+								key={index + 1}
+								color={currentPage === index + 1 ? 'primary' : 'secondary'}
+								onClick={() => handlePageChange(index + 1)}
+								style={{ margin: '0 2px' }}
+							>
+								{index + 1}
+							</Button>
+						))}
 					</div>
-				</div>
-			</div >
+				</>)
+				:
+				(<div className='container-fluid'>
+					<div className='d-inline-flex flex-column align-items-center justify-content-center w-100'>
+						<Alert style={{ textAlign: 'center' }}>Please choose log types and date range for log data</Alert>
+						<div className='col-12 col-lg-6 border border-4 rounded p-4 vw-50'>
+							<div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+								<Dropdown isOpen={dropdownOpen} toggle={onToggleDropdown}>
+									<DropdownToggle color='primary' caret>
+										Log Type
+									</DropdownToggle>
+									<DropdownMenu>
+										{logTypes.map(logType => (
+											<DropdownItem key={logType} toggle={false}>
+												<Label check>
+													<Input
+														type="checkbox"
+														checked={selectedLogTypes.includes(logType)}
+														onChange={() => handleCheckboxChange(logType)}
+													/> {logType}
+												</Label>
+											</DropdownItem>
+										))}
+									</DropdownMenu>
+								</Dropdown>
+								<FormGroup check>
+									<Label for='logDate' style={{ fontWeight: 'bold', margin: '0' }}>
+										Date Range:
+									</Label>
+									<DateRangePicker
+										id='logDate'
+										value={logDateRange}
+										onChange={handleDateRangeChange}
+										minDate={new Date(1970, 0, 1)}
+										maxDate={new Date()}
+										locale={locale} // Formats Dates, and Calendar months base on locale
+										calendarIcon={null}
+										calendarProps={{ defaultView: 'year' }}
+										required />
+
+								</FormGroup>
+								<FormGroup check>
+									<Label for="logLimit" style={{ fontWeight: 'bold', margin: '0' }}>
+										Number of logs to Display:
+									</Label>
+									<Input
+										id="logLimit"
+										name="logLimit"
+										placeholder="(from 1 to 1000)"
+										type="number"
+										onChange={e => setLogLimit(e.target.valueAsNumber)}
+										required
+										invalid={logLimit < 1 || logLimit > 1000}
+									/>
+								</FormGroup>
+							</div>
+							<Button block color='primary' onClick={handleShowLogTable}>Show Log Messages</Button>
+						</div>
+					</div>
+				</div >)
+			}
+
+			<Modal isOpen={modalOpen} toggle={() => setModalOpen(!modalOpen)} centered>
+				<ModalHeader toggle={() => setModalOpen(!modalOpen)}>Log Message</ModalHeader>
+				<ModalBody>
+					{modalLogMessage}
+				</ModalBody>
+			</Modal >
+		</>
 	);
 }
 
