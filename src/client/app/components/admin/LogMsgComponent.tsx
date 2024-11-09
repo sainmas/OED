@@ -8,15 +8,9 @@ import { useAppSelector } from '../../redux/reduxHooks';
 import { selectSelectedLanguage } from '../../redux/slices/appStateSlice';
 import { showWarnNotification } from '../../utils/notifications';
 import { logsApi } from '../../utils/api';
-// import translate from '../../utils/translate';
+import translate from '../../utils/translate';
 
-// interface LogMsgData {
-// 	logType: string;
-// 	logMessage: string;
-// 	logTime: string;
-// }
-
-const PER_PAGE = 25;
+const PER_PAGE = 20;
 const initialLogs: any[] = [];
 const logTypes = ['ERROR', 'INFO', 'WARN', 'SILENT'];
 
@@ -39,7 +33,7 @@ export default function LogMsgComponent() {
 
 	// number of log messages to display
 	const [logLimit, setLogLimit] = React.useState(0);
-	// const [selectAllOption, setSelectAllOption] = React.useState(true);
+	const [selectAll, setSelectAll] = React.useState(true);
 
 	const [currentPage, setCurrentPage] = React.useState(1);
 
@@ -61,6 +55,16 @@ export default function LogMsgComponent() {
 			// Add log type if not selected
 			setSelectedLogTypes([...selectedLogTypes, logType]);
 		}
+	};
+
+	// Handle "Select All" checkbox change
+	const handleSelectAllChange = () => {
+		if (selectAll) {
+			setSelectedLogTypes([]);
+		} else {
+			setSelectedLogTypes(logTypes);
+		}
+		setSelectAll(!selectAll);
 	};
 
 	const handleDateSort = () => {
@@ -133,11 +137,20 @@ export default function LogMsgComponent() {
 		<>
 			{showLogTable ?
 				(<>
-					<h1 style={titleStyle}>Log Messages</h1>
+					<h1 style={titleStyle}>{translate('log.messages')}</h1>
 					<FormGroup check inline style={logFilterStyle}>
 						<Dropdown isOpen={dropdownOpen} toggle={onToggleDropdown}>
-							<DropdownToggle caret>Log Type</DropdownToggle>
+							<DropdownToggle caret>{translate('log.type')}</DropdownToggle>
 							<DropdownMenu>
+								<DropdownItem key='selectAll' toggle={false}>
+									<Label check>
+										<Input
+											type="checkbox"
+											checked={selectAll}
+											onChange={handleSelectAllChange}
+										/> {translate('select.all')}
+									</Label>
+								</DropdownItem>
 								{logTypes.map(logType => (
 									<DropdownItem key={logType} toggle={false}>
 										<Label check>
@@ -152,7 +165,7 @@ export default function LogMsgComponent() {
 							</DropdownMenu>
 						</Dropdown>
 						<div style={{ display: 'flex', gap: '2.5%' }}>
-							<p style={labelStyle}>Date Range:</p>
+							<p style={labelStyle}>{translate('date.range')}</p>
 							<DateRangePicker
 								value={logDateRange}
 								onChange={handleDateRangeChange}
@@ -164,25 +177,25 @@ export default function LogMsgComponent() {
 						</div>
 						<FormGroup check>
 							<Label for="logLimit" style={{ fontWeight: 'bold', margin: '0' }}>
-								Number of logs:
+								{translate('num.logs.display')}
 							</Label>
 							<Input
 								id="logLimit"
 								name="logLimit"
-								placeholder="(from 1 to 1000)"
+								placeholder={translate('from.1.to.1000')}
 								type="number"
 								onChange={e => setLogLimit(e.target.valueAsNumber)}
 								invalid={logLimit < 1 || logLimit > 1000}
 							/>
 						</FormGroup>
-						<Button color='primary' onClick={handleShowLogTable}>Refresh</Button>
+						<Button color='primary' onClick={handleShowLogTable}>{translate('refresh')}</Button>
 					</FormGroup>
 					<Table style={tableStyle} bordered hover>
 						<thead style={headerStyle}>
 							<tr>
-								<th>Log Type</th>
-								<th>Log Message</th>
-								<th onClick={handleDateSort} style={{ cursor: 'pointer' }}>Log Time {dateSortOrder === 'asc' ? '↑' : '↓'}</th>
+								<th>{translate('log.type')}</th>
+								<th>{translate('log.message')}</th>
+								<th onClick={handleDateSort} style={{ cursor: 'pointer' }}>{translate('log.time')} {dateSortOrder === 'asc' ? '↑' : '↓'}</th>
 							</tr>
 						</thead>
 						<tbody style={bodyStyle}>
@@ -224,14 +237,21 @@ export default function LogMsgComponent() {
 				:
 				(<div className='container-fluid'>
 					<div className='d-inline-flex flex-column align-items-center justify-content-center w-100'>
-						<Alert style={{ textAlign: 'center' }}>Please choose log types and date range for log data</Alert>
+						<Alert style={{ textAlign: 'center' }}>{translate('please.choose.log.limit.date.range')}</Alert>
 						<div className='col-12 col-lg-6 border border-4 rounded p-4 vw-50'>
 							<div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
 								<Dropdown isOpen={dropdownOpen} toggle={onToggleDropdown}>
-									<DropdownToggle color='primary' caret>
-										Log Type
-									</DropdownToggle>
+									<DropdownToggle color='primary' caret>{translate('log.type')}</DropdownToggle>
 									<DropdownMenu>
+										<DropdownItem key='selectAll' toggle={false}>
+											<Label check>
+												<Input
+													type="checkbox"
+													checked={selectAll}
+													onChange={handleSelectAllChange}
+												/>{translate('select.all')}
+											</Label>
+										</DropdownItem>
 										{logTypes.map(logType => (
 											<DropdownItem key={logType} toggle={false}>
 												<Label check>
@@ -247,7 +267,7 @@ export default function LogMsgComponent() {
 								</Dropdown>
 								<FormGroup check>
 									<Label for='logDate' style={{ fontWeight: 'bold', margin: '0' }}>
-										Date Range:
+										{translate('date.range')}
 									</Label>
 									<DateRangePicker
 										id='logDate'
@@ -263,12 +283,12 @@ export default function LogMsgComponent() {
 								</FormGroup>
 								<FormGroup check>
 									<Label for="logLimit" style={{ fontWeight: 'bold', margin: '0' }}>
-										Number of logs to Display:
+										{translate('num.logs.display')}
 									</Label>
 									<Input
 										id="logLimit"
 										name="logLimit"
-										placeholder="(from 1 to 1000)"
+										placeholder={translate('from.1.to.1000')}
 										type="number"
 										onChange={e => setLogLimit(e.target.valueAsNumber)}
 										required
@@ -276,14 +296,14 @@ export default function LogMsgComponent() {
 									/>
 								</FormGroup>
 							</div>
-							<Button block color='primary' onClick={handleShowLogTable}>Show Log Messages</Button>
+							<Button block color='primary' onClick={handleShowLogTable}>{translate('show.logs')}</Button>
 						</div>
 					</div>
 				</div >)
 			}
 
 			<Modal isOpen={modalOpen} toggle={() => setModalOpen(!modalOpen)} centered>
-				<ModalHeader toggle={() => setModalOpen(!modalOpen)}>Log Message</ModalHeader>
+				<ModalHeader toggle={() => setModalOpen(!modalOpen)}>{translate('log.message')}</ModalHeader>
 				<ModalBody>
 					{modalLogMessage}
 				</ModalBody>

@@ -513,7 +513,16 @@ const LocaleTranslationData = {
 		"yes": "yes",
 		"yesterday": "Yesterday",
 		"you.cannot.create.a.cyclic.group": "You cannot create a cyclic group",
-		"log.messages": "Log Messages"
+		"log.messages": "Log Messages",
+		"log.message": "Log Message",
+		"log.type": "Log Type",
+		"log.time": "Log Time",
+		"num.logs.display": "Number of logs to display",
+		"refresh": "Refresh",
+		"from.1.to.1000": "from 1 to 1000",
+		"show.logs": "Show Log Table",
+		"please.choose.log.limit.date.range": "Please choose log limit and date range",
+		"select.all": "Select All"
 	},
 	"fr": {
 		"3D": "3D",
@@ -1022,7 +1031,16 @@ const LocaleTranslationData = {
 		"yes": " yes\u{26A1}",
 		"yesterday": "Hier",
 		"you.cannot.create.a.cyclic.group": "Vous ne pouvez pas créer un groupe cyclique",
-		"log.messages": "Log Messages\u{26A1}"
+		"log.messages": "Log Messages\u{26A1}",
+		"log.message": "Log Message\u{26A1}",
+		"log.type": "Log Type\u{26A1}",
+		"log.time": "Log Time\u{26A1}",
+		"num.logs.display": "Number of logs to display\u{26A1}",
+		"refresh": "Refresh\u{26A1}",
+		"from.1.to.1000": "from 1 to 1000\u{26A1}",
+		"show.logs": "Show Log Table\u{26A1}",
+		"please.choose.log.limit.date.range": "Please choose log limit and date range\u{26A1}",
+		"select.all": "Select All\u{26A1}"
 	},
 	"es": {
 		"3D": "3D",
@@ -1532,7 +1550,16 @@ const LocaleTranslationData = {
 		"yes": "sí",
 		"yesterday": "Ayer",
 		"you.cannot.create.a.cyclic.group": "No se puede crear un grupo cíclico",
-		"log.messages": "Log Messages\u{26A1}"
+		"log.messages": "Log Messages\u{26A1}",
+		"log.message": "Log Message\u{26A1}",
+		"log.type": "Log Type\u{26A1}",
+		"log.time": "Log Time\u{26A1}",
+		"num.logs.display": "Number of logs to display\u{26A1}",
+		"refresh": "Refresh\u{26A1}",
+		"from.1.to.1000": "from 1 to 1000\u{26A1}",
+		"show.logs": "Show Log Table\u{26A1}",
+		"please.choose.log.limit.date.range": "Please choose log limit and date range\u{26A1}",
+		"select.all": "Select All\u{26A1}"
 	}
 }
 
