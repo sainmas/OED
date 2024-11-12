@@ -518,11 +518,12 @@ const LocaleTranslationData = {
 		"log.type": "Log Type",
 		"log.time": "Log Time",
 		"num.logs.display": "Number of logs to display",
-		"refresh": "Refresh",
+		"log.msg.update": "Update",
 		"from.1.to.1000": "from 1 to 1000",
 		"show.logs": "Show Log Table",
 		"please.choose.log.limit.date.range": "Please choose log limit and date range",
-		"select.all": "Select All"
+		"select.all": "Select All",
+		"no.logs": "No logs to display. Please select another data range or log type"
 	},
 	"fr": {
 		"3D": "3D",
@@ -1036,11 +1037,12 @@ const LocaleTranslationData = {
 		"log.type": "Log Type\u{26A1}",
 		"log.time": "Log Time\u{26A1}",
 		"num.logs.display": "Number of logs to display\u{26A1}",
-		"refresh": "Refresh\u{26A1}",
+		"log.msg.update": "Update\u{26A1}",
 		"from.1.to.1000": "from 1 to 1000\u{26A1}",
 		"show.logs": "Show Log Table\u{26A1}",
 		"please.choose.log.limit.date.range": "Please choose log limit and date range\u{26A1}",
-		"select.all": "Select All\u{26A1}"
+		"select.all": "Select All\u{26A1}",
+		"no.logs": "No logs to display. Please select another data range or log type\u{26A1}"
 	},
 	"es": {
 		"3D": "3D",
@@ -1555,11 +1557,12 @@ const LocaleTranslationData = {
 		"log.type": "Log Type\u{26A1}",
 		"log.time": "Log Time\u{26A1}",
 		"num.logs.display": "Number of logs to display\u{26A1}",
-		"refresh": "Refresh\u{26A1}",
+		"log.msg.update": "Update\u{26A1}",
 		"from.1.to.1000": "from 1 to 1000\u{26A1}",
 		"show.logs": "Show Log Table\u{26A1}",
 		"please.choose.log.limit.date.range": "Please choose log limit and date range\u{26A1}",
-		"select.all": "Select All\u{26A1}"
+		"select.all": "Select All\u{26A1}",
+		"no.logs": "No logs to display. Please select another data range or log type\u{26A1}"
 	}
 }
 
