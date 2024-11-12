@@ -6,7 +6,6 @@ import * as React from 'react';
 import { FormattedMessage } from 'react-intl';
 import { DropdownItem, DropdownMenu, DropdownToggle, UncontrolledDropdown } from 'reactstrap';
 import { selectSelectedLanguage, updateSelectedLanguage } from '../redux/slices/appStateSlice';
-import { selectOEDVersion } from '../redux/api/versionApi';
 import { useAppDispatch, useAppSelector } from '../redux/reduxHooks';
 import { LanguageTypes } from '../types/redux/i18n';
 import { selectBaseHelpUrl } from '../redux/slices/adminSlice';
@@ -19,10 +18,9 @@ export default function LanguageSelectorComponent() {
 	const dispatch = useAppDispatch();
 
 	const selectedLanguage = useAppSelector(selectSelectedLanguage);
-	const version = useAppSelector(selectOEDVersion);
 	const baseHelpUrl = useAppSelector(selectBaseHelpUrl);
 
-	const helpUrl = baseHelpUrl + version;
+	const helpUrl = baseHelpUrl;
 
 	return (
 		<>
@@ -48,7 +46,7 @@ export default function LanguageSelectorComponent() {
 					</DropdownItem>
 					<DropdownItem divider />
 					<DropdownItem
-						href={helpUrl + '/language.html'}>
+						href={helpUrl + '/language/'}>
 						<FormattedMessage id="help" />
 					</DropdownItem>
 				</DropdownMenu>
