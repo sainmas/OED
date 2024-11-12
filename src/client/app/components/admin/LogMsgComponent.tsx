@@ -22,11 +22,13 @@ export default function LogMsgComponent() {
 	const locale = useAppSelector(selectSelectedLanguage);
 	const [logs, setLogs] = React.useState(initialLogs);
 
-	const [selectedLogTypes, setSelectedLogTypes] = React.useState<string[]>(logTypes);
+	const [selectedTableLogTypes, setSelectedTableLogTypes] = React.useState<string[]>(logTypes);
+	const [selectedUpdateLogTypes, setSelectedUpdateLogTypes] = React.useState<string[]>(logTypes);
 	const [dateSortOrder, setDateSortOrder] = React.useState<'asc' | 'desc'>('asc');
 	const [logDateRange, setLogDateRange] = React.useState<[Date | null, Date | null]>([null, null]);
 	// Dropdown open state for log type in the header
-	const [dropdownOpen, setDropdownOpen] = React.useState(false);
+	const [typeTableDropdown, setTypeTableDropdown] = React.useState(false);
+	const [updateLogDropdown, setUpdateLogDropdown] = React.useState(false);
 
 	// number of log messages to display
 	const [logLimit, setLogLimit] = React.useState(0);
@@ -46,22 +48,41 @@ export default function LogMsgComponent() {
 	};
 
 	// Handle checkbox change
-	const handleCheckboxChange = (logType: string) => {
-		if (selectedLogTypes.includes(logType)) {
+	const handleTableCheckboxChange = (logType: string) => {
+		if (selectedTableLogTypes.includes(logType)) {
 			// Remove log type if already selected
-			setSelectedLogTypes(selectedLogTypes.filter(type => type !== logType));
+			setSelectedTableLogTypes(selectedTableLogTypes.filter(type => type !== logType));
 		} else {
 			// Add log type if not selected
-			setSelectedLogTypes([...selectedLogTypes, logType]);
+			setSelectedTableLogTypes([...selectedTableLogTypes, logType]);
+		}
+	};
+
+	const handleUpdateCheckboxChange = (logType: string) => {
+		if (selectedUpdateLogTypes.includes(logType)) {
+			// Remove log type if already selected
+			setSelectedUpdateLogTypes(selectedUpdateLogTypes.filter(type => type !== logType));
+		} else {
+			// Add log type if not selected
+			setSelectedUpdateLogTypes([...selectedUpdateLogTypes, logType]);
 		}
 	};
 
 	// Handle "Select All" checkbox change
-	const handleSelectAllChange = () => {
+	const handleTableSelectAll = () => {
 		if (selectAll) {
-			setSelectedLogTypes([]);
+			setSelectedTableLogTypes([]);
 		} else {
-			setSelectedLogTypes(logTypes);
+			setSelectedTableLogTypes(logTypes);
+		}
+		setSelectAll(!selectAll);
+	};
+
+	const handleUpdateSelectAll = () => {
+		if (selectAll) {
+			setSelectedUpdateLogTypes([]);
+		} else {
+			setSelectedUpdateLogTypes(logTypes);
 		}
 		setSelectAll(!selectAll);
 	};
@@ -91,8 +112,12 @@ export default function LogMsgComponent() {
 	};
 
 	// Toggle dropdown in the header
-	const onToggleDropdown = () => {
-		setDropdownOpen(!dropdownOpen);
+	const toggleTypeTable = () => {
+		setTypeTableDropdown(!typeTableDropdown);
+	};
+
+	const toggleUpdateLog = () => {
+		setUpdateLogDropdown(!updateLogDropdown);
 	};
 
 	const handleShowAllLogs = () => {
@@ -108,7 +133,7 @@ export default function LogMsgComponent() {
 			(!logDateRange || !logDateRange[0] || logDate >= logDateRange[0]) &&
 			(!logDateRange || !logDateRange[1] || logDate <= logDateRange[1]);
 
-		return selectedLogTypes.includes(log.logType) && isWithinDateRange;
+		return selectedTableLogTypes.includes(log.logType) && isWithinDateRange;
 	});
 
 	const paginatedLogs = showAllLogs ? filteredLogs : filteredLogs.slice((currentPage - 1) * PER_PAGE, currentPage * PER_PAGE);
@@ -126,9 +151,8 @@ export default function LogMsgComponent() {
 			try {
 				// get log by date and type
 				const data = await logsApi.getLogsByDateRangeAndType(
-					logDateRange[0].toISOString(), logDateRange[1].toISOString(), selectedLogTypes, logLimit.toString());
+					logDateRange[0].toISOString(), logDateRange[1].toISOString(), selectedUpdateLogTypes, logLimit.toString());
 				setLogs(data);
-				// setShowLogTable(true);
 				setCurrentPage(1);
 			} catch (error) {
 				console.error(error);
@@ -140,7 +164,7 @@ export default function LogMsgComponent() {
 		<>
 			<h1 style={titleStyle}>{translate('log.messages')}</h1>
 			<div style={logFilterStyle}>
-				<Dropdown isOpen={dropdownOpen} toggle={onToggleDropdown}>
+				<Dropdown isOpen={updateLogDropdown} toggle={toggleUpdateLog}>
 					<DropdownToggle color='primary' caret>{translate('log.type')}</DropdownToggle>
 					<DropdownMenu>
 						<DropdownItem key='selectAll' toggle={false}>
@@ -148,7 +172,7 @@ export default function LogMsgComponent() {
 								<Input
 									type="checkbox"
 									checked={selectAll}
-									onChange={handleSelectAllChange}
+									onChange={handleUpdateSelectAll}
 								/> {translate('select.all')}
 							</Label>
 						</DropdownItem>
@@ -157,8 +181,8 @@ export default function LogMsgComponent() {
 								<Label check>
 									<Input
 										type="checkbox"
-										checked={selectedLogTypes.includes(logType)}
-										onChange={() => handleCheckboxChange(logType)}
+										checked={selectedUpdateLogTypes.includes(logType)}
+										onChange={() => handleUpdateCheckboxChange(logType)}
 									/> {logType}
 								</Label>
 							</DropdownItem>
@@ -200,7 +224,33 @@ export default function LogMsgComponent() {
 				<Table style={tableStyle} bordered hover>
 					<thead style={headerStyle}>
 						<tr>
-							<th>{translate('log.type')}</th>
+							<th>
+								<Dropdown isOpen={typeTableDropdown} toggle={toggleTypeTable}>
+									<DropdownToggle color='primary' caret>{translate('log.type')}</DropdownToggle>
+									<DropdownMenu>
+										<DropdownItem key='selectAll' toggle={false}>
+											<Label check>
+												<Input
+													type="checkbox"
+													checked={selectAll}
+													onChange={handleTableSelectAll}
+												/> {translate('select.all')}
+											</Label>
+										</DropdownItem>
+										{logTypes.map(logType => (
+											<DropdownItem key={logType} toggle={false}>
+												<Label check>
+													<Input
+														type="checkbox"
+														checked={selectedTableLogTypes.includes(logType)}
+														onChange={() => handleTableCheckboxChange(logType)}
+													/> {logType}
+												</Label>
+											</DropdownItem>
+										))}
+									</DropdownMenu>
+								</Dropdown>
+							</th>
 							<th>{translate('log.message')}</th>
 							<th onClick={handleDateSort} style={{ cursor: 'pointer' }}>{translate('log.time')} {dateSortOrder === 'asc' ? '↑' : '↓'}</th>
 						</tr>
@@ -229,7 +279,8 @@ export default function LogMsgComponent() {
 					</tbody>
 				</Table>
 				:
-				<Alert style={{ textAlign: 'center', margin: '2% 25% 25%' }}>{translate('no.logs')}</Alert>}
+				<Alert style={{ textAlign: 'center', margin: '2% 25% 25%' }}>{translate('no.logs')}</Alert>
+			}
 
 			{!showAllLogs && logs.length !== 0 && <Pagination aria-label="Log pagination" style={{ justifyContent: 'center', margin: '1% auto' }}>
 				<>
@@ -288,7 +339,7 @@ const tableStyle: React.CSSProperties = {
 const logFilterStyle: React.CSSProperties = {
 	display: 'flex',
 	justifyContent: 'center',
-	gap: '1%',
+	gap: '1.5%',
 	alignItems: 'center',
 	margin: 'auto 25%',
 	padding: '20px',
