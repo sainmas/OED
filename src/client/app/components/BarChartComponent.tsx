@@ -18,8 +18,8 @@ import { selectBarUnitLabel, selectIsRaw } from '../redux/selectors/plotlyDataSe
 import { selectSelectedLanguage } from '../redux/slices/appStateSlice';
 import { selectBarStacking } from '../redux/slices/graphSlice';
 import Locales from '../types/locales';
-import translate from '../utils/translate';
 import SpinnerComponent from './SpinnerComponent';
+import { useTranslate } from 'redux/componentHooks';
 
 /**
  * Passes the current redux state of the barchart, and turns it into props for the React
@@ -63,6 +63,8 @@ export default function BarChartComponent() {
 
 	// useQueryHooks for data fetching
 	const datasets: Partial<Plotly.PlotData>[] = meterReadings.concat(groupData);
+
+	const translate = useTranslate();
 
 	if (meterIsFetching || groupIsFetching) {
 		return <SpinnerComponent loading height={50} width={50} />;
@@ -112,7 +114,7 @@ export default function BarChartComponent() {
 					modeBarButtonsToRemove: listOfButtons,
 					modeBarButtonsToAdd: [{
 						name: 'toggle-options',
-						title: translate('toggle option'),
+						title: translate('toggle.options'),
 						icon: Icons.pencil,
 						click: function () {
 							// # of items must differ so the length can tell which list of buttons is being set

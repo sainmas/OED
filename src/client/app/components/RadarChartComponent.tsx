@@ -23,7 +23,7 @@ import Locales from '../types/locales';
 import { AreaUnitType, getAreaUnitConversion } from '../utils/getAreaUnitConversion';
 import getGraphColor from '../utils/getGraphColor';
 import { lineUnitLabel } from '../utils/graphics';
-import translate from '../utils/translate';
+import { useTranslate } from 'redux/componentHooks';
 import SpinnerComponent from './SpinnerComponent';
 
 /**
@@ -46,6 +46,8 @@ export default function RadarChartComponent() {
 	const selectedGroups = useAppSelector(selectSelectedGroups);
 	const meterDataById = useAppSelector(selectMeterDataById);
 	const groupDataById = useAppSelector(selectGroupDataById);
+	
+	const translate = useTranslate();
 
 	if (meterIsLoading || groupIsLoading) {
 		return <SpinnerComponent loading width={50} height={50} />;
@@ -340,7 +342,7 @@ export default function RadarChartComponent() {
 					modeBarButtonsToRemove: listOfButtons,
 					modeBarButtonsToAdd: [{
 						name: 'toggle-options',
-						title: translate('toggle option'),
+						title: translate('toggle.options'),
 						icon: Icons.pencil,
 						click: function () {
 							// # of items must differ so the length can tell which list of buttons is being set

@@ -17,7 +17,7 @@ import { selectLineChartDeps, selectPlotlyGroupData, selectPlotlyMeterData } fro
 import { selectLineUnitLabel } from '../redux/selectors/plotlyDataSelectors';
 import { selectSelectedLanguage } from '../redux/slices/appStateSlice';
 import Locales from '../types/locales';
-import translate from '../utils/translate';
+import { useTranslate } from 'redux/componentHooks';
 import SpinnerComponent from './SpinnerComponent';
 
 
@@ -56,6 +56,8 @@ export default function LineChartComponent() {
 
 	// Use Query Data to derive plotly datasets memoized selector
 	const unitLabel = useAppSelector(selectLineUnitLabel);
+
+	const translate = useTranslate();
 
 	// Display Plotly Buttons Feature
 	// The number of items in defaultButtons and advancedButtons must differ as discussed below
@@ -99,7 +101,7 @@ export default function LineChartComponent() {
 					modeBarButtonsToRemove: listOfButtons,
 					modeBarButtonsToAdd: [{
 						name: 'toggle-options',
-						title: translate('toggle option'),
+						title: translate('toggle.options'),
 						icon: Icons.pencil,
 						click: function () {
 							// # of items must differ so the length can tell which list of buttons is being set

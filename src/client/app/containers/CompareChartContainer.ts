@@ -6,7 +6,7 @@
 
 import { connect } from 'react-redux';
 import { getComparePeriodLabels, getCompareChangeSummary, calculateCompareShift } from '../utils/calculateCompare';
-import translate from '../utils/translate';
+import { useTranslate } from 'redux/componentHooks';
 // import * as React from 'react'; Convert from containers to components
 // import { useState } from 'react';
 import Plot from 'react-plotly.js';
@@ -63,6 +63,7 @@ function mapStateToProps(state: RootState, ownProps: CompareChartContainerProps)
 	const groupDataById = selectGroupDataById(state);
 	const selectUnitState = unitDataById[graphingUnit];
 	const locale = selectSelectedLanguage(state);
+	const translate = useTranslate();
 	let unitLabel: string = '';
 	// If graphingUnit is -99 then none selected and nothing to graph so label is empty.
 	// This will probably happen when the page is first loaded.
@@ -251,7 +252,7 @@ function mapStateToProps(state: RootState, ownProps: CompareChartContainerProps)
 			// modeBarButtonsToRemove: listOfButtons,
 			// modeBarButtonsToAdd: [{
 			// 	name: 'toggle-options',
-			// 	title: translate('Toggle Option'),
+			// 	title: translate('toggle.options'),
 			// 	icon: Icons.pencil,
 			// 	click: function () {
 			// 		// # of items must differ so the length can tell which list of buttons is being set

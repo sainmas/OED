@@ -20,7 +20,7 @@ import { UnitDataById } from '../types/redux/units';
 import { isValidThreeDInterval, roundTimeIntervalForFetch } from '../utils/dateRangeCompatibility';
 import { AreaUnitType, getAreaUnitConversion } from '../utils/getAreaUnitConversion';
 import { lineUnitLabel } from '../utils/graphics';
-import translate from '../utils/translate';
+import { useTranslate } from 'redux/componentHooks';
 import SpinnerComponent from './SpinnerComponent';
 import ThreeDPillComponent from './ThreeDPillComponent';
 import Plot from 'react-plotly.js';
@@ -41,8 +41,7 @@ export default function ThreeDComponent() {
 	const graphState = useAppSelector(selectGraphState);
 	const locale = useAppSelector(selectSelectedLanguage);
 	const { meterOrGroupID, meterOrGroupName, isAreaCompatible } = useAppSelector(selectThreeDComponentInfo);
-
-
+	const translate = useTranslate();
 	// Initialize Default values
 	const threeDData = data;
 	let layout = {};
@@ -92,7 +91,7 @@ export default function ThreeDComponent() {
 						modeBarButtonsToRemove: listOfButtons,
 						modeBarButtonsToAdd: [{
 							name: 'more-options',
-							title: translate('toggle option'),
+							title: translate('toggle.options'),
 							icon: Icons.pencil,
 							click: function () {
 								// # of items must differ so the length can tell which list of buttons is being set
@@ -128,6 +127,8 @@ function formatThreeDData(
 	graphState: GraphState,
 	unitDataById: UnitDataById
 ) {
+	const translate = useTranslate();
+
 	// Initialize Plotly Data
 	const xDataToRender: string[] = [];
 	const yDataToRender: string[] = [];
@@ -250,6 +251,7 @@ function setThreeDLayout(zLabelText: string = 'Resource Usage', yDataToRender: s
 	const dataMin = Math.min(...dateObjects.map(date => date.getTime()));
 	const dataMax = Math.max(...dateObjects.map(date => date.getTime()));
 	const dataRange = dataMax - dataMin;
+	const translate = useTranslate();
 
 	//Calculate nTicks for small num of days on y-axis; possibly a better way
 	let nTicks, dTick = 'd1';
