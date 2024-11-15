@@ -1,3 +1,8 @@
+/*
+ * This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at http://mozilla.org/MPL/2.0/.
+ */
 import * as React from 'react';
 import {
 	Alert, Button, Dropdown, DropdownItem, DropdownMenu, DropdownToggle,
@@ -10,8 +15,11 @@ import { showWarnNotification } from '../../utils/notifications';
 import { logsApi } from '../../utils/api';
 import translate from '../../utils/translate';
 
+// number of log messages to display per page
 const PER_PAGE = 20;
+// initialize log message array to hold log messages
 const initialLogs: any[] = [];
+// log types for filtering
 const logTypes = ['ERROR', 'INFO', 'WARN', 'SILENT'];
 
 /**
@@ -20,25 +28,32 @@ const logTypes = ['ERROR', 'INFO', 'WARN', 'SILENT'];
  */
 export default function LogMsgComponent() {
 	const locale = useAppSelector(selectSelectedLanguage);
+
+	// Log messages state
 	const [logs, setLogs] = React.useState(initialLogs);
-
-	const [selectedTableLogTypes, setSelectedTableLogTypes] = React.useState<string[]>(logTypes);
+	// Selected log types for filtering in the update log
 	const [selectedUpdateLogTypes, setSelectedUpdateLogTypes] = React.useState<string[]>(logTypes);
-	const [dateSortOrder, setDateSortOrder] = React.useState<'asc' | 'desc'>('asc');
-	const [logDateRange, setLogDateRange] = React.useState<[Date | null, Date | null]>([null, null]);
-	// Dropdown open state for log type in the header
+	// Dropdown open state for log type in the header for filtering
 	const [typeTableDropdown, setTypeTableDropdown] = React.useState(false);
+	// Selected log types for filtering in the table
+	const [selectedTableLogTypes, setSelectedTableLogTypes] = React.useState<string[]>(logTypes);
+	// Dropdown open state for log type in the table for filtering
 	const [updateLogDropdown, setUpdateLogDropdown] = React.useState(false);
-
-	// number of log messages to display
+	// Sort order for date column in the table
+	const [dateSortOrder, setDateSortOrder] = React.useState<'asc' | 'desc'>('asc');
+	// Log messages date range state
+	const [logDateRange, setLogDateRange] = React.useState<[Date | null, Date | null]>([null, null]);
+	// Number of log messages to display
 	const [logLimit, setLogLimit] = React.useState(0);
+	// "Select All Logs" button state
 	const [selectAll, setSelectAll] = React.useState(true);
-
+	// Current page state for pagination
 	const [currentPage, setCurrentPage] = React.useState(1);
-
+	// Modal state for displaying full log message
 	const [modalOpen, setModalOpen] = React.useState(false);
+	// Full log message to display in the modal
 	const [modalLogMessage, setModalLogMessage] = React.useState('');
-
+	// Showing all logs instead of paginated
 	const [showAllLogs, setShowAllLogs] = React.useState(false);
 
 	// Open modal with the full log message
@@ -47,46 +62,34 @@ export default function LogMsgComponent() {
 		setModalOpen(true);
 	};
 
-	// Handle checkbox change
+	// Handle checkbox change for log type in the table
 	const handleTableCheckboxChange = (logType: string) => {
-		if (selectedTableLogTypes.includes(logType)) {
-			// Remove log type if already selected
+		if (selectedTableLogTypes.includes(logType)) { // Remove log type if already selected
 			setSelectedTableLogTypes(selectedTableLogTypes.filter(type => type !== logType));
-		} else {
-			// Add log type if not selected
+		} else { // Add log type if not selected
 			setSelectedTableLogTypes([...selectedTableLogTypes, logType]);
 		}
 	};
-
+	// Handle checkbox change for log type in the update log
 	const handleUpdateCheckboxChange = (logType: string) => {
-		if (selectedUpdateLogTypes.includes(logType)) {
-			// Remove log type if already selected
+		if (selectedUpdateLogTypes.includes(logType)) {  // Remove log type if already selected
 			setSelectedUpdateLogTypes(selectedUpdateLogTypes.filter(type => type !== logType));
-		} else {
-			// Add log type if not selected
+		} else { // Add log type if not selected
 			setSelectedUpdateLogTypes([...selectedUpdateLogTypes, logType]);
 		}
 	};
 
-	// Handle "Select All" checkbox change
+	// Handle "Select All" checkbox change in the table
 	const handleTableSelectAll = () => {
-		if (selectAll) {
-			setSelectedTableLogTypes([]);
-		} else {
-			setSelectedTableLogTypes(logTypes);
-		}
+		selectAll ? setSelectedTableLogTypes([]) : setSelectedTableLogTypes(logTypes);
 		setSelectAll(!selectAll);
 	};
-
+	// Handle "Select All" checkbox change in the update log
 	const handleUpdateSelectAll = () => {
-		if (selectAll) {
-			setSelectedUpdateLogTypes([]);
-		} else {
-			setSelectedUpdateLogTypes(logTypes);
-		}
+		selectAll ? setSelectedUpdateLogTypes([]) : setSelectedUpdateLogTypes(logTypes);
 		setSelectAll(!selectAll);
 	};
-
+	// Handle sorting of logs by date
 	const handleDateSort = () => {
 		const newDateSortOrder = dateSortOrder === 'asc' ? 'desc' : 'asc';
 		const sortedLogs = [...logs].sort((a, b) => {
@@ -102,24 +105,23 @@ export default function LogMsgComponent() {
 		setDateSortOrder(newDateSortOrder);
 		setLogs(sortedLogs);
 	};
-
+	// Handle date range change
 	const handleDateRangeChange = (range: [Date | null, Date | null]) => {
 		setLogDateRange(range);
 	};
-
+	// Handle page change for pagination
 	const handlePageChange = (newPage: number) => {
 		setCurrentPage(newPage);
 	};
-
-	// Toggle dropdown in the header
+	// Toggle dropdown for type in the table
 	const toggleTypeTable = () => {
 		setTypeTableDropdown(!typeTableDropdown);
 	};
-
+	// Toggle dropdown for type in the update log
 	const toggleUpdateLog = () => {
 		setUpdateLogDropdown(!updateLogDropdown);
 	};
-
+	// Handle showing all logs instead of paginated
 	const handleShowAllLogs = () => {
 		setShowAllLogs(!showAllLogs);
 	};
@@ -127,32 +129,34 @@ export default function LogMsgComponent() {
 	// Filter logs based on selected log types and date range
 	const filteredLogs = logs.filter(log => {
 		const logDate = new Date(log.logTime);
-
 		// Check if log is within the selected date range
 		const isWithinDateRange =
 			(!logDateRange || !logDateRange[0] || logDate >= logDateRange[0]) &&
 			(!logDateRange || !logDateRange[1] || logDate <= logDateRange[1]);
-
 		return selectedTableLogTypes.includes(log.logType) && isWithinDateRange;
 	});
 
+	// Paginate logs if not showing all logs
 	const paginatedLogs = showAllLogs ? filteredLogs : filteredLogs.slice((currentPage - 1) * PER_PAGE, currentPage * PER_PAGE);
 	const totalPages = Math.ceil(filteredLogs.length / PER_PAGE);
 
 	/**
-	 * Handle showing the log table
+	 * Handle showing the log table by fetching from the server
 	 */
 	async function handleShowLogTable() {
+		// date range must be selected
+		// TODO: accept not to choose a date range -> show all logs
 		if (!logDateRange || !logDateRange[0] || !logDateRange[1]) {
 			showWarnNotification('You must select a date range');
-		} else if (!logLimit || logLimit < 1 || logLimit > 1000) {
-			showWarnNotification('You must enter a valid number of logs to display');
+		} else if (!logLimit || logLimit < 1 || logLimit > 1000) { // number of logs being fetched must be between 1 and 1000
+			showWarnNotification(translate('log.limit.required'));
 		} else {
 			try {
 				// get log by date and type
 				const data = await logsApi.getLogsByDateRangeAndType(
 					logDateRange[0].toISOString(), logDateRange[1].toISOString(), selectedUpdateLogTypes, logLimit.toString());
 				setLogs(data);
+				// reset pagination to first page after fetching new logs
 				setCurrentPage(1);
 			} catch (error) {
 				console.error(error);
@@ -163,6 +167,8 @@ export default function LogMsgComponent() {
 	return (
 		<>
 			<h1 style={titleStyle}>{translate('log.messages')}</h1>
+
+			{/* Filter log messages by type, date range, and number of logs for fetching */}
 			<div style={logFilterStyle}>
 				<Dropdown isOpen={updateLogDropdown} toggle={toggleUpdateLog}>
 					<DropdownToggle color='primary' caret>{translate('log.type')}</DropdownToggle>
@@ -220,6 +226,7 @@ export default function LogMsgComponent() {
 				<Button color='primary' onClick={handleShowLogTable}>{translate('log.msg.update')}</Button>
 			</div>
 
+			{/* Display log messages table */}
 			{logs.length > 0 ?
 				<Table style={tableStyle} bordered hover>
 					<thead style={headerStyle}>
@@ -282,6 +289,7 @@ export default function LogMsgComponent() {
 				<Alert style={{ textAlign: 'center', margin: '2% 25% 25%' }}>{translate('no.logs')}</Alert>
 			}
 
+			{/* pagination */}
 			{!showAllLogs && logs.length !== 0 && <Pagination aria-label="Log pagination" style={{ justifyContent: 'center', margin: '1% auto' }}>
 				<>
 					<PaginationItem disabled={currentPage === 1}>
@@ -306,11 +314,13 @@ export default function LogMsgComponent() {
 				</>
 			</Pagination >}
 
+			{/* Show all logs or in pages button */}
 			{logs.length > 0 && !showAllLogs &&
 				<Button color='primary' style={{ margin: '0% 40% 1%' }} onClick={handleShowAllLogs}>Show All Logs ({filteredLogs.length})</Button>}
 			{logs.length > 0 && showAllLogs &&
 				<Button color='primary' style={{ margin: '0% 40% 1%' }} onClick={handleShowAllLogs}>Show in pages</Button>}
 
+			{/* Modal for displaying full log message */}
 			<Modal isOpen={modalOpen} toggle={() => setModalOpen(!modalOpen)} centered>
 				<ModalHeader toggle={() => setModalOpen(!modalOpen)}>{translate('log.message')}</ModalHeader>
 				<ModalBody>
