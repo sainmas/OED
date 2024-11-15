@@ -3,20 +3,14 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 
 const database = require('./database');
-const { mapToObject, threeDHoleAlgorithm } = require('../util');
-const determineMaxPoints = require('../util/determineMaxPoints');
-const log = require('../log');
-const { isReadonlyKeywordOrPlusOrMinusToken } = require('typescript');
-const LogEmail = require('./LogEmail');
-
 const sqlFile = database.sqlFile;
 
 class LogMsg {
 	/**
 	 * Creates a new log
-	 * @param logType
-	 * @param logMessage
-	 * @param {Moment} logTime
+	 * @param logType log type. Have to be INFO, WARN, ERROR, or SILENT
+	 * @param logMessage log information
+	 * @param {Moment} logTime the date and time of the log
 	 */
 	constructor(logType, logMessage, logTime) {
 		this.logType = logType;
@@ -105,12 +99,10 @@ class LogMsg {
 
 	/**
 	 * Returns a promise to get all of the logs in between two dates.
-	 * If no startDate is specified, all logs before the endDate are returned.
-	 * If no endDate is specified, all logs after the startDate are returned.
-	 * @param {Date} startDate
-	 * @param {Date} endDate
-	 * @param {Array<string>} logTypes
-	 * @param {Number} logLimit
+	 * @param {Date} startDate start date of the range to get logs
+	 * @param {Date} endDate end date of the range to get logs
+	 * @param {Array<string>} logTypes array of log types to get logs
+	 * @param {Number} logLimit the maximum number of logs to return
 	 * @param conn is the connection to use.
 	 * @returns {Promise.<array.<LogMsg>>}
 	 */
