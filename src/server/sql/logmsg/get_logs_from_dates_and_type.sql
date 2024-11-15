@@ -6,7 +6,8 @@
 SELECT 
 	log_type, log_message, log_time
 FROM logmsg 
-WHERE log_type = ${logType}
+WHERE log_type = ANY (${logTypes}::log_msg_type[])
 	AND log_time >= COALESCE(${startDate}, '-infinity'::TIMESTAMP)
 	AND log_time <= COALESCE(${endDate}, 'infinity'::TIMESTAMP)
-ORDER BY log_time ASC;
+ORDER BY log_time ASC
+LIMIT ${logLimit};

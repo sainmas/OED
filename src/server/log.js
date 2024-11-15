@@ -51,7 +51,8 @@ class Logger {
 	 * @param {boolean?} skipMail Don't e-mail this message even if we would normally emit an e-mail for this level.
 	 */
 	log(level, message, error = null, skipMail = false) {
-		let messageToLog = `[${level.name}@${moment().format('YYYY-MM-DDTHH:mm:ss.SSSZ')}] ${message}\n`;
+		let logTime = moment().format('YYYY-MM-DDTHH:mm:ss.SSSZ');
+		let messageToLog = `[${level.name}@${logTime}] ${message}\n`;
 
 		const conn = getConnection();
 
@@ -78,19 +79,43 @@ class Logger {
 				}
 			});
 
+			// NOTE: for running the first time, uncomment the following code block to write all current logs to the database
+			// after that you can comment out it to write only new logs to the database
+			// TODO: This should be fix later to check whehter it should write new logs or all logs to the database when running
+			// fs.readFile(logFile, 'utf8', async (err, data) => {
+			// 	if (err) {
+			// 		console.error(`Failed to read log file: ${err} (${err.stack})`);
+			// 		return;
+			// 	}
+
+			// 	const logEntries = data.split('\n').filter(entry => entry.trim() !== '');
+			// 	for (const entry of logEntries) {
+			// 		const logParts = entry.match(/\[(.*?)@(.*?)\] (.*)/);
+			// 		if (logParts) {
+			// 			const [, logType, logTime, logMessage] = logParts;
+			// 			const logMsg = new LogMsg(logType, logMessage, new Date(logTime));
+			// 			try {
+			// 				await logMsg.insert(conn);
+			// 			} catch (err) {
+			// 				console.error(`Failed to write log to database: ${err} (${err.stack})`);
+			// 			}
+			// 		}
+			// 	}
+			// })
+
+
+			// Comment out the following code block when running the first time to write all logs to the database
+			// then uncomment it to write only new logs to the database later
 			// Write the new log to the database
-			const logMsgPatern = messageToLog.match(/\[(.*?)@(.*?)\] (.*)/);
-			if (logMsgPatern) {
-				const [, logType, logTime, logMessage] = logMsgPatern;
-				const logMsg = new LogMsg(logType, logMessage, new Date(logTime));
-				(async () => {
-					try {
-						await logMsg.insert(conn);
-					} catch (err) {
-						console.error(`Failed to write log to database: ${err} (${err.stack})`);
-					}
-				})();
-			}
+			const logMsg = new LogMsg(level.name, message, new Date(logTime));
+			(async () => {
+				try {
+					await logMsg.insert(conn);
+				} catch (err) {
+					console.error(`Failed to write log to database: ${err} (${err.stack})`);
+				}
+			})();
+
 		}
 
 		// Only log elsewhere if given a high enough priority level.

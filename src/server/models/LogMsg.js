@@ -109,18 +109,20 @@ class LogMsg {
 	 * If no endDate is specified, all logs after the startDate are returned.
 	 * @param {Date} startDate
 	 * @param {Date} endDate
-	 * @param logType
+	 * @param {Array<string>} logTypes
+	 * @param {Number} logLimit
 	 * @param conn is the connection to use.
 	 * @returns {Promise.<array.<LogMsg>>}
 	 */
-	static async getLogsByDateRangeAndType(startDate, endDate, logType, conn) {
+	static async getLogsByDateRangeAndType(startDate, endDate, logTypes, logLimit = 100, conn) {
 		const rows = await conn.any(sqlFile('logmsg/get_logs_from_dates_and_type.sql'), {
 			startDate: startDate,
 			endDate: endDate,
-			logType: logType
+			logTypes: logTypes,
+			logLimit: logLimit
 		});
-		return rows.map(LogMsg.mapRow);
 
+		return rows.map(LogMsg.mapRow);
 	}
 }
 module.exports = LogMsg;

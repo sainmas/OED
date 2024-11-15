@@ -27,7 +27,7 @@ const validLog = {
 
 const validLogMsg = {
 	type: 'object',
-	required: ['startDate', 'endDate', 'logType'],
+	required: ['startDate', 'endDate', 'logTypes', 'logLimit'],
 	properties: {
 		startDate: {
 			type: 'string',
@@ -37,19 +37,15 @@ const validLogMsg = {
 			type: 'string',
 			format: 'date-time'
 		},
-		logType: {
+		logTypes: {
 			type: 'string',
-			enum: ['INFO', 'WARN', 'ERROR', 'SILENT']
+			pattern: '^(INFO|WARN|ERROR|SILENT)(-(INFO|WARN|ERROR|SILENT))*$'
 		},
-
-		// use this if later database is changed to be able to deal with logType as a list
-		// logType: {
-		// 	type: 'array',
-		// 	items: {
-		// 		type: 'string',
-		// 		enum: ['INFO', 'WARN', 'ERROR', 'SILENT']
-		// 	}
-		// }
+		logLimit: {
+			type: 'string',
+			// as logLimit is being sent as string, using pattern to validate it represents a number from 1 to 1000
+			pattern: '^(?:[1-9][0-9]{0,2}|1000)$'
+		},
 	}
 }
 router.post('/info', async (req, res) => {
@@ -86,17 +82,6 @@ router.post('/error', async (req, res) => {
 });
 
 
-// router.get('/logsmsg', async (req, res) => {
-// 	const conn = getConnection();
-// 	try {
-// 		const rows = await LogMsg.getAll(conn);
-// 		res.json(rows);
-// 	} catch (err) {
-// 		console.error(`Failed to fetch in getAll: ${err}`);
-// 		res.sendStatus(500);
-// 	}
-// });
-
 router.get('/logsmsg/getLogsByDateRangeAndType', async (req, res) => {
 	const validationResult = validate(req.query, validLogMsg);
 	if (!validationResult.valid) {
@@ -104,7 +89,8 @@ router.get('/logsmsg/getLogsByDateRangeAndType', async (req, res) => {
 	} else {
 		const conn = getConnection();
 		try {
-			const rows = await LogMsg.getLogsByDateRangeAndType(req.query.startDate, req.query.endDate, req.query.logType, conn);
+			const logLimit = parseInt(req.query.logLimit);
+			const rows = await LogMsg.getLogsByDateRangeAndType(req.query.startDate, req.query.endDate, req.query.logTypes.split('-'), logLimit, conn);
 			res.json(rows);
 		} catch (err) {
 			console.error(`Failed to fetch logs filter by date range and type: ${err}`);
