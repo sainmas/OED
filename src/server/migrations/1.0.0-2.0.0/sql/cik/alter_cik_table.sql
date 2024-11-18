@@ -12,3 +12,6 @@ CREATE TABLE IF NOT EXISTS cik (
 	intercept FLOAT,
 	PRIMARY KEY (source_id, destination_id)
 );
+
+-- TODO It is important that a redoCik is done after this to recreate cik.
+-- MUST ADD THIS TO THE 2.0 MIGRATION.
