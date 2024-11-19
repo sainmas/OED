@@ -188,18 +188,19 @@ export default function CreateVisualUnitMapModalComponent() {
 
 		colorSchema.domain().forEach((item, i) => {
 			const legendEntry = legend.append('g')
-				.attr('transform', `translate(0, ${i * 25})`);
+				.attr('transform', `translate(0, ${i * 30})`);
 
 			// Rectangle color box
-			legendEntry.append('rect')
-				.attr('width', 20)
-				.attr('height', 20)
+			legendEntry.append('circle')
+				.attr('r', 15)
+				.attr('cx', 15) // Center the circle horizontally
+				.attr('cy', 15) // Center the circle vertically
 				.attr('fill', colorSchema(item));
 
 			// Text label
 			legendEntry.append('text')
-				.attr('x', 30)
-				.attr('y', 15)
+				.attr('x', 40) // Position the text to the right of the circle
+				.attr('y', 20) // Align the text vertically with the circle
 				.style('fill', '#000')
 				.style('font-size', '14px')
 				.style('alignment-middle', 'middle')
