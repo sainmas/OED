@@ -10,6 +10,7 @@ const validate = require('jsonschema').validate;
 const adminAuthenticator = require('./authenticator').adminAuthMiddleware;
 const LogMsg = require('../models/LogMsg');
 const { getConnection } = require('../db');
+const { TimeInterval } = require('../../common/TimeInterval');
 
 const router = express.Router();
 router.use(adminAuthenticator('log API'));
@@ -27,15 +28,12 @@ const validLog = {
 
 const validLogMsg = {
 	type: 'object',
-	required: ['startDate', 'endDate', 'logTypes', 'logLimit'],
+	required: ['timeInterval', 'logTypes', 'logLimit'],
 	properties: {
-		startDate: {
+		timeInterval: {
+			// it should check for format: 'date-time' but this won't work for case where time is not provided
+			// when time is not provided, timeInterval value will be 'all' so just check type is string for now
 			type: 'string',
-			format: 'date-time'
-		},
-		endDate: {
-			type: 'string',
-			format: 'date-time'
 		},
 		logTypes: {
 			type: 'string',
@@ -90,7 +88,9 @@ router.get('/logsmsg/getLogsByDateRangeAndType', async (req, res) => {
 		const conn = getConnection();
 		try {
 			const logLimit = parseInt(req.query.logLimit);
-			const rows = await LogMsg.getLogsByDateRangeAndType(req.query.startDate, req.query.endDate, req.query.logTypes.split('-'), logLimit, conn);
+			const timeInterval = TimeInterval.fromString(req.query.timeInterval);
+			const rows = await LogMsg.getLogsByDateRangeAndType(
+				timeInterval.startTimestamp, timeInterval.endTimestamp, req.query.logTypes.split('-'), logLimit, conn);
 			res.json(rows);
 		} catch (err) {
 			console.error(`Failed to fetch logs filter by date range and type: ${err}`);

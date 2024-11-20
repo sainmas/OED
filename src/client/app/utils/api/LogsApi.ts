@@ -6,6 +6,7 @@
 
 import ApiBackend from './ApiBackend';
 import { LogData } from '../../types/redux/logs';
+import { TimeInterval } from '../../../../common/TimeInterval';
 
 export default class LogsApi {
 	private readonly backend: ApiBackend;
@@ -26,9 +27,9 @@ export default class LogsApi {
 		return await this.backend.doPostRequest('/api/logs/error', log);
 	}
 
-	public async getLogsByDateRangeAndType(startDate: string, endDate: string, logTypes: string[], logLimit: string): Promise<LogData[]> {
+	public async getLogsByDateRangeAndType(timeInterval: TimeInterval, logTypes: string[], logLimit: string): Promise<LogData[]> {
 		const request = await this.backend.doGetRequest('/api/logs/logsmsg/getLogsByDateRangeAndType',
-			{ startDate: startDate, endDate: endDate, logTypes: logTypes.join('-'), logLimit: logLimit });
+			{ timeInterval: timeInterval.toString(), logTypes: logTypes.join('-'), logLimit: logLimit });
 		return request as LogData[];
 	}
 

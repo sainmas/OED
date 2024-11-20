@@ -106,10 +106,10 @@ class LogMsg {
 	 * @param conn is the connection to use.
 	 * @returns {Promise.<array.<LogMsg>>}
 	 */
-	static async getLogsByDateRangeAndType(startDate, endDate, logTypes, logLimit = 100, conn) {
+	static async getLogsByDateRangeAndType(startDate = null, endDate = null, logTypes, logLimit = 100, conn) {
 		const rows = await conn.any(sqlFile('logmsg/get_logs_from_dates_and_type.sql'), {
-			startDate: startDate,
-			endDate: endDate,
+			startDate: startDate || '-infinity',
+			endDate: endDate || 'infinity',
 			logTypes: logTypes,
 			logLimit: logLimit
 		});

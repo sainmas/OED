@@ -4,6 +4,7 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
 import * as React from 'react';
+import * as moment from 'moment';
 import {
 	Alert, Button, Dropdown, DropdownItem, DropdownMenu, DropdownToggle,
 	FormGroup, Input, Label, Modal, ModalBody, ModalHeader, Pagination, PaginationItem, PaginationLink, Table
@@ -14,6 +15,10 @@ import { selectSelectedLanguage } from '../../redux/slices/appStateSlice';
 import { showWarnNotification } from '../../utils/notifications';
 import { logsApi } from '../../utils/api';
 import translate from '../../utils/translate';
+import { TimeInterval } from '../../../../common/TimeInterval';
+import { dateRangeToTimeInterval, timeIntervalToDateRange } from '../../utils/dateRangeCompatibility';
+import { Value } from '@wojtekmaj/react-daterange-picker/dist/cjs/shared/types';
+
 
 // number of log messages to display per page
 const PER_PAGE = 20;
@@ -42,7 +47,7 @@ export default function LogMsgComponent() {
 	// Sort order for date column in the table
 	const [dateSortOrder, setDateSortOrder] = React.useState<'asc' | 'desc'>('asc');
 	// Log messages date range state
-	const [logDateRange, setLogDateRange] = React.useState<[Date | null, Date | null]>([null, null]);
+	const [logDateRange, setLogDateRange] = React.useState<TimeInterval>(TimeInterval.unbounded());
 	// Number of log messages to display
 	const [logLimit, setLogLimit] = React.useState(0);
 	// "Select All Logs" button state
@@ -106,8 +111,8 @@ export default function LogMsgComponent() {
 		setLogs(sortedLogs);
 	};
 	// Handle date range change
-	const handleDateRangeChange = (range: [Date | null, Date | null]) => {
-		setLogDateRange(range);
+	const handleDateRangeChange = (range: Value) => {
+		setLogDateRange(dateRangeToTimeInterval(range));
 	};
 	// Handle page change for pagination
 	const handlePageChange = (newPage: number) => {
@@ -128,11 +133,11 @@ export default function LogMsgComponent() {
 
 	// Filter logs based on selected log types and date range
 	const filteredLogs = logs.filter(log => {
-		const logDate = new Date(log.logTime);
+		const logDate = moment(log.logTime);
 		// Check if log is within the selected date range
 		const isWithinDateRange =
-			(!logDateRange || !logDateRange[0] || logDate >= logDateRange[0]) &&
-			(!logDateRange || !logDateRange[1] || logDate <= logDateRange[1]);
+			(!logDateRange || !logDateRange.getIsBounded() || logDate >= logDateRange.getStartTimestamp()) &&
+			(!logDateRange || !logDateRange.getIsBounded() || logDate <= logDateRange.getEndTimestamp());
 		return selectedTableLogTypes.includes(log.logType) && isWithinDateRange;
 	});
 
@@ -144,17 +149,13 @@ export default function LogMsgComponent() {
 	 * Handle showing the log table by fetching from the server
 	 */
 	async function handleShowLogTable() {
-		// date range must be selected
-		// TODO: accept not to choose a date range -> show all logs
-		if (!logDateRange || !logDateRange[0] || !logDateRange[1]) {
-			showWarnNotification('You must select a date range');
-		} else if (!logLimit || logLimit < 1 || logLimit > 1000) { // number of logs being fetched must be between 1 and 1000
+		// Number of logs being fetched must be between 1 and 1000
+		if (!logLimit || logLimit < 1 || logLimit > 1000) {
 			showWarnNotification(translate('log.limit.required'));
 		} else {
 			try {
 				// get log by date and type
-				const data = await logsApi.getLogsByDateRangeAndType(
-					logDateRange[0].toISOString(), logDateRange[1].toISOString(), selectedUpdateLogTypes, logLimit.toString());
+				const data = await logsApi.getLogsByDateRangeAndType(logDateRange, selectedUpdateLogTypes, logLimit.toString());
 				setLogs(data);
 				// reset pagination to first page after fetching new logs
 				setCurrentPage(1);
@@ -201,7 +202,7 @@ export default function LogMsgComponent() {
 					</Label>
 					<DateRangePicker
 						id="dateRange"
-						value={logDateRange}
+						value={timeIntervalToDateRange(logDateRange)}
 						onChange={handleDateRangeChange}
 						minDate={new Date(1970, 0, 1)}
 						maxDate={new Date()}
