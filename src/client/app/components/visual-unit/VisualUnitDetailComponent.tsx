@@ -5,15 +5,24 @@
 import { FormattedMessage } from 'react-intl';
 import TooltipHelpComponent from '../TooltipHelpComponent';
 import * as React from 'react';
-import CreateVisualUnitMapModalComponent from './CreateVisualUnitModalMapComponent';
-import CreateCikVisualMapComponent from './CreateCikVisualModalMapComponent';
+import { CreateVisualUnitComponent } from './CreateVisualUnitComponent';
 import TooltipMarkerComponent from '../TooltipMarkerComponent';
+import { selectCik } from '../../redux/api/conversionsApi';
+import { selectConversionsDetails } from '../../redux/api/conversionsApi';
+import { useAppSelector } from '../../redux/reduxHooks';
+import { selectAllUnits } from '../../redux/api/unitsApi';
 
 /**
  * Defines the units and conversion graphics view.
  * @returns Units visual graphics page element
  */
 export default function VisualUnitDetailComponent() {
+	/* Get unit and conversion data from redux */
+	const unitData = useAppSelector(selectAllUnits);
+	const conversionData = useAppSelector(selectConversionsDetails);
+	const cikData = useAppSelector(selectCik);
+
+
 
 	const titleStyle: React.CSSProperties = {
 		textAlign: 'center'
@@ -45,7 +54,7 @@ export default function VisualUnitDetailComponent() {
 			</div>
 
 			<div style={titleStyle}>
-				<CreateVisualUnitMapModalComponent/>
+				<CreateVisualUnitComponent units={unitData} conversions={conversionData}/>
 			</div>
 
 			<div className='container-fluid'>
@@ -55,7 +64,7 @@ export default function VisualUnitDetailComponent() {
 			</div>
 
 			<div style={titleStyle}>
-				<CreateCikVisualMapComponent />
+				<CreateVisualUnitComponent units={unitData} conversions={cikData} isCik/>
 			</div>
 		</div>
 	);
