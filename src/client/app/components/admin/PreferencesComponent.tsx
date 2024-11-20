@@ -13,7 +13,7 @@ import { ChartTypes } from '../../types/redux/graph';
 import { LanguageTypes } from '../../types/redux/i18n';
 import { AreaUnitType } from '../../utils/getAreaUnitConversion';
 import { showErrorNotification, showSuccessNotification } from '../../utils/notifications';
-import translate from '../../utils/translate';
+import { useTranslate } from '../../redux/componentHooks';
 import TimeZoneSelect from '../TimeZoneSelect';
 import { defaultAdminState } from '../../redux/slices/adminSlice';
 
@@ -23,6 +23,7 @@ import { defaultAdminState } from '../../redux/slices/adminSlice';
  * @returns Preferences Component for Administrative use
  */
 export default function PreferencesComponent() {
+	const translate = useTranslate();
 	const { data: adminPreferences = defaultAdminState } = preferencesApi.useGetPreferencesQuery();
 	const [localAdminPref, setLocalAdminPref] = React.useState<PreferenceRequestItem>(cloneDeep(adminPreferences));
 	const [submitPreferences] = preferencesApi.useSubmitPreferencesMutation();
@@ -36,6 +37,10 @@ export default function PreferencesComponent() {
 
 	const makeLocalChanges = (key: keyof PreferenceRequestItem, value: PreferenceRequestItem[keyof PreferenceRequestItem]) => {
 		setLocalAdminPref({ ...localAdminPref, [key]: value });
+	};
+
+	const discardChanges = () => {
+		setLocalAdminPref(cloneDeep(adminPreferences));
 	};
 
 	return (
@@ -316,24 +321,32 @@ export default function PreferencesComponent() {
 					onChange={e => makeLocalChanges('defaultHelpUrl', e.target.value)}
 				/>
 			</div>
-
-			<Button
-				type='submit'
-				onClick={() =>
-					submitPreferences(localAdminPref)
-						.unwrap()
-						.then(() => {
-							showSuccessNotification(translate('updated.preferences'));
-						})
-						.catch(() => {
-							showErrorNotification(translate('failed.to.submit.changes'));
-						})
-				}
-				disabled={!hasChanges}
-				className='align-self-end mt-3'
-			>
-				{translate('submit')}
-			</Button>
+			<div className='d-flex justify-content-end mt-3'>
+				<Button
+					type='button'
+					onClick={discardChanges}
+					disabled={!hasChanges}
+					style={{ marginRight: '20px' }}
+				>
+					{translate('discard.changes')}
+				</Button>
+				<Button
+					type='submit'
+					onClick={() =>
+						submitPreferences(localAdminPref)
+							.unwrap()
+							.then(() => {
+								showSuccessNotification(translate('updated.preferences'));
+							})
+							.catch(() => {
+								showErrorNotification(translate('failed.to.submit.changes'));
+							})
+					}
+					disabled={!hasChanges}
+				>
+					{translate('submit')}
+				</Button>
+			</div>
 		</div >
 	);
 }

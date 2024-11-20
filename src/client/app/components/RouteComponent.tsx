@@ -4,7 +4,8 @@
 import * as React from 'react';
 import { IntlProvider } from 'react-intl';
 import { RouterProvider, createBrowserRouter } from 'react-router-dom';
-import UploadCSVContainer from '../containers/csv/UploadCSVContainer';
+import ReadingsCSVUploadComponent from '../components/csv/ReadingsCSVUploadComponent';
+import MetersCSVUploadComponent from '../components/csv/MetersCSVUploadComponent';
 import MapCalibrationContainer from '../containers/maps/MapCalibrationContainer';
 import MapsDetailContainer from '../containers/maps/MapsDetailContainer';
 import { useAppSelector } from '../redux/reduxHooks';
@@ -12,7 +13,6 @@ import LocaleTranslationData from '../translations/data';
 import { UserRole } from '../types/items';
 import AppLayout from './AppLayout';
 import HomeComponent from './HomeComponent';
-import LoginComponent from './LoginComponent';
 import AdminComponent from './admin/AdminComponent';
 import UsersDetailComponent from './admin/users/UsersDetailComponent';
 import ConversionsDetailComponent from './conversion/ConversionsDetailComponent';
@@ -47,7 +47,6 @@ const router = createBrowserRouter([
 		path: '/', element: <AppLayout />, errorElement: <ErrorComponent />,
 		children: [
 			{ index: true, element: <HomeComponent /> },
-			{ path: 'login', element: <LoginComponent /> },
 			{ path: 'groups', element: <GroupsDetailComponent /> },
 			{ path: 'meters', element: <MetersDetailComponent /> },
 			{ path: 'graph', element: <GraphLink /> },
@@ -56,17 +55,20 @@ const router = createBrowserRouter([
 				children: [
 					{ path: 'admin', element: <AdminComponent /> },
 					{ path: 'calibration', element: <MapCalibrationContainer /> },
+					{ path: 'conversions', element: <ConversionsDetailComponent /> },
+					{ path: 'csvMeters', element: <MetersCSVUploadComponent /> },
 					{ path: 'maps', element: <MapsDetailContainer /> },
 					{ path: 'units', element: <UnitsDetailComponent /> },
 					{ path: 'conversions', element: <ConversionsDetailComponent /> },
 					{ path: 'users', element: <UsersDetailComponent /> },
 					{ path: 'logmsg', element: <LogMsgComponent /> }
+
 				]
 			},
 			{
 				element: <RoleOutlet role={UserRole.CSV} />,
 				children: [
-					{ path: 'csv', element: <UploadCSVContainer /> }
+					{ path: 'csvReadings', element: <ReadingsCSVUploadComponent /> }
 				]
 			},
 			{ path: '*', element: <NotFound /> }
