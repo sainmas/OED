@@ -50,8 +50,10 @@ export default function LogMsgComponent() {
 	const [logDateRange, setLogDateRange] = React.useState<TimeInterval>(TimeInterval.unbounded());
 	// Number of log messages to display
 	const [logLimit, setLogLimit] = React.useState(0);
-	// "Select All Logs" button state
-	const [selectAll, setSelectAll] = React.useState(true);
+	// "Select All Logs" button state for update log
+	const [selectAllUpdate, setSelectAllUpdate] = React.useState(true);
+	// "Select All Logs" button state for table log
+	const [selectAllTable, setSelectAllTable] = React.useState(true);
 	// Current page state for pagination
 	const [currentPage, setCurrentPage] = React.useState(1);
 	// Modal state for displaying full log message
@@ -60,6 +62,13 @@ export default function LogMsgComponent() {
 	const [modalLogMessage, setModalLogMessage] = React.useState('');
 	// Showing all logs instead of paginated
 	const [showAllLogs, setShowAllLogs] = React.useState(false);
+	// Update button state
+	const [buttonAvailable, setButtonAvailable] = React.useState(false);
+
+	// Update the availability of the update button each time the selected log types, log limit, or date range changes
+	React.useEffect(() => {
+		setButtonAvailable(false);
+	}, [selectedUpdateLogTypes, logLimit, logDateRange]);
 
 	// Open modal with the full log message
 	const handleLogMessageClick = (logMessage: string) => {
@@ -75,6 +84,7 @@ export default function LogMsgComponent() {
 			setSelectedTableLogTypes([...selectedTableLogTypes, logType]);
 		}
 	};
+
 	// Handle checkbox change for log type in the update log
 	const handleUpdateCheckboxChange = (logType: string) => {
 		if (selectedUpdateLogTypes.includes(logType)) {  // Remove log type if already selected
@@ -84,15 +94,21 @@ export default function LogMsgComponent() {
 		}
 	};
 
+	// React effect to keep track of the "Select All" checkbox state
+	React.useEffect(() => {
+		selectedUpdateLogTypes.length === logTypes.length ? setSelectAllUpdate(true) : setSelectAllUpdate(false);
+		selectedTableLogTypes.length === logTypes.length ? setSelectAllTable(true) : setSelectAllTable(false);
+	}, [selectedUpdateLogTypes, selectedTableLogTypes]);
+
 	// Handle "Select All" checkbox change in the table
 	const handleTableSelectAll = () => {
-		selectAll ? setSelectedTableLogTypes([]) : setSelectedTableLogTypes(logTypes);
-		setSelectAll(!selectAll);
+		selectAllTable ? setSelectedTableLogTypes([]) : setSelectedTableLogTypes(logTypes);
+		setSelectAllTable(!selectAllTable);
 	};
 	// Handle "Select All" checkbox change in the update log
 	const handleUpdateSelectAll = () => {
-		selectAll ? setSelectedUpdateLogTypes([]) : setSelectedUpdateLogTypes(logTypes);
-		setSelectAll(!selectAll);
+		selectAllUpdate ? setSelectedUpdateLogTypes([]) : setSelectedUpdateLogTypes(logTypes);
+		setSelectAllUpdate(!selectAllUpdate);
 	};
 	// Handle sorting of logs by date
 	const handleDateSort = () => {
@@ -159,6 +175,7 @@ export default function LogMsgComponent() {
 				setLogs(data);
 				// reset pagination to first page after fetching new logs
 				setCurrentPage(1);
+				setButtonAvailable(true);
 			} catch (error) {
 				console.error(error);
 			}
@@ -178,7 +195,7 @@ export default function LogMsgComponent() {
 							<Label check>
 								<Input
 									type="checkbox"
-									checked={selectAll}
+									checked={selectAllUpdate}
 									onChange={handleUpdateSelectAll}
 								/> {translate('select.all')}
 							</Label>
@@ -224,7 +241,7 @@ export default function LogMsgComponent() {
 						value={logLimit}
 					/>
 				</FormGroup>
-				<Button color='primary' onClick={handleShowLogTable}>{translate('log.msg.update')}</Button>
+				<Button color='primary' disabled={buttonAvailable} onClick={handleShowLogTable}>{translate('log.msg.update')}</Button>
 			</div>
 
 			{/* Display log messages table */}
@@ -240,7 +257,7 @@ export default function LogMsgComponent() {
 											<Label check>
 												<Input
 													type="checkbox"
-													checked={selectAll}
+													checked={selectAllTable}
 													onChange={handleTableSelectAll}
 												/> {translate('select.all')}
 											</Label>
