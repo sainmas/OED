@@ -8,7 +8,7 @@ import { DropdownItem, DropdownMenu, DropdownToggle, UncontrolledDropdown } from
 import { selectSelectedLanguage, updateSelectedLanguage } from '../redux/slices/appStateSlice';
 import { useAppDispatch, useAppSelector } from '../redux/reduxHooks';
 import { LanguageTypes } from '../types/redux/i18n';
-import { selectBaseHelpUrl } from '../redux/slices/adminSlice';
+import { selectHelpUrl } from '../redux/slices/adminSlice';
 
 /**
  * A component that allows users to select which language the page should be displayed in.
@@ -18,9 +18,7 @@ export default function LanguageSelectorComponent() {
 	const dispatch = useAppDispatch();
 
 	const selectedLanguage = useAppSelector(selectSelectedLanguage);
-	const baseHelpUrl = useAppSelector(selectBaseHelpUrl);
-
-	const helpUrl = baseHelpUrl;
+	const helpUrl = useAppSelector(selectHelpUrl);
 
 	return (
 		<>
