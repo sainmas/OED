@@ -6,23 +6,21 @@ import * as React from 'react';
 import * as d3 from 'd3';
 import { useEffect } from 'react';
 import { useIntl } from 'react-intl';
-// import { useAppSelector } from '../../redux/reduxHooks';
 import { UnitData } from 'types/redux/units';
 import { ConversionData } from 'types/redux/conversions';
 import { CikData } from 'types/redux/ciks';
-// import { selectAllUnits } from '../../redux/api/unitsApi';
 
-/**
- * Visual graph component that shows the relationship between units and conversions
- * entered by an admin.
- * @returns D3 force graph visual
- */
 interface CreateVisualUnitProps {
 	units: UnitData[];
 	conversions: ConversionData[] | CikData[];
 	isCik?: boolean;
 }
 
+/**
+ * Visual graph component that shows the relationship between units and conversions
+ * entered by an admin.
+ * @returns D3 force graph visual
+ */
 export const CreateVisualUnitComponent: React.FC<CreateVisualUnitProps> = ({
 	units,
 	conversions,
