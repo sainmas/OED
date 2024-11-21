@@ -28,7 +28,7 @@ export default function VisualUnitDetailComponent() {
 		textAlign: 'center'
 	};
 
-	const tooltipStyle = {
+	const seeUnitVisualizationPageStyle = {
 		display: 'inline-block',
 		fontSize: '50%',
 		// For now, only an admin can see the unit page.
@@ -42,29 +42,26 @@ export default function VisualUnitDetailComponent() {
 			<div className='container-fluid'>
 				<h1 style={titleStyle}>
 					<FormattedMessage id='units.conversion.page.title' />
-					<div style={tooltipStyle}>
-						<TooltipMarkerComponent page='visual-unit' helpTextId={tooltipStyle.tooltipVisualUnitView} />
+					<div style={seeUnitVisualizationPageStyle}>
+						<TooltipMarkerComponent page='visual-unit' helpTextId={seeUnitVisualizationPageStyle.tooltipVisualUnitView} />
 					</div>
 				</h1>
-				<br/>
 
 				<h2 style={titleStyle}>
 					<FormattedMessage id='visual.input.units.graphic' />
 				</h2>
-			</div>
 
-			<div style={titleStyle}>
-				<CreateVisualUnitComponent units={unitData} conversions={conversionData}/>
-			</div>
+				<div style={titleStyle}>
+					<CreateVisualUnitComponent units={unitData} conversions={conversionData}/>
+				</div>
 
-			<div className='container-fluid'>
 				<h2 style={titleStyle}>
 					<FormattedMessage id='visual.analyzed.units.graphic' />
 				</h2>
-			</div>
 
-			<div style={titleStyle}>
-				<CreateVisualUnitComponent units={unitData} conversions={cikData} isCik/>
+				<div style={titleStyle}>
+					<CreateVisualUnitComponent units={unitData} conversions={cikData} isCik/>
+				</div>
 			</div>
 		</div>
 	);
