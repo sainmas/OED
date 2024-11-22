@@ -15,7 +15,7 @@ import { useAppSelector } from '../../redux/reduxHooks';
  * Defines the units and conversion graphics view.
  * @returns Units visual graphics page element
  */
-export default function SeeUnitVisualizationPage() {
+export default function VisualUnitDetailComponent() {
 	/* Get conversion data from redux */
 	const conversionData = useAppSelector(selectConversionsDetails);
 	const cikData = useAppSelector(selectCik);
