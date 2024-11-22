@@ -29,7 +29,7 @@ export default function VisualUnitDetailComponent() {
 	const tooltipStyle = {
 		display: 'inline-block',
 		fontSize: '50%',
-		// For now, only an admin can see the unit page.
+		// For now, only an admin can see the unit visualization page.
 		tooltipVisualUnitView: 'help.admin.unitconversionvisuals'
 	};
 
