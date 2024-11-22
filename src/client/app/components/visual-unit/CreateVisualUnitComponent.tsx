@@ -6,27 +6,28 @@ import * as React from 'react';
 import * as d3 from 'd3';
 import { useEffect } from 'react';
 import { useIntl } from 'react-intl';
-import { UnitData } from 'types/redux/units';
+import { useAppSelector } from '../../redux/reduxHooks';
 import { ConversionData } from 'types/redux/conversions';
 import { CikData } from 'types/redux/ciks';
-
-interface CreateVisualUnitProps {
-	units: UnitData[];
-	conversions: ConversionData[] | CikData[];
-	isCik?: boolean;
-}
+import { selectAllUnits } from '../../redux/api/unitsApi';
 
 /**
  * Visual graph component that shows the relationship between units and conversions
  * entered by an admin.
  * @returns D3 force graph visual
  */
+interface CreateVisualUnitProps {
+	conversions: ConversionData[] | CikData[];
+	isCik?: boolean;
+}
+
 export const CreateVisualUnitComponent: React.FC<CreateVisualUnitProps> = ({
-	units,
 	conversions,
 	isCik = false
 }) => {
 	const intl = useIntl();
+	/* Get unit data from redux */
+	const units = useAppSelector(selectAllUnits);
 
 	/* creating color schema for nodes based on their unit type */
 	const colors = ['#1F77B4', '#2CA02C', '#fd7e14', '#e377c2'];

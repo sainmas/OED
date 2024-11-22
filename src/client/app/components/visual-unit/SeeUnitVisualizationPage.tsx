@@ -10,15 +10,13 @@ import TooltipMarkerComponent from '../TooltipMarkerComponent';
 import { selectCik } from '../../redux/api/conversionsApi';
 import { selectConversionsDetails } from '../../redux/api/conversionsApi';
 import { useAppSelector } from '../../redux/reduxHooks';
-import { selectAllUnits } from '../../redux/api/unitsApi';
 
 /**
  * Defines the units and conversion graphics view.
  * @returns Units visual graphics page element
  */
-export default function VisualUnitDetailComponent() {
-	/* Get unit and conversion data from redux */
-	const unitData = useAppSelector(selectAllUnits);
+export default function SeeUnitVisualizationPage() {
+	/* Get conversion data from redux */
 	const conversionData = useAppSelector(selectConversionsDetails);
 	const cikData = useAppSelector(selectCik);
 
@@ -28,7 +26,7 @@ export default function VisualUnitDetailComponent() {
 		textAlign: 'center'
 	};
 
-	const seeUnitVisualizationPageStyle = {
+	const tooltipStyle = {
 		display: 'inline-block',
 		fontSize: '50%',
 		// For now, only an admin can see the unit page.
@@ -42,8 +40,8 @@ export default function VisualUnitDetailComponent() {
 			<div className='container-fluid'>
 				<h1 style={titleStyle}>
 					<FormattedMessage id='units.conversion.page.title' />
-					<div style={seeUnitVisualizationPageStyle}>
-						<TooltipMarkerComponent page='visual-unit' helpTextId={seeUnitVisualizationPageStyle.tooltipVisualUnitView} />
+					<div style={tooltipStyle}>
+						<TooltipMarkerComponent page='visual-unit' helpTextId={tooltipStyle.tooltipVisualUnitView} />
 					</div>
 				</h1>
 
@@ -52,7 +50,7 @@ export default function VisualUnitDetailComponent() {
 				</h2>
 
 				<div style={titleStyle}>
-					<CreateVisualUnitComponent units={unitData} conversions={conversionData}/>
+					<CreateVisualUnitComponent conversions={conversionData}/>
 				</div>
 
 				<h2 style={titleStyle}>
@@ -60,7 +58,7 @@ export default function VisualUnitDetailComponent() {
 				</h2>
 
 				<div style={titleStyle}>
-					<CreateVisualUnitComponent units={unitData} conversions={cikData} isCik/>
+					<CreateVisualUnitComponent conversions={cikData} isCik/>
 				</div>
 			</div>
 		</div>

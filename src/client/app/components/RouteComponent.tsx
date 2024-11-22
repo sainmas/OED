@@ -25,7 +25,7 @@ import RoleOutlet from './router/RoleOutlet';
 import UnitsDetailComponent from './unit/UnitsDetailComponent';
 import ErrorComponent from './router/ErrorComponent';
 import { selectSelectedLanguage } from '../redux/slices/appStateSlice';
-import VisualUnitDetailComponent from './visual-unit/VisualUnitDetailComponent';
+import SeeUnitVisualizationPage from './visual-unit/SeeUnitVisualizationPage';
 
 /**
  * @returns the router component Responsible for client side routing.
@@ -60,7 +60,7 @@ const router = createBrowserRouter([
 					{ path: 'maps', element: <MapsDetailContainer /> },
 					{ path: 'units', element: <UnitsDetailComponent /> },
 					{ path: 'users', element: <UsersDetailComponent /> },
-					{ path: 'visual-unit', element: <VisualUnitDetailComponent/> }
+					{ path: 'visual-unit', element: <SeeUnitVisualizationPage/> }
 				]
 			},
 			{
