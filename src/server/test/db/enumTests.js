@@ -83,4 +83,32 @@ mocha.describe('Enums JS to DB', () => {
             expect(serverEnum.toString()).to.equal(jsObject.toString());
         })
     })
+
+    //test unit_types
+    mocha.it('can equate unit.unitType to SQL enum', async () => {
+        const conn = DB.getConnection();
+        let serverEnum = [];
+        let jsEnum = [];
+        conn.result(Database.sqlFile('unit/get_unit_types_enum.sql')).then(data => {
+            //need sql inlin code for getting unit enum SELECT unnest(enum_range(NULL::unit_type));
+            let resultArray = data.rows;
+            resultArray.forEach((item) =>{
+                serverEnum.push(item.unnest);
+            });
+            for(let key in Unit.unitType) {
+                if (Unit.unitType.hasOwnProperty(key)) {
+                    let value = Unit.unitType[key];
+                    jsEnum.push(value);
+                }
+            }
+            serverEnum.sort();
+            jsEnum.sort();
+            // console.log("server: " + serverEnum.toString())
+            // console.log("js: " + jsEnum.toString())
+            expect(serverEnum.toString()).to.equal(jsEnum.toString());
+            expect(serverEnum.length).to.equal(jsEnum.length);
+            // expectArrayOfUnitsToBeEquivalent(serverEnum, jsEnum);
+            // expectCompareToEqualExpected(serverEnum.length, jsEnum.length);
+        })
+    })
 })
