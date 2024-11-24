@@ -1,0 +1,1 @@
+SELECT unnest(enum_range(NULL::area_unit_type));
