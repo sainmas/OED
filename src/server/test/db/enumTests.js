@@ -31,8 +31,6 @@ mocha.describe('Enums JS to DB', () => {
 				}
 				serverEnum.sort();
 				jsObject.sort();
-                console.log(serverEnum.toString());
-                console.log(jsObject.toString());
 				expect(serverEnum.length).to.equal(jsObject.length);
 				expect(serverEnum.toString()).to.equal(jsObject.toString());
 			}
@@ -58,8 +56,6 @@ mocha.describe('Enums JS to DB', () => {
 				}
 				serverEnum.sort();
 				jsObject.sort();
-                console.log("DB",serverEnum.toString());
-                console.log("JS",jsObject.toString());
 				expect(serverEnum.length).to.equal(jsObject.length);
 				expect(serverEnum.toString()).to.equal(jsObject.toString());
 			}
@@ -87,8 +83,6 @@ mocha.describe('Enums JS to DB', () => {
                 }
                 serverEnum.sort();
                 jsObject.sort();
-                console.log(serverEnum.toString());
-                console.log(jsObject.toString());
                 expect(serverEnum.length).to.equal(jsObject.length);
                 expect(serverEnum.toString()).to.equal(jsObject.toString());
             }
@@ -114,8 +108,6 @@ mocha.describe('Enums JS to DB', () => {
                 }
                 serverEnum.sort();
                 jsObject.sort();
-                console.log(serverEnum.toString());
-                console.log(jsObject.toString());
                 expect(serverEnum.length).to.equal(jsObject.length);
                 expect(serverEnum.toString()).to.equal(jsObject.toString());
             }
@@ -142,8 +134,6 @@ mocha.describe('Enums JS to DB', () => {
                 }
                 serverEnum.sort();
                 jsEnum.sort();
-                console.log("DB",serverEnum.toString());
-                console.log("JS",jsEnum.toString());
                 expect(serverEnum.length).to.equal(jsEnum.length);
                 expect(serverEnum.toString()).to.equal(jsEnum.toString());
             }
