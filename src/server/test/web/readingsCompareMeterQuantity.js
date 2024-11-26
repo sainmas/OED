@@ -143,7 +143,7 @@ mocha.describe('readings API', () => {
 						displayable: true,
 						gps: undefined,
 						note: 'special meter',
-						file: 'readings_ri_15_days_75.csv',
+						file: 'test/web/readingsData/readings_ri_15_days_75.csv',
 						deleteFile: false,
 						readingFrequency: '15 minutes',
 						id: METER_ID
