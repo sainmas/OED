@@ -48,7 +48,7 @@ export default function RadarChartComponent() {
 	const selectedGroups = useAppSelector(selectSelectedGroups);
 	const meterDataById = useAppSelector(selectMeterDataById);
 	const groupDataById = useAppSelector(selectGroupDataById);
-	
+
 	if (meterIsLoading || groupIsLoading) {
 		return <SpinnerComponent loading width={50} height={50} />;
 		// return <SpinnerComponent loading width={50} height={50} />
