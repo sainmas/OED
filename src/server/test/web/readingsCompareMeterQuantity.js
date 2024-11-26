@@ -75,10 +75,10 @@ mocha.describe('readings API', () => {
 				// Add C6 here
 
 				mocha.it('C8: 1 day shift end 2022-10-31 17:00:00 for 15 minute reading intervals and quantity units & kWh as MJ', async() => {
-					// adding u1, u2, u3
+					// adding units u1, u2, u3
 					const unitData = [
 						{
-							//u1
+							// u1
 							name: 'kWh',
 							identifier: '',
 							unitRepresent: Unit.unitRepresentType.QUANTITY,
@@ -90,7 +90,7 @@ mocha.describe('readings API', () => {
 							note: 'OED created standard unit'
 						},
 						{
-							//u2
+							// u2
 							name: 'Electric_Utility',
 							identifier: '',
 							unitRepresent: Unit.unitRepresentType.QUANTITY,
@@ -102,7 +102,7 @@ mocha.describe('readings API', () => {
 							note: 'special unit'
 						},
 						{
-							//u3
+							// u3
 							name: 'MJ',
 							identifier: 'megaJoules',
 							unitRepresent: Unit.unitRepresentType.QUANTITY,
@@ -114,10 +114,10 @@ mocha.describe('readings API', () => {
 							note: 'MJ'
 						}
 					];
-
 					const conversionData = [
+						// adding conversions c1, c2
 						{
-							//c1
+							// c1
 							sourceName: 'Electric_Utility',
 							destinationName: 'kWh',
 							bidirectional: false,
