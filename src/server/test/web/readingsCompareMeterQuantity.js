@@ -74,7 +74,7 @@ mocha.describe('readings API', () => {
 
 				// Add C6 here
 
-				mocha.it('C8: 1 day shift end 2022-10-31 17:00:00 for 15 minute reading intervals and quantity units & kWh as MJ', async() => {
+				mocha.it('C8: 1 day shift end 2022-10-31 17:00:00 for 15 minute reading intervals and quantity units & kWh as MJ', async () => {
 					// adding units u1, u2, u3
 					const unitData = [
 						{
@@ -134,19 +134,33 @@ mocha.describe('readings API', () => {
 							intercept: 0,
 							note: 'kWh → MJ'
 						}
-					]
+					];
+					const meterData = [
+						// adding meterData for MJ Unit
+						{
+						name: 'Electric_Utility MJ',
+						unit: 'Electric_Utility',
+						displayable: true,
+						gps: undefined,
+						note: 'special meter',
+						file: 'readings_ri_15_days_75.csv',
+						deleteFile: false,
+						readingFrequency: '15 minutes',
+						id: METER_ID
+						}
+					];
 					await prepareTest(unitData, conversionData, meterData);
 					// Get the unit ID since the DB could use any value.
-  					const unitId = await getUnitId('MJ');
-					const expected = [11232.0660730344, 12123.0051081528]; 
+					const unitId = await getUnitId('MJ');
+					const expected = [11232.0660730344, 12123.0051081528];
 					// for compare, need the unitID, currentStart, currentEnd, shift
 					const res = await chai.request(app).get(`/api/compareReadings/meters/${METER_ID}`)
-					.query({
-						curr_start: '2022-10-31 00:00:00',  
-						curr_end: '2022-10-31 17:00:00',  
-						shift: 'P1D',                      
-						graphicUnitId: unitId              
-					});
+						.query({
+							curr_start: '2022-10-31 00:00:00',
+							curr_end: '2022-10-31 17:00:00',
+							shift: 'P1D',
+							graphicUnitId: unitId
+						});
 					expectCompareToEqualExpected(res, expected);
 				});
 
