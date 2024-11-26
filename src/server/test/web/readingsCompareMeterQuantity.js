@@ -75,6 +75,46 @@ mocha.describe('readings API', () => {
 				// Add C6 here
 
 				mocha.it('C8: 1 day shift end 2022-10-31 17:00:00 for 15 minute reading intervals and quantity units & kWh as MJ', async() => {
+					// adding u1, u2, u3
+					const unitData = [
+						{
+							//u1
+							name: 'kWh',
+							identifier: '',
+							unitRepresent: Unit.unitRepresentType.QUANTITY,
+							secInRate: 3600,
+							typeOfUnit: Unit.unitType.UNIT,
+							suffix: '',
+							displayable: Unit.displayableType.ALL,
+							prefferedDisplay: true,
+							note: 'OED created standard unit'
+						},
+						{
+							//u2
+							name: 'Electric_Utility',
+							identifier: '',
+							unitRepresent: Unit.unitRepresentType.QUANTITY,
+							secInRate: 3600,
+							typeOfUnit: Unit.unitType.METER,
+							suffix: '',
+							displayable: Unit.displayableType.NONE,
+							prefferedDisplay: false,
+							note: 'special unit'
+						},
+						{
+							//u3
+							name: 'MJ',
+							identifier: 'megaJoules',
+							unitRepresent: Unit.unitRepresentType.QUANTITY,
+							secInRate: 3600,
+							typeOfUnit: Unit.unitType.UNIT,
+							suffix: '',
+							displayable: Unit.displayableType.ALL,
+							prefferedDisplay: false,
+							note: 'MJ'
+						}
+
+					]
 					await prepareTest(unitDatakWh, conversionDatakWh, meterDatakWh);
 					// Get the unit ID since the DB could use any value.
   					const unitId = await getUnitId('MJ');
