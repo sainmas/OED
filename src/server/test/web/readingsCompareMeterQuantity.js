@@ -113,9 +113,29 @@ mocha.describe('readings API', () => {
 							prefferedDisplay: false,
 							note: 'MJ'
 						}
+					];
 
+					const conversionData = [
+						{
+							//c1
+							sourceName: 'Electric_Utility',
+							destinationName: 'kWh',
+							bidirectional: false,
+							slope: 1,
+							intercept: 0,
+							note: 'Electric_Utility → kWh'
+						},
+						{
+							// c2
+							sourceName: 'kWh',
+							destinationName: 'MJ',
+							bidirectional: true,
+							slope: 3.6,
+							intercept: 0,
+							note: 'kWh → MJ'
+						}
 					]
-					await prepareTest(unitDatakWh, conversionDatakWh, meterDatakWh);
+					await prepareTest(unitData, conversionData, meterData);
 					// Get the unit ID since the DB could use any value.
   					const unitId = await getUnitId('MJ');
 					const expected = [11232.0660730344, 12123.0051081528]; 
