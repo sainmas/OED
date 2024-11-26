@@ -6,9 +6,11 @@
 
 import { connect } from 'react-redux';
 import { getComparePeriodLabels, getCompareChangeSummary, calculateCompareShift } from '../utils/calculateCompare';
-import { useTranslate } from 'redux/componentHooks';
+// import { useTranslate } from 'redux/componentHooks';
 // import * as React from 'react'; Convert from containers to components
 // import { useState } from 'react';
+// When this container gets converted to component,migrate to useTranslate() from componentHooks.ts
+import translate from '../utils/translate';
 import Plot from 'react-plotly.js';
 // import { Icons } from 'plotly.js';
 import Locales from '../types/locales';
@@ -63,7 +65,6 @@ function mapStateToProps(state: RootState, ownProps: CompareChartContainerProps)
 	const groupDataById = selectGroupDataById(state);
 	const selectUnitState = unitDataById[graphingUnit];
 	const locale = selectSelectedLanguage(state);
-	const translate = useTranslate();
 	let unitLabel: string = '';
 	// If graphingUnit is -99 then none selected and nothing to graph so label is empty.
 	// This will probably happen when the page is first loaded.

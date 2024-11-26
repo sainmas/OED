@@ -19,7 +19,7 @@ import { selectSelectedLanguage } from '../redux/slices/appStateSlice';
 import { selectBarStacking } from '../redux/slices/graphSlice';
 import Locales from '../types/locales';
 import SpinnerComponent from './SpinnerComponent';
-import { useTranslate } from 'redux/componentHooks';
+import { useTranslate } from '../redux/componentHooks';
 
 /**
  * Passes the current redux state of the barchart, and turns it into props for the React
@@ -28,6 +28,7 @@ import { useTranslate } from 'redux/componentHooks';
  * @returns Plotly BarChart
  */
 export default function BarChartComponent() {
+	const translate = useTranslate();
 	const dispatch = useAppDispatch();
 	const { barMeterDeps, barGroupDeps } = useAppSelector(selectPlotlyBarDeps);
 	const { meterArgs, groupArgs, meterShouldSkip, groupShouldSkip } = useAppSelector(selectBarChartQueryArgs);
@@ -64,8 +65,6 @@ export default function BarChartComponent() {
 	// useQueryHooks for data fetching
 	const datasets: Partial<Plotly.PlotData>[] = meterReadings.concat(groupData);
 
-	const translate = useTranslate();
-
 	if (meterIsFetching || groupIsFetching) {
 		return <SpinnerComponent loading height={50} width={50} />;
 	}
@@ -91,6 +90,7 @@ export default function BarChartComponent() {
 				data={datasets}
 				style={{ width: '100%', height: '100%', minHeight: '700px' }}
 				layout={{
+					margin: { t: 0, b: 0, r: 3 }, // Eliminate top, bottom, and right margins
 					barmode: (barStacking ? 'stack' : 'group'),
 					bargap: 0.2, // Gap between different times of readings
 					bargroupgap: 0.1, // Gap between different meter's readings under the same timestamp
