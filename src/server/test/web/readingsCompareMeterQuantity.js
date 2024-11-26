@@ -86,7 +86,7 @@ mocha.describe('readings API', () => {
 							typeOfUnit: Unit.unitType.UNIT,
 							suffix: '',
 							displayable: Unit.displayableType.ALL,
-							prefferedDisplay: true,
+							preferredDisplay: true,
 							note: 'OED created standard unit'
 						},
 						{
@@ -98,7 +98,7 @@ mocha.describe('readings API', () => {
 							typeOfUnit: Unit.unitType.METER,
 							suffix: '',
 							displayable: Unit.displayableType.NONE,
-							prefferedDisplay: false,
+							preferredDisplay: false,
 							note: 'special unit'
 						},
 						{
@@ -110,7 +110,7 @@ mocha.describe('readings API', () => {
 							typeOfUnit: Unit.unitType.UNIT,
 							suffix: '',
 							displayable: Unit.displayableType.ALL,
-							prefferedDisplay: false,
+							preferredDisplay: false,
 							note: 'MJ'
 						}
 					];
