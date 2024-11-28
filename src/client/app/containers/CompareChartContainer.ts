@@ -249,7 +249,7 @@ function mapStateToProps(state: RootState, ownProps: CompareChartContainerProps)
 		config: {
 			displayModeBar: true,
 			modeBarButtonsToRemove: defaultButtons,
-			// TO DO: Removes line above and uncomment below. Read above for more info
+			// TODO: Removes line above and uncomment below. Read above for more info
 			// modeBarButtonsToRemove: listOfButtons,
 			// modeBarButtonsToAdd: [{
 			// 	name: 'toggle-options',
