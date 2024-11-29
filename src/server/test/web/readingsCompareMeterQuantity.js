@@ -75,34 +75,9 @@ mocha.describe('readings API', () => {
 				// Add C6 here
 
 				mocha.it('C8: 1 day shift end 2022-10-31 17:00:00 for 15 minute reading intervals and quantity units & kWh as MJ', async () => {
-					// adding units u1, u2, u3
-					const unitData = [
+					// Use predefined unit and conversion data
+					const unitData = unitDatakWh.concat([
 						{
-							// u1
-							name: 'kWh',
-							identifier: '',
-							unitRepresent: Unit.unitRepresentType.QUANTITY,
-							secInRate: 3600,
-							typeOfUnit: Unit.unitType.UNIT,
-							suffix: '',
-							displayable: Unit.displayableType.ALL,
-							preferredDisplay: true,
-							note: 'OED created standard unit'
-						},
-						{
-							// u2
-							name: 'Electric_Utility',
-							identifier: '',
-							unitRepresent: Unit.unitRepresentType.QUANTITY,
-							secInRate: 3600,
-							typeOfUnit: Unit.unitType.METER,
-							suffix: '',
-							displayable: Unit.displayableType.NONE,
-							preferredDisplay: false,
-							note: 'special unit'
-						},
-						{
-							// u3
 							name: 'MJ',
 							identifier: 'megaJoules',
 							unitRepresent: Unit.unitRepresentType.QUANTITY,
@@ -113,20 +88,9 @@ mocha.describe('readings API', () => {
 							preferredDisplay: false,
 							note: 'MJ'
 						}
-					];
-					const conversionData = [
-						// adding conversions c1, c2
+					]);
+					const conversionData = conversionDatakWh.concat([
 						{
-							// c1
-							sourceName: 'Electric_Utility',
-							destinationName: 'kWh',
-							bidirectional: false,
-							slope: 1,
-							intercept: 0,
-							note: 'Electric_Utility → kWh'
-						},
-						{
-							// c2
 							sourceName: 'kWh',
 							destinationName: 'MJ',
 							bidirectional: true,
@@ -134,22 +98,9 @@ mocha.describe('readings API', () => {
 							intercept: 0,
 							note: 'kWh → MJ'
 						}
-					];
-					const meterData = [
-						// adding meterData for MJ Unit
-						{
-						name: 'Electric_Utility MJ',
-						unit: 'Electric_Utility',
-						displayable: true,
-						gps: undefined,
-						note: 'special meter',
-						file: 'test/web/readingsData/readings_ri_15_days_75.csv',
-						deleteFile: false,
-						readingFrequency: '15 minutes',
-						id: METER_ID
-						}
-					];
-					await prepareTest(unitData, conversionData, meterData);
+					]);
+					// Prepare test with the standard data
+					await prepareTest(unitData, conversionData, meterDatakWh);
 					// Get the unit ID since the DB could use any value.
 					const unitId = await getUnitId('MJ');
 					const expected = [11232.0660730344, 12123.0051081528];
