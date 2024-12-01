@@ -76,14 +76,14 @@ mocha.describe('readings API', () => {
 					const unitId = await getUnitId('kWh');
 					const expected = [9132.81261972035, 13147.7382388332];
 					const res = await chai.request(app).get(`/api/compareReadings/meters/${METER_ID}`)
-					  .query({
-						curr_start: '2022-10-30 00:00:00',
-						curr_end: '2022-11-01 15:00:00',  
-						shift: 'P7D',  
-						graphicUnitId: unitId
-					  });
+						.query({
+							curr_start: '2022-10-30 00:00:00',
+							curr_end: '2022-11-01 15:00:00',
+							shift: 'P7D',
+							graphicUnitId: unitId
+						});
 					expectCompareToEqualExpected(res, expected);
-				  });				  
+				});
 
 				// Add C6 here
 
