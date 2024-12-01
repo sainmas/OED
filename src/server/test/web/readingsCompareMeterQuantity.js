@@ -68,7 +68,7 @@ mocha.describe('readings API', () => {
 						});
 					expectCompareToEqualExpected(res, expected);
 				});
-				
+
 				// Add C4 here
 
 				mocha.it('C5: 7 day shift end 2022-11-01 15:00:00 (beyond data) for 15 minute reading intervals and quantity units & kWh as kWh', async () => {
@@ -78,8 +78,8 @@ mocha.describe('readings API', () => {
 					const res = await chai.request(app).get(`/api/compareReadings/meters/${METER_ID}`)
 					  .query({
 						curr_start: '2022-10-30 00:00:00',
-						curr_end: '2022-11-01 15:00:00',  // 3-day window, ends at 2022-11-01 15:00:00
-						shift: 'P7D',  // 7-day shift (different from C3)
+						curr_end: '2022-11-01 15:00:00',  
+						shift: 'P7D',  
 						graphicUnitId: unitId
 					  });
 					expectCompareToEqualExpected(res, expected);
