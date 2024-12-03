@@ -76,7 +76,7 @@ export default function RadarChartComponent() {
 		'resetScale2d'];
 	const advancedButtons: Plotly.ModeBarDefaultButtons[] = ['select2d', 'lasso2d', 'autoScale2d', 'resetScale2d'];
 	// Manage button states with useState
-	const	[listOfButtons, setListOfButtons] = React.useState(defaultButtons);
+	const [listOfButtons, setListOfButtons] = React.useState(defaultButtons);
 
 	// Add all valid data from existing meters to the radar plot
 	for (const meterID of selectedMeters) {
