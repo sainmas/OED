@@ -3,29 +3,38 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
+
 import * as React from 'react';
 import * as moment from 'moment';
 import {
 	Alert, Button, Dropdown, DropdownItem, DropdownMenu, DropdownToggle,
+	FormFeedback,
 	FormGroup, Input, Label, Modal, ModalBody, ModalHeader, Pagination, PaginationItem, PaginationLink, Table
 } from 'reactstrap';
 import DateRangePicker from '@wojtekmaj/react-daterange-picker';
 import { useAppSelector } from '../../redux/reduxHooks';
 import { selectSelectedLanguage } from '../../redux/slices/appStateSlice';
-import { showWarnNotification } from '../../utils/notifications';
 import { logsApi } from '../../utils/api';
 import translate from '../../utils/translate';
 import { TimeInterval } from '../../../../common/TimeInterval';
 import { dateRangeToTimeInterval, timeIntervalToDateRange } from '../../utils/dateRangeCompatibility';
 import { Value } from '@wojtekmaj/react-daterange-picker/dist/cjs/shared/types';
 
-
 // number of log messages to display per page
 const PER_PAGE = 20;
+
+enum LogTypes {
+	ERROR = 'ERROR',
+	INFO = 'INFO',
+	WARN = 'WARN',
+	DEBUG = 'DEBUG',
+	SILENT = 'SILENT'
+}
+// log types for filtering
+const logTypes = Object.values(LogTypes);
+
 // initialize log message array to hold log messages
 const initialLogs: any[] = [];
-// log types for filtering
-const logTypes = ['ERROR', 'INFO', 'WARN', 'SILENT'];
 
 /**
  * React component that defines the log message page
@@ -33,37 +42,38 @@ const logTypes = ['ERROR', 'INFO', 'WARN', 'SILENT'];
  */
 export default function LogMsgComponent() {
 	const locale = useAppSelector(selectSelectedLanguage);
-
 	// Log messages state
 	const [logs, setLogs] = React.useState(initialLogs);
+	// Log messages date range state
+	const [logDateRange, setLogDateRange] = React.useState<TimeInterval>(TimeInterval.unbounded());
+	// Sort order for date column in the table
+	const [dateSortOrder, setDateSortOrder] = React.useState<'asc' | 'desc'>('asc');
+	// Number of log messages to display
+	const [logLimit, setLogLimit] = React.useState(PER_PAGE);
+	// Current page state for pagination
+	const [currentPage, setCurrentPage] = React.useState(1);
+	// Showing all logs instead of paginated
+	const [showAllLogs, setShowAllLogs] = React.useState(false);
+	// Update button state
+	const [buttonAvailable, setButtonAvailable] = React.useState(false);
+	// Modal state for displaying full log message
+	const [modalOpen, setModalOpen] = React.useState(false);
+	// Log type and time to display in the modal header
+	const [modelHeader, setModelHeader] = React.useState('');
+	// Full log message to display in the modal
+	const [modalLogMessage, setModalLogMessage] = React.useState('');
 	// Selected log types for filtering in the update log
 	const [selectedUpdateLogTypes, setSelectedUpdateLogTypes] = React.useState<string[]>(logTypes);
-	// Dropdown open state for log type in the header for filtering
+	// "Select All Logs" button state for update log
+	const [selectAllUpdate, setSelectAllUpdate] = React.useState(true);
+	// Dropdown open state for log type in the header for filter
 	const [typeTableDropdown, setTypeTableDropdown] = React.useState(false);
 	// Selected log types for filtering in the table
 	const [selectedTableLogTypes, setSelectedTableLogTypes] = React.useState<string[]>(logTypes);
 	// Dropdown open state for log type in the table for filtering
 	const [updateLogDropdown, setUpdateLogDropdown] = React.useState(false);
-	// Sort order for date column in the table
-	const [dateSortOrder, setDateSortOrder] = React.useState<'asc' | 'desc'>('asc');
-	// Log messages date range state
-	const [logDateRange, setLogDateRange] = React.useState<TimeInterval>(TimeInterval.unbounded());
-	// Number of log messages to display
-	const [logLimit, setLogLimit] = React.useState(0);
-	// "Select All Logs" button state for update log
-	const [selectAllUpdate, setSelectAllUpdate] = React.useState(true);
 	// "Select All Logs" button state for table log
 	const [selectAllTable, setSelectAllTable] = React.useState(true);
-	// Current page state for pagination
-	const [currentPage, setCurrentPage] = React.useState(1);
-	// Modal state for displaying full log message
-	const [modalOpen, setModalOpen] = React.useState(false);
-	// Full log message to display in the modal
-	const [modalLogMessage, setModalLogMessage] = React.useState('');
-	// Showing all logs instead of paginated
-	const [showAllLogs, setShowAllLogs] = React.useState(false);
-	// Update button state
-	const [buttonAvailable, setButtonAvailable] = React.useState(false);
 
 	// Update the availability of the update button each time the selected log types, log limit, or date range changes
 	React.useEffect(() => {
@@ -71,25 +81,30 @@ export default function LogMsgComponent() {
 	}, [selectedUpdateLogTypes, logLimit, logDateRange]);
 
 	// Open modal with the full log message
-	const handleLogMessageClick = (logMessage: string) => {
+	const handleLogMessageModal = (logType: string, logTime: string, logMessage: string) => {
+		setModelHeader(`[${logType}] ${moment(logTime).toLocaleString()}`);
 		setModalLogMessage(logMessage);
 		setModalOpen(true);
 	};
 
 	// Handle checkbox change for log type in the table
 	const handleTableCheckboxChange = (logType: string) => {
-		if (selectedTableLogTypes.includes(logType)) { // Remove log type if already selected
+		if (selectedTableLogTypes.includes(logType)) {
+			// Remove log type if already selected
 			setSelectedTableLogTypes(selectedTableLogTypes.filter(type => type !== logType));
-		} else { // Add log type if not selected
+		} else {
+			// Add log type if not selected
 			setSelectedTableLogTypes([...selectedTableLogTypes, logType]);
 		}
 	};
 
 	// Handle checkbox change for log type in the update log
 	const handleUpdateCheckboxChange = (logType: string) => {
-		if (selectedUpdateLogTypes.includes(logType)) {  // Remove log type if already selected
+		if (selectedUpdateLogTypes.includes(logType)) {
+			// Remove log type if already selected
 			setSelectedUpdateLogTypes(selectedUpdateLogTypes.filter(type => type !== logType));
-		} else { // Add log type if not selected
+		} else {
+			// Add log type if not selected
 			setSelectedUpdateLogTypes([...selectedUpdateLogTypes, logType]);
 		}
 	};
@@ -114,13 +129,13 @@ export default function LogMsgComponent() {
 	const handleDateSort = () => {
 		const newDateSortOrder = dateSortOrder === 'asc' ? 'desc' : 'asc';
 		const sortedLogs = [...logs].sort((a, b) => {
-			const dateA = new Date(a.logTime);
-			const dateB = new Date(b.logTime);
+			const dateA = moment(a.logTime);
+			const dateB = moment(b.logTime);
 
 			if (newDateSortOrder === 'asc') {
-				return dateA.getTime() - dateB.getTime();
+				return dateA.valueOf() - dateB.valueOf();
 			} else {
-				return dateB.getTime() - dateA.getTime();
+				return dateB.valueOf() - dateA.valueOf();
 			}
 		});
 		setDateSortOrder(newDateSortOrder);
@@ -165,20 +180,15 @@ export default function LogMsgComponent() {
 	 * Handle showing the log table by fetching from the server
 	 */
 	async function handleShowLogTable() {
-		// Number of logs being fetched must be between 1 and 1000
-		if (!logLimit || logLimit < 1 || logLimit > 1000) {
-			showWarnNotification(translate('log.limit.required'));
-		} else {
-			try {
-				// get log by date and type
-				const data = await logsApi.getLogsByDateRangeAndType(logDateRange, selectedUpdateLogTypes, logLimit.toString());
-				setLogs(data);
-				// reset pagination to first page after fetching new logs
-				setCurrentPage(1);
-				setButtonAvailable(true);
-			} catch (error) {
-				console.error(error);
-			}
+		try {
+			// get log by date and type
+			const data = await logsApi.getLogsByDateRangeAndType(logDateRange, selectedUpdateLogTypes, logLimit.toString());
+			setLogs(data);
+			// reset pagination to first page after fetching new logs
+			setCurrentPage(1);
+			setButtonAvailable(true);
+		} catch (error) {
+			console.error(error);
 		}
 	}
 
@@ -223,7 +233,8 @@ export default function LogMsgComponent() {
 						onChange={handleDateRangeChange}
 						minDate={new Date(1970, 0, 1)}
 						maxDate={new Date()}
-						locale={locale} // Formats Dates, and Calendar months base on locale
+						// Formats Dates, and Calendar months base on locale
+						locale={locale}
 						calendarIcon={null}
 						calendarProps={{ defaultView: 'year' }} />
 				</FormGroup>
@@ -237,11 +248,20 @@ export default function LogMsgComponent() {
 						placeholder={translate('from.1.to.1000')}
 						type="number"
 						onChange={e => setLogLimit(e.target.valueAsNumber)}
-						invalid={logLimit < 1 || logLimit > 1000}
+						invalid={!logLimit || logLimit < 1 || logLimit > 1000}
 						value={logLimit}
 					/>
+					<FormFeedback>
+						{translate('log.limit.required')}
+					</FormFeedback>
 				</FormGroup>
-				<Button color='primary' disabled={buttonAvailable} onClick={handleShowLogTable}>{translate('log.msg.update')}</Button>
+				<Button
+					color='primary'
+					disabled={buttonAvailable || !logLimit || logLimit < 1 || logLimit > 1000}
+					onClick={handleShowLogTable}
+				>
+					{translate('update')[0].toUpperCase() + translate('update').slice(1)}
+				</Button>
 			</div>
 
 			{/* Display log messages table */}
@@ -286,7 +306,7 @@ export default function LogMsgComponent() {
 								<td>{log.logType}</td>
 								<td
 									style={{ cursor: 'pointer' }}
-									onClick={() => handleLogMessageClick(log.logMessage)}
+									onClick={() => handleLogMessageModal(log.logType, log.logTime, log.logMessage)}
 								>{log.logMessage.length > 80 ? `${log.logMessage.slice(0, 80)} ...` : log.logMessage}</td>
 								<td>
 									{new Date(log.logTime).toLocaleString('en-US', {
@@ -340,7 +360,7 @@ export default function LogMsgComponent() {
 
 			{/* Modal for displaying full log message */}
 			<Modal isOpen={modalOpen} toggle={() => setModalOpen(!modalOpen)} centered>
-				<ModalHeader toggle={() => setModalOpen(!modalOpen)}>{translate('log.message')}</ModalHeader>
+				<ModalHeader toggle={() => setModalOpen(!modalOpen)}>{modelHeader}</ModalHeader>
 				<ModalBody>
 					{modalLogMessage}
 				</ModalBody>

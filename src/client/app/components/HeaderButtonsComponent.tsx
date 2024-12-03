@@ -102,7 +102,7 @@ export default function HeaderButtonsComponent() {
 			shouldCSVReadingsButtonDisabled: pathname === '/csvReadings',
 			shouldUnitsButtonDisabled: pathname === '/units',
 			shouldConversionsButtonDisabled: pathname === '/conversions',
-			shouldLogMsgButtonDisabled: pathname === '/logmsg'
+			shouldLogMsgButtonDisabled: pathname === '/logmsg',
 			shouldVisualUnitMapButtonDisabled: pathname === '/visual-unit'
 		}));
 	}, [pathname]);
@@ -315,7 +315,7 @@ export default function HeaderButtonsComponent() {
 						{translate('log.in')}
 					</ModalHeader>
 					<ModalBody>
-						<LoginComponent handleClose={handleClose}/>
+						<LoginComponent handleClose={handleClose} />
 					</ModalBody>
 				</Modal>
 			</>

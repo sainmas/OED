@@ -60,7 +60,6 @@ const router = createBrowserRouter([
 					{ path: 'csvMeters', element: <MetersCSVUploadComponent /> },
 					{ path: 'maps', element: <MapsDetailContainer /> },
 					{ path: 'units', element: <UnitsDetailComponent /> },
-					{ path: 'conversions', element: <ConversionsDetailComponent /> },
 					{ path: 'users', element: <UsersDetailComponent /> },
 					{ path: 'logmsg', element: <LogMsgComponent /> },
 					{ path: 'users', element: <UsersDetailComponent /> },

@@ -56,48 +56,6 @@ class LogMsg {
 	}
 
 	/**
-	 * Returns a promise to get all of the logs from the database
-	 * @param conn the connection to be used.
-	 * @returns {Promise.<array.<logMsg>>}
-	 */
-	static async getAll(conn) {
-		const rows = await conn.any(sqlFile('logmsg/get_all_logs.sql'));
-		if (rows.length > 0) {
-			return rows.map(LogMsg.mapRow);
-		}
-	}
-
-	/**
-	 * Returns a promise to get all of the logs in between two dates.
-	 * If no startDate is specified, all logs before the endDate are returned.
-	 * If no endDate is specified, all logs after the startDate are returned.
-	 * @param {Date} startDate
-	 * @param {Date} endDate
-	 * @param conn is the connection to use.
-	 * @returns {Promise.<array.<LogMsg>>}
-	 */
-	static async getLogsByDateRange(startDate, endDate, conn) {
-		const rows = await conn.any(sqlFile('logmsg/get_logs_from_dates.sql'), {
-			startDate: startDate,
-			endDate: endDate
-		});
-
-		return rows.map(LogMsg.mapRow);
-	}
-
-	/**
-	 * Returns a promise to get all of the logs of a certain type
-	 * @param logType
-	 * @param conn is the connection to use.
-	 * @returns {Promise.<array.<LogMsg>>}
-	 */
-	static async getLogsByType(logType, conn) {
-		const rows = await conn.any(sqlFile('logmsg/get_logs_from_type.sql'), { logType: logType });
-
-		return rows.map(LogMsg.mapRow);
-	}
-
-	/**
 	 * Returns a promise to get all of the logs in between two dates.
 	 * @param {Date} startDate start date of the range to get logs
 	 * @param {Date} endDate end date of the range to get logs

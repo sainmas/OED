@@ -51,8 +51,8 @@ class Logger {
 	 * @param {boolean?} skipMail Don't e-mail this message even if we would normally emit an e-mail for this level.
 	 */
 	log(level, message, error = null, skipMail = false) {
-		let logTime = moment().format('YYYY-MM-DDTHH:mm:ss.SSSZ');
-		let messageToLog = `[${level.name}@${logTime}] ${message}\n`;
+		let logTime = moment();
+		let messageToLog = `[${level.name}@${logTime.format('YYYY-MM-DDTHH:mm:ss.SSSZ')}] ${message}\n`;
 
 		const conn = getConnection();
 
@@ -81,7 +81,7 @@ class Logger {
 
 			// NOTE: for running the first time, uncomment the following code block to write all current logs to the database
 			// after that you can comment out it to write only new logs to the database
-			// TODO: This should be fix later to check whehter it should write new logs or all logs to the database when running
+			// TODO: This should be fix later to check whether it should write new logs or all logs to the database when running
 			// fs.readFile(logFile, 'utf8', async (err, data) => {
 			// 	if (err) {
 			// 		console.error(`Failed to read log file: ${err} (${err.stack})`);
@@ -107,7 +107,7 @@ class Logger {
 			// Comment out the following code block when running the first time to write all logs to the database
 			// then uncomment it to write only new logs to the database later
 			// Write the new log to the database
-			const logMsg = new LogMsg(level.name, message, new Date(logTime));
+			const logMsg = new LogMsg(level.name, message, logTime);
 			(async () => {
 				try {
 					await logMsg.insert(conn);

@@ -37,7 +37,7 @@ const validLogMsg = {
 		},
 		logTypes: {
 			type: 'string',
-			pattern: '^(INFO|WARN|ERROR|SILENT)(-(INFO|WARN|ERROR|SILENT))*$'
+			pattern: '^(INFO|WARN|ERROR|SILENT|DEBUG)(-(INFO|WARN|ERROR|SILENT|DEBUG))*$'
 		},
 		logLimit: {
 			type: 'string',
