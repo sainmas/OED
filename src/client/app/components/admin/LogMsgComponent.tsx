@@ -6,6 +6,7 @@
 
 import * as React from 'react';
 import * as moment from 'moment';
+import { orderBy } from 'lodash';
 import {
 	Alert, Button, Dropdown, DropdownItem, DropdownMenu, DropdownToggle,
 	FormFeedback,
@@ -18,7 +19,6 @@ import { logsApi } from '../../utils/api';
 import translate from '../../utils/translate';
 import { TimeInterval } from '../../../../common/TimeInterval';
 import { dateRangeToTimeInterval, timeIntervalToDateRange } from '../../utils/dateRangeCompatibility';
-import { Value } from '@wojtekmaj/react-daterange-picker/dist/cjs/shared/types';
 
 // number of log messages to display per page
 const PER_PAGE = 20;
@@ -109,11 +109,15 @@ export default function LogMsgComponent() {
 		}
 	};
 
-	// React effect to keep track of the "Select All" checkbox state
+	// React effect to keep track of the "Select All" checkbox state for the update log
 	React.useEffect(() => {
 		selectedUpdateLogTypes.length === logTypes.length ? setSelectAllUpdate(true) : setSelectAllUpdate(false);
+	}, [selectedUpdateLogTypes]);
+
+	// React effect to keep track of the "Select All" checkbox state for the table
+	React.useEffect(() => {
 		selectedTableLogTypes.length === logTypes.length ? setSelectAllTable(true) : setSelectAllTable(false);
-	}, [selectedUpdateLogTypes, selectedTableLogTypes]);
+	}, [selectedTableLogTypes]);
 
 	// Handle "Select All" checkbox change in the table
 	const handleTableSelectAll = () => {
@@ -128,53 +132,21 @@ export default function LogMsgComponent() {
 	// Handle sorting of logs by date
 	const handleDateSort = () => {
 		const newDateSortOrder = dateSortOrder === 'asc' ? 'desc' : 'asc';
-		const sortedLogs = [...logs].sort((a, b) => {
-			const dateA = moment(a.logTime);
-			const dateB = moment(b.logTime);
-
-			if (newDateSortOrder === 'asc') {
-				return dateA.valueOf() - dateB.valueOf();
-			} else {
-				return dateB.valueOf() - dateA.valueOf();
-			}
-		});
+		const sortedLogs = orderBy(logs, ['logTime'], [newDateSortOrder]);
 		setDateSortOrder(newDateSortOrder);
 		setLogs(sortedLogs);
-	};
-	// Handle date range change
-	const handleDateRangeChange = (range: Value) => {
-		setLogDateRange(dateRangeToTimeInterval(range));
 	};
 	// Handle page change for pagination
 	const handlePageChange = (newPage: number) => {
 		setCurrentPage(newPage);
 	};
-	// Toggle dropdown for type in the table
-	const toggleTypeTable = () => {
-		setTypeTableDropdown(!typeTableDropdown);
-	};
-	// Toggle dropdown for type in the update log
-	const toggleUpdateLog = () => {
-		setUpdateLogDropdown(!updateLogDropdown);
-	};
-	// Handle showing all logs instead of paginated
-	const handleShowAllLogs = () => {
-		setShowAllLogs(!showAllLogs);
-	};
 
 	// Filter logs based on selected log types and date range
-	const filteredLogs = logs.filter(log => {
-		const logDate = moment(log.logTime);
-		// Check if log is within the selected date range
-		const isWithinDateRange =
-			(!logDateRange || !logDateRange.getIsBounded() || logDate >= logDateRange.getStartTimestamp()) &&
-			(!logDateRange || !logDateRange.getIsBounded() || logDate <= logDateRange.getEndTimestamp());
-		return selectedTableLogTypes.includes(log.logType) && isWithinDateRange;
-	});
-
-	// Paginate logs if not showing all logs
-	const paginatedLogs = showAllLogs ? filteredLogs : filteredLogs.slice((currentPage - 1) * PER_PAGE, currentPage * PER_PAGE);
-	const totalPages = Math.ceil(filteredLogs.length / PER_PAGE);
+	const paginatedLogs = showAllLogs
+		? logs.filter(log => selectedTableLogTypes.includes(log.logType))
+		: logs.filter(log => selectedTableLogTypes.includes(log.logType))
+			.slice((currentPage - 1) * PER_PAGE, currentPage * PER_PAGE);
+	const totalPages = Math.ceil(logs.length / PER_PAGE);
 
 	/**
 	 * Handle showing the log table by fetching from the server
@@ -198,7 +170,7 @@ export default function LogMsgComponent() {
 
 			{/* Filter log messages by type, date range, and number of logs for fetching */}
 			<div style={logFilterStyle}>
-				<Dropdown isOpen={updateLogDropdown} toggle={toggleUpdateLog}>
+				<Dropdown isOpen={updateLogDropdown} toggle={() => setUpdateLogDropdown(!updateLogDropdown)}>
 					<DropdownToggle color='primary' caret>{translate('log.type')}</DropdownToggle>
 					<DropdownMenu>
 						<DropdownItem key='selectAll' toggle={false}>
@@ -230,7 +202,7 @@ export default function LogMsgComponent() {
 					<DateRangePicker
 						id="dateRange"
 						value={timeIntervalToDateRange(logDateRange)}
-						onChange={handleDateRangeChange}
+						onChange={e => setLogDateRange(dateRangeToTimeInterval(e))}
 						minDate={new Date(1970, 0, 1)}
 						maxDate={new Date()}
 						// Formats Dates, and Calendar months base on locale
@@ -270,7 +242,7 @@ export default function LogMsgComponent() {
 					<thead style={headerStyle}>
 						<tr>
 							<th>
-								<Dropdown isOpen={typeTableDropdown} toggle={toggleTypeTable}>
+								<Dropdown isOpen={typeTableDropdown} toggle={() => setTypeTableDropdown(!typeTableDropdown)}>
 									<DropdownToggle color='primary' caret>{translate('log.type')}</DropdownToggle>
 									<DropdownMenu>
 										<DropdownItem key='selectAll' toggle={false}>
@@ -308,17 +280,7 @@ export default function LogMsgComponent() {
 									style={{ cursor: 'pointer' }}
 									onClick={() => handleLogMessageModal(log.logType, log.logTime, log.logMessage)}
 								>{log.logMessage.length > 80 ? `${log.logMessage.slice(0, 80)} ...` : log.logMessage}</td>
-								<td>
-									{new Date(log.logTime).toLocaleString('en-US', {
-										year: 'numeric',
-										month: '2-digit',
-										day: '2-digit',
-										hour: '2-digit',
-										minute: '2-digit',
-										second: '2-digit',
-										fractionalSecondDigits: 2
-									})}
-								</td>
+								<td>{moment(log.logTime).format('MM/DD/YYYY, hh:mm:ss.SS A')}</td>
 							</tr>
 						))}
 					</tbody>
@@ -353,10 +315,11 @@ export default function LogMsgComponent() {
 			</Pagination >}
 
 			{/* Show all logs or in pages button */}
-			{logs.length > 0 && !showAllLogs &&
-				<Button color='primary' style={{ margin: '0% 40% 1%' }} onClick={handleShowAllLogs}>Show All Logs ({filteredLogs.length})</Button>}
-			{logs.length > 0 && showAllLogs &&
-				<Button color='primary' style={{ margin: '0% 40% 1%' }} onClick={handleShowAllLogs}>Show in pages</Button>}
+			{logs.length > 0 &&
+				<Button color='primary' style={{ margin: '0% 40% 1%' }} onClick={() => setShowAllLogs(!showAllLogs)}>
+					{!showAllLogs ? `Show All Logs (${logs.length})` : 'Show in pages'}
+				</Button>}
+
 
 			{/* Modal for displaying full log message */}
 			<Modal isOpen={modalOpen} toggle={() => setModalOpen(!modalOpen)} centered>
