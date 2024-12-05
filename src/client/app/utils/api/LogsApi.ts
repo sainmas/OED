@@ -29,7 +29,7 @@ export default class LogsApi {
 
 	public async getLogsByDateRangeAndType(timeInterval: TimeInterval, logTypes: string[], logLimit: string): Promise<LogData[]> {
 		const request = await this.backend.doGetRequest('/api/logs/logsmsg/getLogsByDateRangeAndType',
-			{ timeInterval: timeInterval.toString(), logTypes: logTypes.join('-'), logLimit: logLimit });
+			{ timeInterval: timeInterval.toString(), logTypes: logTypes, logLimit: logLimit });
 		return request as LogData[];
 	}
 

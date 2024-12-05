@@ -29,6 +29,7 @@ const validLog = {
 const validLogMsg = {
 	type: 'object',
 	required: ['timeInterval', 'logTypes', 'logLimit'],
+	maxProperties: 3,
 	properties: {
 		timeInterval: {
 			// it should check for format: 'date-time' but this won't work for case where time is not provided
@@ -36,8 +37,11 @@ const validLogMsg = {
 			type: 'string',
 		},
 		logTypes: {
-			type: 'string',
-			pattern: '^(INFO|WARN|ERROR|SILENT|DEBUG)(-(INFO|WARN|ERROR|SILENT|DEBUG))*$'
+			type: 'array',
+			items: {
+				type: 'string',
+				enum: ['INFO', 'WARN', 'ERROR', 'SILENT', 'DEBUG']
+			}
 		},
 		logLimit: {
 			type: 'string',
@@ -79,7 +83,6 @@ router.post('/error', async (req, res) => {
 	}
 });
 
-
 router.get('/logsmsg/getLogsByDateRangeAndType', async (req, res) => {
 	const validationResult = validate(req.query, validLogMsg);
 	if (!validationResult.valid) {
@@ -89,8 +92,9 @@ router.get('/logsmsg/getLogsByDateRangeAndType', async (req, res) => {
 		try {
 			const logLimit = parseInt(req.query.logLimit);
 			const timeInterval = TimeInterval.fromString(req.query.timeInterval);
+			const logTypes = req.query.logTypes;
 			const rows = await LogMsg.getLogsByDateRangeAndType(
-				timeInterval.startTimestamp, timeInterval.endTimestamp, req.query.logTypes.split('-'), logLimit, conn);
+				timeInterval.startTimestamp, timeInterval.endTimestamp, logTypes, logLimit, conn);
 			res.json(rows);
 		} catch (err) {
 			console.error(`Failed to fetch logs filter by date range and type: ${err}`);

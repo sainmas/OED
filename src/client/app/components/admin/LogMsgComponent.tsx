@@ -66,12 +66,12 @@ export default function LogMsgComponent() {
 	const [selectedUpdateLogTypes, setSelectedUpdateLogTypes] = React.useState<string[]>(logTypes);
 	// "Select All Logs" button state for update log
 	const [selectAllUpdate, setSelectAllUpdate] = React.useState(true);
+	// Dropdown open state for log type in the update log for filtering
+	const [updateLogDropdown, setUpdateLogDropdown] = React.useState(false);
 	// Dropdown open state for log type in the header for filter
 	const [typeTableDropdown, setTypeTableDropdown] = React.useState(false);
 	// Selected log types for filtering in the table
 	const [selectedTableLogTypes, setSelectedTableLogTypes] = React.useState<string[]>(logTypes);
-	// Dropdown open state for log type in the table for filtering
-	const [updateLogDropdown, setUpdateLogDropdown] = React.useState(false);
 	// "Select All Logs" button state for table log
 	const [selectAllTable, setSelectAllTable] = React.useState(true);
 
@@ -229,7 +229,7 @@ export default function LogMsgComponent() {
 				</FormGroup>
 				<Button
 					color='primary'
-					disabled={buttonAvailable || !logLimit || logLimit < 1 || logLimit > 1000}
+					disabled={buttonAvailable || !logLimit || logLimit < 1 || logLimit > 1000 || selectedUpdateLogTypes.length === 0}
 					onClick={handleShowLogTable}
 				>
 					{translate('update')[0].toUpperCase() + translate('update').slice(1)}
@@ -269,7 +269,9 @@ export default function LogMsgComponent() {
 								</Dropdown>
 							</th>
 							<th>{translate('log.message')}</th>
-							<th onClick={handleDateSort} style={{ cursor: 'pointer' }}>{translate('log.time')} {dateSortOrder === 'asc' ? '↑' : '↓'}</th>
+							<th onClick={handleDateSort} style={{ cursor: 'pointer' }}>
+								{translate('log.time')} {dateSortOrder === 'asc' ? '↑' : '↓'}
+							</th>
 						</tr>
 					</thead>
 					<tbody style={bodyStyle}>
@@ -279,7 +281,9 @@ export default function LogMsgComponent() {
 								<td
 									style={{ cursor: 'pointer' }}
 									onClick={() => handleLogMessageModal(log.logType, log.logTime, log.logMessage)}
-								>{log.logMessage.length > 80 ? `${log.logMessage.slice(0, 80)} ...` : log.logMessage}</td>
+								>
+									{log.logMessage.length > 80 ? `${log.logMessage.slice(0, 80)} ...` : log.logMessage}
+								</td>
 								<td>{moment(log.logTime).format('MM/DD/YYYY, hh:mm:ss.SS A')}</td>
 							</tr>
 						))}
@@ -319,7 +323,6 @@ export default function LogMsgComponent() {
 				<Button color='primary' style={{ margin: '0% 40% 1%' }} onClick={() => setShowAllLogs(!showAllLogs)}>
 					{!showAllLogs ? `Show All Logs (${logs.length})` : 'Show in pages'}
 				</Button>}
-
 
 			{/* Modal for displaying full log message */}
 			<Modal isOpen={modalOpen} toggle={() => setModalOpen(!modalOpen)} centered>

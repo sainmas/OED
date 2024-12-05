@@ -52,7 +52,7 @@ class LogMsg {
 	 */
 	async insert(conn) {
 		const logMsg = this;
-		await conn.none(sqlFile('logmsg/insert_new_log.sql'), logMsg);
+		await conn.none(sqlFile('logmsg/insert_new_logmsg.sql'), logMsg);
 	}
 
 	/**
@@ -65,7 +65,7 @@ class LogMsg {
 	 * @returns {Promise.<array.<LogMsg>>}
 	 */
 	static async getLogsByDateRangeAndType(startDate = null, endDate = null, logTypes, logLimit = 100, conn) {
-		const rows = await conn.any(sqlFile('logmsg/get_logs_from_dates_and_type.sql'), {
+		const rows = await conn.any(sqlFile('logmsg/get_logmsgs_from_dates_and_type.sql'), {
 			startDate: startDate || '-infinity',
 			endDate: endDate || 'infinity',
 			logTypes: logTypes,
