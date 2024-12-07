@@ -76,7 +76,7 @@ export default function RadarChartComponent() {
 		'resetScale2d'];
 	const advancedButtons: Plotly.ModeBarDefaultButtons[] = ['select2d', 'lasso2d', 'autoScale2d', 'resetScale2d'];
 	// Manage button states with useState
-	const	[listOfButtons, setListOfButtons] = React.useState(defaultButtons);
+	const [listOfButtons, setListOfButtons] = React.useState(defaultButtons);
 
 	// Add all valid data from existing meters to the radar plot
 	for (const meterID of selectedMeters) {
@@ -89,11 +89,6 @@ export default function RadarChartComponent() {
 				if (readingsData) {
 					const label = entity.identifier;
 					const colorID = meterID;
-					// TODO If we are sure the data is always defined then remove this commented out code.
-					// Be consistent for all graphing and groups below.
-					// if (readingsData.readings === undefined) {
-					// 	throw new Error('Unacceptable condition: readingsData.readings is undefined.');
-					// }
 					// Create two arrays for the distance (rData) and angle (thetaData) values. Fill the array with the data from the line readings.
 					// HoverText is the popup value show for each reading.
 					const thetaData: string[] = [];
@@ -146,9 +141,6 @@ export default function RadarChartComponent() {
 				if (readingsData) {
 					const label = entity.name;
 					const colorID = groupID;
-					// if (readingsData.readings === undefined) {
-					// 	throw new Error('Unacceptable condition: readingsData.readings is undefined.');
-					// }
 					// Create two arrays for the distance (rData) and angle (thetaData) values. Fill the array with the data from the line readings.
 					// HoverText is the popup value show for each reading.
 					const thetaData: string[] = [];
