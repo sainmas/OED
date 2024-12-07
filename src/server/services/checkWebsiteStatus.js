@@ -1,52 +1,28 @@
-const cron = require('node-cron');
-const { getConnection } = require('../db');
-const { logMailer } = require('../logMailer');
-const LogEmail = require('../models/LogEmail');
-const colors = require('colors');
-  
-async function checkWebsite() {
-  const conn = getConnection();
+/* This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 
-  try {
-    const response = await fetch('https://httpstat.us/500/', { method: 'HEAD' });
-
-    if (response.ok) {
-      console.log('The server is up'.green.inverse);
-    } else {
-      console.error('The server is down'.red.inverse);
-
-      const errorMessage = 'The server at https://httpstat.us/500/ is down.';
-
-      // Log the error in the database
-      const log = new LogEmail(undefined, errorMessage);
-      await log.insert(conn);
-
-      // Send a logging email
-      await logMailer(conn);
-    }
-  } 
-  catch (error) {
-    console.error('Error:', error);
-
-    const errorMessage = `Failed to reach https://httpstat.us/500/. Error: ${error.message}`;
-
-    // Log the error in the database
-    const log = new LogEmail(undefined, errorMessage);
-    await log.insert(conn);
-
-    // Send a logging email
-    await logMailer(conn);
-  } finally {
-    if (conn.close) {
-      await conn.close();
-    }
-  }
-}
-
-// Schedule the task to run every hour
-// cron.schedule('0 * * * *', () => {
-//   console.log('Running website status check...');
-//   checkWebsite();
-// });
-
-checkWebsite();
+	const cron = require('node-cron');
+	const { getConnection } = require('../db');
+	const { log } = require('../log');
+	const { logMailer } = require('../logMailer');
+	const LogEmail = require('../models/LogEmail');
+	const WEBSITE_URL = process.argv[2];
+	
+	async function checkWebsite() {
+		try {
+			const response = await fetch(WEBSITE_URL, { method: 'HEAD' });
+	
+			if (!response.ok) {
+				const errorMessage = `The server at ${WEBSITE_URL} is down.`;
+				// Log the error using Logger class
+				log.error(errorMessage);	
+			}
+		} catch (error) {
+			const errorMessage = `Failed to reach ${WEBSITE_URL}. Error: ${error.message}`;
+	  log.error(errorMessage, error);
+		}
+	}
+	
+	checkWebsite();
+	
