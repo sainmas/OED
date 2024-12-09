@@ -37,11 +37,8 @@ const validLogMsg = {
 			type: 'string',
 		},
 		logTypes: {
-			type: 'array',
-			items: {
-				type: 'string',
-				enum: ['INFO', 'WARN', 'ERROR', 'SILENT', 'DEBUG']
-			}
+			type: 'string',
+			pattern: '^(INFO|WARN|ERROR|SILENT|DEBUG)(,(INFO|WARN|ERROR|SILENT|DEBUG))*$'
 		},
 		logLimit: {
 			type: 'string',
@@ -86,18 +83,19 @@ router.post('/error', async (req, res) => {
 router.get('/logsmsg/getLogsByDateRangeAndType', async (req, res) => {
 	const validationResult = validate(req.query, validLogMsg);
 	if (!validationResult.valid) {
+		log.error('invalid request to getLogsByDateRangeAndType');
 		res.sendStatus(400);
 	} else {
 		const conn = getConnection();
 		try {
 			const logLimit = parseInt(req.query.logLimit);
 			const timeInterval = TimeInterval.fromString(req.query.timeInterval);
-			const logTypes = req.query.logTypes;
+			const logTypes = req.query.logTypes.split(',');
 			const rows = await LogMsg.getLogsByDateRangeAndType(
 				timeInterval.startTimestamp, timeInterval.endTimestamp, logTypes, logLimit, conn);
 			res.json(rows);
 		} catch (err) {
-			console.error(`Failed to fetch logs filter by date range and type: ${err}`);
+			log.error(`Failed to fetch logs filter by date range and type: ${err}`);
 			res.sendStatus(500);
 		}
 	}

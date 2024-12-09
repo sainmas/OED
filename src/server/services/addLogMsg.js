@@ -10,14 +10,14 @@ const LogMsg = require('../models/LogMsg');
 const { getConnection } = require('../db');
 const moment = require('moment');
 
-const addLogMsgToDB = async () => {
+async function addLogMsgToDB() {
     try {
         const data = await fs.promises.readFile(logFile, 'utf8');
-        const logEntries = data.split('\n').filter(entry => entry.trim() !== '');
+        const logEntries = data.split('[');
         const conn = getConnection();
 
         for (const entry of logEntries) {
-            const logParts = entry.match(/\[(.*?)@(.*?)\] (.*)/);
+            const logParts = entry.match(/(.*?)@(.*?)\] ([^\[]*)(?=\[|$)/s);
             if (logParts) {
                 const [, logType, logTime, logMessage] = logParts;
                 const logMsg = new LogMsg(logType, logMessage, moment(logTime));
@@ -32,6 +32,6 @@ const addLogMsgToDB = async () => {
     } catch (err) {
         console.error(`Failed to migrate logs to database: ${err} (${err.stack})`);
     }
-};
+}
 
-module.exports = addLogMsgToDB;
+module.exports = { addLogMsgToDB };

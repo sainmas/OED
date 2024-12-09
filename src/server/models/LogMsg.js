@@ -52,7 +52,11 @@ class LogMsg {
 	 */
 	async insert(conn) {
 		const logMsg = this;
-		await conn.none(sqlFile('logmsg/insert_new_logmsg.sql'), logMsg);
+		await conn.none(sqlFile('logmsg/insert_new_logmsg.sql'), {
+			logType: logMsg.logType,
+			logMessage: logMsg.logMessage,
+			logTime: logMsg.logTime.format('YYYY-MM-DDTHH:mm:ss.SSS')
+		});
 	}
 
 	/**

@@ -5,12 +5,12 @@
  */
 
 import * as React from 'react';
-import * as moment from 'moment';
+import * as moment from 'moment-timezone';
 import { orderBy } from 'lodash';
 import {
 	Alert, Button, Dropdown, DropdownItem, DropdownMenu, DropdownToggle,
-	FormFeedback,
-	FormGroup, Input, Label, Modal, ModalBody, ModalHeader, Pagination, PaginationItem, PaginationLink, Table
+	FormFeedback, FormGroup, Input, Label, Modal, ModalBody, ModalHeader,
+	Pagination, PaginationItem, PaginationLink, Table
 } from 'reactstrap';
 import DateRangePicker from '@wojtekmaj/react-daterange-picker';
 import { useAppSelector } from '../../redux/reduxHooks';
@@ -82,7 +82,7 @@ export default function LogMsgComponent() {
 
 	// Open modal with the full log message
 	const handleLogMessageModal = (logType: string, logTime: string, logMessage: string) => {
-		setModelHeader(`[${logType}] ${moment(logTime).toLocaleString()}`);
+		setModelHeader(`[${logType}] ${moment.parseZone(logTime).format('LL LTS [(and ]SSS[ms)]')}`);
 		setModalLogMessage(logMessage);
 		setModalOpen(true);
 	};
@@ -136,10 +136,6 @@ export default function LogMsgComponent() {
 		setDateSortOrder(newDateSortOrder);
 		setLogs(sortedLogs);
 	};
-	// Handle page change for pagination
-	const handlePageChange = (newPage: number) => {
-		setCurrentPage(newPage);
-	};
 
 	// Filter logs based on selected log types and date range
 	const paginatedLogs = showAllLogs
@@ -154,7 +150,8 @@ export default function LogMsgComponent() {
 	async function handleShowLogTable() {
 		try {
 			// get log by date and type
-			const data = await logsApi.getLogsByDateRangeAndType(logDateRange, selectedUpdateLogTypes, logLimit.toString());
+			const data = await logsApi.getLogsByDateRangeAndType(
+				logDateRange, selectedUpdateLogTypes.toString(), logLimit.toString());
 			setLogs(data);
 			// reset pagination to first page after fetching new logs
 			setCurrentPage(1);
@@ -284,7 +281,7 @@ export default function LogMsgComponent() {
 								>
 									{log.logMessage.length > 80 ? `${log.logMessage.slice(0, 80)} ...` : log.logMessage}
 								</td>
-								<td>{moment(log.logTime).format('MM/DD/YYYY, hh:mm:ss.SS A')}</td>
+								<td>{moment.parseZone(log.logTime).format('LL LTS')}</td>
 							</tr>
 						))}
 					</tbody>
@@ -297,23 +294,23 @@ export default function LogMsgComponent() {
 			{!showAllLogs && logs.length !== 0 && <Pagination aria-label="Log pagination" style={{ justifyContent: 'center', margin: '1% auto' }}>
 				<>
 					<PaginationItem disabled={currentPage === 1}>
-						<PaginationLink first onClick={() => handlePageChange(1)} />
+						<PaginationLink first onClick={() => setCurrentPage(1)} />
 					</PaginationItem><PaginationItem disabled={currentPage === 1}>
-						<PaginationLink previous onClick={() => handlePageChange(currentPage - 1)} />
+						<PaginationLink previous onClick={() => setCurrentPage(currentPage - 1)} />
 					</PaginationItem>
 
 					{Array.from({ length: totalPages }, (_, index) => (
 						<PaginationItem key={index + 1} active={currentPage === index + 1}>
-							<PaginationLink onClick={() => handlePageChange(index + 1)}>
+							<PaginationLink onClick={() => setCurrentPage(index + 1)}>
 								{index + 1}
 							</PaginationLink>
 						</PaginationItem>
 					))}
 
 					<PaginationItem disabled={currentPage === totalPages}>
-						<PaginationLink next onClick={() => handlePageChange(currentPage + 1)} />
+						<PaginationLink next onClick={() => setCurrentPage(currentPage + 1)} />
 					</PaginationItem><PaginationItem disabled={currentPage === totalPages}>
-						<PaginationLink last onClick={() => handlePageChange(totalPages)} />
+						<PaginationLink last onClick={() => setCurrentPage(totalPages)} />
 					</PaginationItem>
 				</>
 			</Pagination >}
@@ -321,7 +318,7 @@ export default function LogMsgComponent() {
 			{/* Show all logs or in pages button */}
 			{logs.length > 0 &&
 				<Button color='primary' style={{ margin: '0% 40% 1%' }} onClick={() => setShowAllLogs(!showAllLogs)}>
-					{!showAllLogs ? `Show All Logs (${logs.length})` : 'Show in pages'}
+					{!showAllLogs ? `${translate('show.all.logs')} (${logs.length})` : translate('show.in.pages')}
 				</Button>}
 
 			{/* Modal for displaying full log message */}

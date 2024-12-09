@@ -27,7 +27,7 @@ export default class LogsApi {
 		return await this.backend.doPostRequest('/api/logs/error', log);
 	}
 
-	public async getLogsByDateRangeAndType(timeInterval: TimeInterval, logTypes: string[], logLimit: string): Promise<LogData[]> {
+	public async getLogsByDateRangeAndType(timeInterval: TimeInterval, logTypes: string, logLimit: string): Promise<LogData[]> {
 		const request = await this.backend.doGetRequest('/api/logs/logsmsg/getLogsByDateRangeAndType',
 			{ timeInterval: timeInterval.toString(), logTypes: logTypes, logLimit: logLimit });
 		return request as LogData[];
