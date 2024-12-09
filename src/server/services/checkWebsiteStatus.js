@@ -2,11 +2,7 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 
-	const cron = require('node-cron');
-	const { getConnection } = require('../db');
 	const { log } = require('../log');
-	const { logMailer } = require('../logMailer');
-	const LogEmail = require('../models/LogEmail');
 	const WEBSITE_URL = process.argv[2];
 	
 	async function checkWebsite() {
