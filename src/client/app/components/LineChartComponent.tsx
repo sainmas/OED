@@ -73,14 +73,13 @@ export default function LineChartComponent() {
 		return <SpinnerComponent loading height={50} width={50} />;
 	}
 
-
-	// Check if there is at least one valid graph
-	const enoughData = data.find(data => data.x!.length > 1);
 	// Customize the layout of the plot
 	// See https://community.plotly.com/t/replacing-an-empty-graph-with-a-message/31497 for showing text not plot.
 	if (data.length === 0) {
 		return <h1>{`${translate('select.meter.group')}`}	</h1>;
-	} else if (!enoughData) {
+	}
+	// Checks if there is enough data for at least one valid graph
+	else if (!data[0].x) {
 		return <h1>{`${translate('no.data.in.range')}`}</h1>;
 	} else {
 		return (
@@ -93,7 +92,8 @@ export default function LineChartComponent() {
 					legend: { x: 0, y: 1.1, orientation: 'h' },
 					// 'fixedrange' on the yAxis means that dragging is only allowed on the xAxis which we utilize for selecting dateRanges
 					yaxis: { title: unitLabel, gridcolor: '#ddd', fixedrange: true },
-					xaxis: { rangeslider: { visible: true }, showgrid: true, gridcolor: '#ddd' }
+					//Range must be between these values to allow error bars to show properly
+					xaxis: { rangeslider: { visible: true }, showgrid: true, gridcolor: '#ddd', range: [data[0].x[0], data[0].x[data[0].x.length - 1]]}
 				}}
 				config={{
 					responsive: true,
