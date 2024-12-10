@@ -7,6 +7,7 @@
 	"scripts": {
 		"start": "node ./src/bin/www",
 		"start:dev": "nodemon --legacy-watch --inspect=0.0.0.0 ./src/bin/www",
+		"checkWebsiteStatus": "node src/server/services/checkWebsiteStatus.js",
 		"webpack:dev": "webpack watch --color --progress --mode development",
 		"webpack:build": "webpack build --node-env production",
 		"webpack": "webpack build --color --progress --mode development",
